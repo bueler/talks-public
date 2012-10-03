@@ -1,0 +1,11 @@
+    \begin{tikzpicture}[>=stealth,scale=1.75,decoration={random steps,segment length=3mm,amplitude=0.75mm}]
+      \draw [decorate] (-2.5,0) .. controls (0,-.5) and (0,0.2) .. (2.5,0) node[anchor=west] {$\sigma$};
+      \coordinate (A) at (0.03,-0.12);
+      \coordinate [label=right:$w$] (B) at (-0.04,+0.25);
+      \fill (A) circle (1pt);
+      \draw[->] (A)  -- (B);
+      \draw[rounded corners=1.5cm] (-2,-1) rectangle +(4,2);
+      \node (plus) at (-1.25,0.75) {$V^{+}$};
+      \node (minus) at (-1.25,-0.75) {$V^{-}$};
+      \draw[->] (-.25,-1.25) node[anchor=north] {$\partial V$} -- (0,-1);
+   \end{tikzpicture}

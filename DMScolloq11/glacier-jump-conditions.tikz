@@ -1,0 +1,13 @@
+    \begin{tikzpicture}[>=stealth,scale=1.7]
+      \draw (-2,1) .. controls (-.5,.25) and (2,.5) .. (2.5,-1.15) node[pos=0.25,inner sep=1pt,circle,fill] (iceair) {}; % ice surface
+      \draw (-2,-.2) .. controls (-.65,-1.1) and (1,-.5) .. (2.5,-1.15) node[pos=0.75,inner sep=1pt,circle,fill] (icebedrock) {}; % bedrock
+      \draw (2.5,-1.15) .. controls (2.7,-1.23) and (2.95,-1.36) .. (3,-1.4); % bedrock extension
+      \node (air1) at (1.25,0.75) {{\large air}};
+      \node (air2) at (1.25,0.50) {($\rho H = 0$)};
+      \node (ice1) at (-.25,0.10) {{\large ice} };
+      \node (ice2) at (-.25,-0.15) {($\rho H = \rho_{\text w} H_{\text w} + \rho_{\text i} H_{\text i}$)};
+      \node (bedrock1) at (-1,-1) {{\large bedrock}};
+      \node (bedrock2) at (-1,-1.25) {($\rho H = 0$)};
+     \draw[->] (iceair) -- +(-101:.5cm) node[anchor=east] {$\bf{n}$};
+     \draw[->] (icebedrock) -- +(82:.5cm) node[anchor=west] {$\bf{n}$};
+  \end{tikzpicture}
