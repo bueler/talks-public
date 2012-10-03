@@ -1,0 +1,15 @@
+* start with showing Ian's data
+
+* describe model novelty:
+  -- ssa as sliding law for sia
+  -- show Schoof (2006) diagram and talk about advance over pre-determine streaming
+  -- enthalpy method for polythermal: ease of implementation, under development
+  -- till yield stress model:
+    + pore water pressure model: need for few parameters
+    + tillphi = f(bed)
+
+* show 3km results: map-plane figs
+
+* param study; histograms
+
+
