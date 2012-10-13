@@ -1,0 +1,152 @@
+\documentclass{beamer}
+%\documentclass[handout]{beamer}
+
+\mode<presentation>
+{
+  \usetheme{CambridgeUS}
+  \usefonttheme{professionalfonts}
+
+  %\usetheme{Singapore}
+  %\usecolortheme{orchid}
+  %\setbeamercovered{transparent}
+}
+
+\usepackage{pgfpages}
+
+\usepackage{alltt,verbatim,amsmath,times}
+\usepackage{bm}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usefonttheme[onlymath]{serif}
+%\usepackage{times}
+%\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\usepackage{hyperref}
+
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\Acal}{\mathcal{A}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Kcal}{\mathcal{K}}
+
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bQ}{\mathbf{Q}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bbU}{\bar{\bU}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+
+\newcommand{\Div}{\nabla\cdot}
+\newcommand{\eps}{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\lap}{\triangle}
+\DeclareMathOperator{\trace}{tr}
+\renewcommand{\bar}{\overline}
+
+\newcommand{\ddx}[1]{\frac{\partial #1}{\partial x}}
+\newcommand{\ddy}[1]{\frac{\partial #1}{\partial y}}
+\newcommand{\pp}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ppt}[1]{\frac{\partial #1}{\partial t}}
+\newcommand{\ppT}[1]{\frac{\partial #1}{\partial T}}
+\newcommand{\ppx}[1]{\frac{\partial #1}{\partial x}}
+\newcommand{\ppy}[1]{\frac{\partial #1}{\partial y}}
+\newcommand{\ppz}[1]{\frac{\partial #1}{\partial z}}
+\newcommand{\ppxx}[1]{\frac{\partial^2 #1}{\partial x^2}}
+\newcommand{\ppzz}[1]{\frac{\partial^2 #1}{\partial z^2}}
+
+%\setbeamercolor{redtext}{fg=red!80!black}
+\setbeamercolor{redtext}{fg=red!94!black}
+%\setbeamercolor{greentext}{fg=green!80!black}
+\setbeamercolor{greentext}{fg=green!60!black}
+%\setbeamercolor{bluetext}{fg=blue!70!black}
+\setbeamercolor{bluetext}{fg=blue!90!black}
+\setbeamercolor{yellowtext}{fg=yellow!95!black}
+\setbeamercolor{orangetext}{fg=yellow!50!red}
+
+\newcommand{\green}{\usebeamercolor[fg]{greentext}}
+\newcommand{\blue}{\usebeamercolor[fg]{bluetext}}
+\newcommand{\red}{\usebeamercolor[fg]{redtext}}
+
+\renewcommand{\L}{\emph{Left}}
+\newcommand{\R}{\emph{Right}}
+
+
+
+\title[weak and shallow ice flow models]{Weak and shallow: New thinking on simulations of ice sheets}
+
+\author[Bueler]{Ed Bueler\inst{1}}
+
+\institute[UAF and UW]{
+  \tiny \inst{1}Dept of Mathematics and Statistics, and Geophysical Institute,
+  University of Alaska Fairbanks}
+
+\date{}
+
+
+\setbeamerfont{date}{size=\scriptsize}
+
+\subject{ice sheet modelling, ice sheets, ice streams, numerical analysis, variational inequality}
+
+
+%\begin{comment}
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%\end{comment}
+
+
+\begin{document}
+\graphicspath{{figs/},{../commonfigs/}}
+
+\begin{frame}
+  \titlepage
+  \begin{center}
+  \tiny 27 October 2012
+  
+  \tiny supported by NASA grant NNX09AJ38C
+  \end{center}
+\end{frame}
+
+\begin{comment}
+% NO OUTLINE:
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[hideallsubsections]
+  % You might wish to add the option [pausesections]
+\end{frame}
+\end{comment}
+
+
+\section{1. FOO}\subsection*{}
+
+
+\begin{frame}
+  \frametitle{inSAR surface velocity observations}
+
+\begin{columns}
+\begin{column}{0.65\textwidth}
+
+\begin{itemize}
+\item RADARSAT SAR
+\end{itemize}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+  \includegraphics[width=1.0\textwidth]{ice-sheet-cartoon}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\end{document}
+
