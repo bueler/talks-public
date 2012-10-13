@@ -1,10 +1,10 @@
-all: talk.pdf
+all: talkDMS11.pdf
 
 TIKZFIGURES=glacier-jump-conditions.tikz phase-change.tikz pillbox.tikz
 
-talk.pdf: talk.tex ${TIKZFIGURES}
-	pdflatex talk
-	pdflatex talk
+talkDMS11.pdf: talkDMS11.tex ${TIKZFIGURES}
+	pdflatex talkDMS11
+	pdflatex talkDMS11
 
 .PHONY: clean
 
