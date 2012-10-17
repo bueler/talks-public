@@ -29,7 +29,7 @@
 
 
 % THIS IS A FEATURE NOT A BUG: this talk will not build without some non-public figures which are in the svn repo on marmaduke/beauregard:
-\graphicspath{{figs/},{/home/bueler/icerepo/UAF-misc/nwgm2012/figures/}}
+\graphicspath{{figs/},{../commonfigs/},{/home/bueler/icerepo/UAF-misc/nwgm2012/figures/}}
 
 \usetikzlibrary{shadows}
 
@@ -48,7 +48,7 @@
 
 \title[ice sheet modelling]{How ice sheets flow, \\ and how to model it on a computer}
 
-\author[Bueler]{Ed Bueler \\ \medskip \scriptsize (with help from Andy Aschwanden)}
+\author[Bueler]{Ed Bueler \\ \medskip \scriptsize (with help from Andy Aschwanden and Constantine Khroulev)}
 
 \institute{
   Dept.~of Mathematics and Statistics \\
@@ -102,40 +102,45 @@
 
 Because ice sheets change more slowly than the atmosphere, predicting their
 behavior over the coming century has more in common with short-term
-weather prediction: small errors in the initial state could
-systematically affect a forecast throughout the 21st century.
+weather prediction: \alert{small errors in the initial state could
+systematically affect a forecast throughout the 21st century}.
 
 \medskip
 \emph{(Arthern \& Gudmundsson, 2010, J. Glaciol)}
 \end{frame}
 
 
-\begin{frame}{``hindcast'' idea}
-  \begin{block}{From wikipedia} A hindcast is a way of testing a
-mathematical model. Known or closely estimated inputs for past events
+\begin{frame}{ice sheet ``weather'' forecasting 101}
+
+\begin{itemize}
+\item \emph{weather model testing}:  Enter measured forcing variables into a weather forecast model.  If the model accurately shows weather events that are known to have occurred then it can be considered successful.
+\bigskip
+
+  \begin{block}{From wikipedia} A \alert{hindcast} is a way of testing a
+mathematical [prediction] model. Known or closely estimated inputs for past events
 are entered into the model to see how well the output matches the
 known results.
   \end{block}
- 
-\begin{itemize}
-\item \emph{weather model example}:  Enter measured forcings into a weather forecast model.  If the model accurately shows
-weather events that are known to have occurred then it can be
-considered successful.
-\item hindcast before forecast
+
+\bigskip
+\item hindcast \emph{before} forecast
+\item verification \emph{before} (hindcast $+$ validation) \emph{before} forecast
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{hindcasting in an ice sheet way}
+\begin{frame}{climate ``forcings'' for a model of an ice sheet}
   \begin{itemize}
-  \item reanalysis from a regional climate model HIRHAM5 as climate forcing
-  \item timeseries from 1989--2011 with monthly values of
-  \end{itemize}
+  \item reanalysis from a regional climate model \scriptsize (HIRHAM5) \normalsize as climate forcing
+  \item timeseries from 1989--2011 with monthly values of:
+
+  \bigskip
+
  \begin{columns}[c]
     \begin{column}{.5\linewidth}
       \vspace{-.5cm}
       \begin{figure}
-        2m air temperature\\
+        2m air temperature \phantom{$\bigg|$} \\
         \includegraphics[width=0.5\linewidth]{hirham5-5km-t2m}
      \end{figure}
     \end{column}
@@ -143,24 +148,14 @@ considered successful.
       \vspace{-.5cm}
       \begin{figure}
         climatic mass balance\\
+        \scriptsize (= precipitation minus removal by melting) \normalsize\\
         \includegraphics[width=0.5\linewidth]{hirham5-5km-cmb}
      \end{figure}
     \end{column}
   \end{columns}
-\end{frame}
 
-
-\begin{frame}
-  \frametitle{generating initial states using PISM}
-  \begin{block}{as an example we test 3 initialization schemes:}
-    \begin{itemize}
-    \item {\color{dark blue}{constant-climate}} steady-state using
-present-day climate
-    \item {\color{dark orange}{paleo-climate}} uses (imperfect) data from a full Ice Age cycle
-    \item {\color{dark violet}{flux-corrected paleo-climate}} combines
-paleo-climate with information about present-day ice thickness
-    \end{itemize}
-  \end{block}
+  \item also: ocean temperatures, geothermal heat, bedrock topography, \dots
+  \end{itemize}
 \end{frame}
 
 
@@ -172,12 +167,48 @@ paleo-climate with information about present-day ice thickness
 \end{frame}
 
 
-\begin{frame}{validation: ice volume and ice thickness}
-Probably the most common validation metric is ice volume
-\vspace{1em}
+\begin{frame}
+  \frametitle{PISM = Parallel Ice Sheet Model}
+
+  \begin{itemize}
+  \item arguably the most widely-used ice sheet model:
+     \begin{center}
+        \includegraphics[width=0.75\linewidth]{pism-user-world}
+     \end{center}
+  \item developed here at UAF
+  \item supported by NASA MAP and ARSC
+  \item see \alert{www.pism-docs.org}
+  \item \dots but just an example for this talk
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{generating initial states using PISM}
+  \begin{block}{some initialization schemes:}
+    \begin{itemize}
+    \item {\color{dark blue}{constant-climate}} steady-state using
+present-day climate
+    \item {\color{dark orange}{paleo-climate}} uses (imperfect) data from a full Ice Age cycle
+    \item {\color{dark violet}{flux-corrected paleo-climate}} combines
+paleo-climate with information about present-day ice thickness
+    \end{itemize}
+  \end{block}
+
+  \begin{itemize}
+  \item I'll mostly show Andy's Greenland runs on 2 km grid
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{validation metric: ice volume and ice thickness}
+
 \begin{itemize}
-\item[\color{dark violet}{X}] ice thickness was used to obtain ``flux-corrected'' initial state, thus not available for validation
-\end{itemize}
+\item the most common validation metric is ice volume
+\item ice volume measurement based on ice thickness observation
+\item PISM Greenland runs comparison:
+
+\vspace{1em}
 
 {\scriptsize{
 \begin{tabular}{l c c c c}
@@ -185,59 +216,45 @@ Probably the most common validation metric is ice volume
   & observed & \color{dark blue}{constant-climate} & \color{dark orange}{paleo-climate}  & \color{dark violet}{flux-corrected}\\
 \hline
 \emph{ice volume}\\
-initial volume\, [10$^{6}$\,km$^{3}$] & 2.93 & \color{dark blue}{3.18} & \color{dark orange}{3.37} & \color{dark violet}{X}\\
+initial volume\, [10$^{6}$\,km$^{3}$] & 2.93 & \color{dark blue}{3.18} & \color{dark orange}{3.37} & \color{dark violet}{X} \medskip \\
+
 \emph{ice thickness}\\
-avg difference [m] &  & \color{dark blue}{99} & \color{dark orange}{121} & \color{dark violet}{X}\\
+avg abs.~difference [m] &  & \color{dark blue}{99} & \color{dark orange}{121} & \color{dark violet}{X}\\
 rms difference [m] & & \color{dark blue}{199} & \color{dark orange}{244} & \color{dark violet}{X}\\
 \hline
 \end{tabular}
 observed ice thickness is from Griggs \& Bamber (unpublished)
 }}
-\begin{itemize}
+\scriptsize
+\item[\color{dark violet}{X}] = ice thickness used in ``flux-correcting'' is not available for validation
+\normalsize
+\bigskip
+
+\item thus: volume is a weak metric because it averages out positive and negative thickness errors
 \item how well do we know ice thickness?
 \end{itemize}
-  \vspace{.5em}
-  \begin{beamercolorbox}[shadow=true,rounded=true]{boxed} \centering
-    $\alert \Rightarrow$ we will see that ice volume is a very weak metric
-  \end{beamercolorbox}
 \end{frame}
 
 
-\begin{frame}{validation: cumulative total mass changes}
+\begin{frame}{validation metric: gravimetric total mass changes}
   \begin{figure}
-    \includegraphics<1>[width=9cm]{ts_mass_2004-2010}
+    \includegraphics<1>[width=0.9\textwidth]{ts_mass_2004-2010}
   \end{figure}
-  \begin{beamercolorbox}[shadow=true,rounded=true]{boxed} \centering
-    gravimetric mass changes are well reproduced
-  \end{beamercolorbox}
 \end{frame}
 
-
-\begin{frame}{validation: mass fluxes} \vspace{-0.25em}
-  \begin{figure}
-    \includegraphics<1>[width=9cm]{ts_fluxes_fluxes_1990-2010}
-  \caption{Simulated mass fluxes from 1990 to 2010. Climatic mass
-balance (solid line) and ice discharge (dashed line). For comparison
-the ice discharge estimate for 1996 \emph{Van den Broeke et al, 2009)}
-is shown (black dotted line).}
-  \end{figure}
- \note[item]{PISM is conserving mass down to less than 250 grams per
-   year for a typical Greenland run. That's a relative accuracy of
-   about 10$^{-16}$}
-\end{frame}
 
 
 \begin{frame}{validation: surface speeds}
-  %\vspace{-1em}
+  \vspace{-2em}
 
   \begin{figure}
-    \includegraphics<1>[height=4.25cm]{csurf_insar_pism_all} \\
+    \includegraphics<1>[height=4.5cm]{csurf_insar_pism_all} \\
    \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
   \end{figure}
   
 \begin{itemize}
 \item values in m/a
-\item observed = interferometric SAR and speckle/feature tracking (Joughin et al., 2010)
+\item observed = interferometric SAR $+$ feature-tracking \footnotesize (Joughin et al., 2010) \normalsize
 \item some ``data assimilation techniques'' (inverse modelling of the observed velocities) give much better match to observed velocities \dots but it's not clear if time-evolution is better
 \end{itemize}
 \end{frame}
@@ -252,12 +269,12 @@ is shown (black dotted line).}
 
 \begin{itemize}
 \item values in m
-\item observed = ICESat (S\o{}rensen, 2011);
+\item observed = ICESat laser altimetry \footnotesize (S\o{}rensen, 2011) \normalsize
 \end{itemize}
 \end{frame}
 
 
-\section[challenges]{challenges in putting ice sheet flow on computers}
+\section{challenges}
 
 \begin{frame}{we've come a long way baby?}
   \vspace{-.25cm}
