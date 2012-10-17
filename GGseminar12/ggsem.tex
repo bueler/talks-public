@@ -12,6 +12,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{movie15}
+\usepackage{empheq}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
@@ -29,7 +30,7 @@
 
 
 % THIS IS A FEATURE NOT A BUG: this talk will not build without some non-public figures which are in the svn repo on marmaduke/beauregard:
-\graphicspath{{figs/},{../commonfigs/},{/home/bueler/icerepo/UAF-misc/nwgm2012/figures/}}
+\graphicspath{{figs/},{../commonfigs/},{/home/bueler/icerepo/UAF-misc/nwgm2012/figures/},{/home/bueler/karthaus/photos/}}
 
 \usetikzlibrary{shadows}
 
@@ -92,8 +93,202 @@
    \frametitle{Outline}
    \tableofcontents[subsectionstyle=hide/hide/hide]
 \end{frame}
+
   
 \section{how do ice sheets flow?}
+
+\begin{frame}{ice is a \emph{fluid} \dots mostly}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\includegraphics[width=1.0\textwidth]{polaris}
+\end{column}
+\begin{column}{0.35\textwidth}
+\includegraphics[width=1.0\textwidth]{pancakes}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{ice in glaciers is a \emph{fluid}}
+
+\begin{itemize}
+\item ice in glaciers is a \emph{fluid}
+\item (ice sheets are just big glaciers)
+\item we describe fluids primarily by a \emph{velocity field} $\mathbf{u}(t,x,y,z)$
+\item if the ice fluid were
+  \begin{itemize}
+  \item[$\circ$] faster-moving, and
+  \item[$\circ$] linearly-viscous
+  \end{itemize}
+  
+  then ice flow would be a ``typical'' fluid like liquid water
+\item we would use the Navier-Stokes equations as our flow model:
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
+\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{force balance}}
+\end{align*}
+\item so, to numerically model our glacier fluid, do we grab a textbook on computational fluid dynamics (CFD) and go?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{is numerical ice flow modeling a part of CFD?}
+
+\begin{itemize}
+\item \alert{yes}
+\item large scale like atmosphere/ocean
+\item \dots but it is a weird one
+\item consider what makes atmosphere/ocean flow modeling exciting:
+  \begin{itemize}
+  \item[$\circ$] turbulence
+  \item[$\circ$] convection
+  \item[$\circ$] coriolis force
+  \item[$\circ$] density variation
+  \end{itemize}
+\item none of the above is relevant to ice flow
+\item so what could be interesting about the flow of slow, cold, stiff, laminar, old ice?
+\item it's ``\emph{ice dynamics!}''
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{ice is a slow, shear-thinning fluid}
+
+\begin{itemize}
+\item our fluid is
+
+  \begin{tabular}{lc}
+  \emph{slow}: & $\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0$ \\
+  \emph{non-Newtonian}: & viscosity $\nu$ is not constant
+  \end{tabular}
+\item ``slow'':
+  $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
+\item ``non-Newtonian'' flow:  it is ``shear-thinning'', so larger strain rate means smaller viscosity
+\item the standard ice flow model is Glen-law ($n=3$) Stokes:
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
+0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{force balance}} \\
+\mathbf{D}u_{ij} &= A \tau^2 \tau_{ij} &&\text{\emph{flow law}}
+\end{align*}
+\item equations above are true at every instant
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{because ice is a slow fluid \dots}
+
+\begin{itemize}
+\item because ice is a slow fluid:
+  \begin{quote}
+  \alert{geometry, boundary stress, and ice viscosity determine velocity field instantaneously}
+  \end{quote}
+\item a time-stepping ice sheet code recomputes the velocity field at every time step, without requiring velocity from the previous step\footnote{to be a weatherman you've got to know which way the wind blows \dots but don't expect that much from a glaciologist}
+\item thus no memory of previous momentum/velocity
+\item velocity is a ``diagnostic'' output of an ice flow model
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{slab-on-a-slope}
+
+\begin{itemize}
+\item solve the ``standard ice flow model'' in a tilted slab, below
+\item assumes no variation in flow with $x$
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{slab}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{slab-on-a-slope}
+\vspace{-1em}
+
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{center}
+% NOT preserving aspect ratio
+\includegraphics[width=0.55\textwidth,height=0.63\textheight]{slabvel}
+
+\medskip
+\scriptsize
+velocity from slab-on-a-slope formula
+\end{center}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\includegraphics[width=0.8\textwidth]{athabasca_deform}
+
+\medskip
+\scriptsize
+velocity profile of the Athabasca Glacier from inclinometry
+
+\tiny (Savage and Paterson, 1963)
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{deformation versus basal motion}
+
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\small
+\begin{itemize}
+\item \alert{top:}
+
+cartoon of SIA and SSA modes
+\item \alert{bottom:}
+
+sheet-stream-shelf transition,
+
+Lambert Glacier \& Amery Ice Shelf, Antarctica
+\end{itemize}
+\end{column}
+
+\begin{column}{0.7\textwidth}
+\includegraphics[width=\textwidth]{siassacartoon-lambert}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{slow, non-Newtonian, some basal slip, and shallow}
+
+\begin{itemize}
+\item ice sheets have four outstanding properties \emph{as fluids}:
+  \begin{enumerate}
+  \item slow
+  \item non-Newtonian
+  \item \alert{shallow}
+  \item contact slip (sometimes)
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{regarding ``shallow''}
+
+\begin{itemize}
+\item consider cross section of Greenland ice sheet at $71^\circ$ N
+\item below in {\color{dark red}{red}} is a no-vertical-exaggeration view
+\small
+  \begin{itemize}
+  \item[$\circ$] green and blue: standard vertically-exaggerated cross section
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.6\textwidth]{green_transect}
+  \end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME:  from here show Halfar solution to SIA, van der Veen solution to SSA, and talk V\&V
+\end{itemize}
+\end{frame}
 
 
 \section{ice sheet models do what?}
@@ -284,6 +479,14 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
   \end{figure}
 \end{frame}
 
+
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME:  show Guillaume moving grounding line movie
+\end{itemize}
+\end{frame}
 
 \section{questions?}
 
