@@ -359,11 +359,58 @@ equal spaced in \emph{exponential} time
 
 \begin{frame}{importance of verification}
 
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\small
 \begin{itemize}
-\item FIXME: last slide showed exact solutions; so what; \emph{measure} errors; show thickness errors
-\item from now on, let's assume we have built an ``ice sheet model'' and spent some time verifying it
+\item so now we are \alert{ice sheet modellers}, the chosen few \dots
+\item we take the SIA, SSA, etc.~equations and turn them into computer programs
+\item \dots and get pretty pictures
+\bigskip
+
+\item but last slide showed \emph{exact} solutions
+\item instead of ``eyeballing'' we can \emph{measure} errors from the numerical code
+\end{itemize}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+%\vspace{-0.25in}
+\begin{center}
+\includegraphics[width=1.0\textwidth]{test-G-thickness}
+\end{center}
+\end{column}
+\end{columns}
+
+\small
+\begin{itemize}
+\item from now on, let's assume we have built an ``ice sheet model'' and have already spent some time verifying it
+\item i.e.~let's skip over \emph{my} career, as some kind of minor detail \dots
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{next step: validation?}
+
+\begin{itemize}
+\small
+
+\item sometimes observational data is 
+  \begin{itemize}
+  \item[$\circ$] of high quality
+  \item[$\circ$] measures exactly what the model is simulating
+  \end{itemize}
+\item for example, below:
+  \begin{itemize}
+  \item[$\circ$] observed surface velocities versus
+  \item[$\circ$] velocity computed by SSA model in PISM
+  \end{itemize}
+\end{itemize}
+
+\begin{center}
+  \includegraphics[width=0.4\textwidth]{rossquiver} \quad  \includegraphics[width=0.4\textwidth]{rossscatter}
+\end{center}
+\end{frame}
+
 
 
 \section{ice sheet models do what?}
