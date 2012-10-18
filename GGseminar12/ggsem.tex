@@ -11,7 +11,8 @@
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{movie15}
+%\usepackage{movie15}
+\usepackage{animate}
 \usepackage{empheq}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
@@ -97,7 +98,7 @@
   
 \section{how do ice sheets flow?}
 
-\begin{frame}{ice is a \emph{fluid} \dots mostly}
+\begin{frame}{ice in glaciers is a \emph{viscous fluid}}
 \begin{columns}
 \begin{column}{0.65\textwidth}
 \includegraphics[width=1.0\textwidth]{polaris}
@@ -106,12 +107,16 @@
 \includegraphics[width=1.0\textwidth]{pancakes}
 \end{column}
 \end{columns}
+
+\bigskip\bigskip
+\begin{itemize}
+\item mostly
+\end{itemize}
 \end{frame}
 
-\begin{frame}{ice in glaciers is a \emph{fluid}}
+\begin{frame}{ice in glaciers is a \emph{viscous fluid}}
 
 \begin{itemize}
-\item ice in glaciers is a \emph{fluid}
 \item (ice sheets are just big glaciers)
 \item we describe fluids primarily by a \emph{velocity field} $\mathbf{u}(t,x,y,z)$
 \item if the ice fluid were
@@ -124,7 +129,7 @@
 \item we would use the Navier-Stokes equations as our flow model:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
-\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{force balance}}
+\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{force balance}:  $ma=F$}
 \end{align*}
 \item so, to numerically model our glacier fluid, do we grab a textbook on computational fluid dynamics (CFD) and go?
 \end{itemize}
@@ -137,7 +142,7 @@
 \item \alert{yes}
 \item large scale like atmosphere/ocean
 \item \dots but it is a weird one
-\item consider what makes atmosphere/ocean flow modeling exciting:
+\item consider what makes atmosphere/ocean modeling exciting:
   \begin{itemize}
   \item[$\circ$] turbulence
   \item[$\circ$] convection
@@ -154,7 +159,8 @@
 \begin{frame}{ice is a slow, shear-thinning fluid}
 
 \begin{itemize}
-\item our fluid is
+\item our glacier fluid is
+\smallskip
 
   \begin{tabular}{lc}
   \emph{slow}: & $\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0$ \\
@@ -162,12 +168,12 @@
   \end{tabular}
 \item ``slow'':
   $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
-\item ``non-Newtonian'' flow:  it is ``shear-thinning'', so larger strain rate means smaller viscosity
-\item the standard ice flow model is Glen-law ($n=3$) Stokes:
+\item ``non-Newtonian'': flow is ``shear-thinning'', so larger strain rate means smaller viscosity
+\item thus the standard ice flow model is Glen-law ($n=3$) Stokes:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
-0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{force balance}} \\
-\mathbf{D}u_{ij} &= A \tau^2 \tau_{ij} &&\text{\emph{flow law}}
+0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow force balance}} \\
+\mathbf{D}u_{ij} &= A \tau^2 \tau_{ij} &&\text{\emph{Glen flow law}}
 \end{align*}
 \item equations above are true at every instant
 \end{itemize}
@@ -191,13 +197,21 @@
 \begin{frame}{slab-on-a-slope}
 
 \begin{itemize}
+\item an easiest case!
 \item solve the ``standard ice flow model'' in a tilted slab, below
-\item assumes no variation in flow with $x$
-\end{itemize}
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{slab}
+\includegraphics[width=0.45\textwidth]{slab}
 \end{center}
+
+\vspace{-0.5in}
+\item assume
+  \begin{itemize}
+  \item[$\circ$] constant thickness
+  \item[$\circ$] no variation in flow with $x$
+  \end{itemize}
+\item compute velocity $\mathbf{u}(z)$ \dots formulas suppressed
+\end{itemize}
 \end{frame}
 
 
@@ -237,7 +251,7 @@ velocity profile of the Athabasca Glacier from inclinometry
 \begin{itemize}
 \item \alert{top:}
 
-cartoon of SIA and SSA modes
+cartoon of non-sliding (SIA) and sliding/floating (SSA) modes
 \item \alert{bottom:}
 
 sheet-stream-shelf transition,
@@ -250,6 +264,29 @@ Lambert Glacier \& Amery Ice Shelf, Antarctica
 \includegraphics[width=\textwidth]{siassacartoon-lambert}
 \end{column}
 \end{columns}
+\end{frame}
+
+
+\begin{frame}{Antarctica is a \emph{marine ice sheet}}
+
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\small
+\begin{itemize}
+\item in fact we should not forgetting floating parts of ice sheets
+\item i.e.~\emph{ice shelves}
+\item and they often have fast upstream grounded ice: \emph{ice streams}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\includegraphics[width=0.8\textwidth]{basal-stress-ant}
+\end{column}
+\end{columns}
+
+\begin{center}
+\includegraphics[width=1.0\textwidth]{vel-compare-ant}
+\end{center}
 \end{frame}
 
 
@@ -283,10 +320,48 @@ Lambert Glacier \& Amery Ice Shelf, Antarctica
 \end{frame}
 
 
-\begin{frame}{FIXME}
+\begin{frame}{shallow models of ice sheets and shelves}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\small
+\begin{itemize}
+\item we don't actually use the  ``standard ice flow model'' (i.e.~the Stokes equations) very often
+\item shown are two most-common shallow approximations
+  \begin{itemize}
+  \item[$\circ$] \alert{top}: time-dependent exact solution to the ``SIA'' = shallow ice approximation
+  \item[$\circ$] \alert{bottom}: steady exact solution to the ``SSA'' = shallow shelf approximation
+  \end{itemize}
+\item \dots but I suppress the equations for the SIA and SSA models
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\vspace{-0.25in}
+
+\begin{center}
+\animategraphics[autoplay,loop,height=3.5cm]{4}{anim/halfar}{0}{26}
+
+\tiny 
+frames from $t=4$ months to $t = 10^6$ years,
+
+equal spaced in \emph{exponential} time
+
+\bigskip
+\includegraphics[width=0.69\textwidth]{shelfthk}
+
+\includegraphics[width=0.69\textwidth]{shelfvel}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{importance of verification}
 
 \begin{itemize}
-\item FIXME:  from here show Halfar solution to SIA, van der Veen solution to SSA, and talk V\&V
+\item FIXME: last slide showed exact solutions; so what; \emph{measure} errors; show thickness errors
+\item from now on, let's assume we have built an ``ice sheet model'' and spent some time verifying it
 \end{itemize}
 \end{frame}
 
@@ -366,7 +441,7 @@ known results.
   \frametitle{PISM = Parallel Ice Sheet Model}
 
   \begin{itemize}
-  \item arguably the most widely-used ice sheet model:
+  \item arguably the most widely-used ice sheet model in the world:
      \begin{center}
         \includegraphics[width=0.75\linewidth]{pism-user-world}
      \end{center}
@@ -391,7 +466,7 @@ paleo-climate with information about present-day ice thickness
   \end{block}
 
   \begin{itemize}
-  \item I'll mostly show Andy's Greenland runs on 2 km grid
+  \item next four slides: Andy's Greenland runs using PISM on 2 km grid
   \end{itemize}
 \end{frame}
 
@@ -439,7 +514,7 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
 
 
 
-\begin{frame}{validation: surface speeds}
+\begin{frame}{validation metric: surface speeds}
   \vspace{-2em}
 
   \begin{figure}
@@ -450,13 +525,13 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
 \begin{itemize}
 \item values in m/a
 \item observed = interferometric SAR $+$ feature-tracking \footnotesize (Joughin et al., 2010) \normalsize
-\item some ``data assimilation techniques'' (inverse modelling of the observed velocities) give much better match to observed velocities \dots but it's not clear if time-evolution is better
+\item some ``data assimilation techniques'' (= inverse modelling of the observed velocities) give much better match to observed velocities \dots but it's not clear if time-evolution is better
 \end{itemize}
 \end{frame}
 
 
 
-\begin{frame}{validation: surface elevation change 2003--2009}
+\begin{frame}{validation metric: surface elevation change}
  \begin{figure}
     \includegraphics<1>[height=4.25cm]{dh_2003-2009} \\
     \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
@@ -464,14 +539,15 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
 
 \begin{itemize}
 \item values in m
+\item change over period 2003--2009
 \item observed = ICESat laser altimetry \footnotesize (S\o{}rensen, 2011) \normalsize
 \end{itemize}
 \end{frame}
 
 
-\section{challenges}
+\section{progress and challenges}
 
-\begin{frame}{we've come a long way baby?}
+\begin{frame}{we've come a long way, baby?}
   \vspace{-.25cm}
   \begin{figure}
     1990s (20 km grid) \hspace{1.75cm} today (1 km grid)\\
@@ -485,6 +561,9 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
 
 \begin{itemize}
 \item FIXME:  show Guillaume moving grounding line movie
+\item FIXME:  figure suggesting uncertainty in basal shear stress
+\item FIXME:  figure from Golledge S New Zealand LGM: how to use paleo constraints?
+\item FIXME:  figure from Albrecht and Levermann; calving law?
 \end{itemize}
 \end{frame}
 

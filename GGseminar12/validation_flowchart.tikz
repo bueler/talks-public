@@ -1,0 +1,51 @@
+
+% Define block styles
+\tikzstyle{decision} = [ellipse, draw, 
+    text badly centered, node distance=3cm, inner sep=2pt,draw=dark violet,
+        % The filling: 
+        top color=white, 
+        bottom color=light violet]
+\tikzstyle{model} = [rectangle, draw,
+    text badly centered, rounded corners,draw=dark orange,
+        % The filling: 
+        top color=white, 
+        bottom color=dark orange]
+\tikzstyle{observation} = [rectangle, draw,
+    text badly centered, rounded corners,draw=dark blue,
+        % The filling: 
+        top color=white, 
+        bottom color=light blue]
+\tikzstyle{arrow line} = [draw, -latex']
+\tikzstyle{line} = [draw]
+
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+
+   % Place nodes
+    \node [model] (initial state) {initial state};
+
+    \node [model, below of=initial state, node distance=1.5cm] (ISM) {ice sheet model};
+    \node [model, below of=ISM, text width=6em, node distance=2cm]
+    (modeled state) {modeled present state};
+    \node [observation, right of=ISM, text width=6em, node distance=5cm] (reanalysis) {reanalysis data};
+    \node [observation, right of=modeled state, text width=7em, node distance=2.5cm,xshift=1.25cm,yshift=-.25cm] (validation) {observations\\ (more is better)};
+    \node [decision, below of=modeled state, text width=6em, node distance=1.75cm] (agreement) {agreement?};
+    \node [model, below of=agreement, text width=6em, node distance=1.75cm] (future) {make forecasts};
+
+    \node [left of=agreement,inner sep=0pt,minimum size=0cm] (ll) {};
+    \node [left of=ISM,inner sep=0pt,minimum size=0cm] (ml) {};
+    \node [left of=initial state,inner sep=0pt,minimum size=0cm] (ul) {};
+
+   % edges
+   \path [arrow line] (initial state) -- (ISM);
+   \path [arrow line] (ISM) -- node {hindcast} (modeled state);
+   \path [arrow line] (reanalysis) -- node {input forcings} (ISM);
+   \path [arrow line] (validation) -- node {validation} (agreement);
+   \path [arrow line] (modeled state) -- (agreement);
+   \path [arrow line] (agreement) -- node {yes} (future);
+   \path [line] (agreement) -- (ll);
+   \path [line] (ll) -- node {no} (ml);
+   \path [line] (ml) -- (ul);
+   \path [arrow line] (ml) -- (ISM);
+   \path [arrow line] (ul) -- (initial state);
+\end{tikzpicture}
