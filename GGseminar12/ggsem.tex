@@ -651,20 +651,29 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
 \end{frame}
 
 
-\begin{frame}{can we build a decent calving law?}
+\begin{frame}{a decent calving law for ice shelves?}
 
 \begin{columns}
-\begin{column}{0.45\textwidth}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item FIXME: two aspects, stress condition at calving front and physical fracture process
-\item FIXME: add eigencalving result figure top
-\item \alert{bottom:} PISM fracture-density model of the Filchner-Ronne ice shelf showing observed surface crevasse fields (black) and modelled density (color); from Albrecht and Levermann (2012)
+\small
+\item two issues:
+  \begin{itemize}
+  \item[$\circ$] physical fracture process which causes weakening
+  \item[$\circ$] stress condition at front which causes calving
+  \end{itemize}
+\item \alert{top:} PISM fracture-density model of the Filchner-Ronne ice shelf showing observed surface crevasse fields (black) and modelled density (color) \qquad \tiny Albrecht and Levermann (2012) \small
+\item \alert{top:} PISM ``eigen-calving'' model; modeled steady states of Larsen A \& B ice shelves closely-approximate observed \qquad \tiny Levermann et al.~(2012) \small
 \end{itemize}
 \end{column}
 
-\begin{column}{0.55\textwidth}
+\begin{column}{0.5\textwidth}
 \vspace{-0.1in}
-  \includegraphics[width=1.0\textwidth]{fracture-density-fris}
+
+\qquad \includegraphics[width=0.55\textwidth]{fracture-density-fris}
+
+%\medskip
+\animategraphics[autoplay,loop,height=5.2cm]{6}{eigenanim/eigen}{0}{160}
 \end{column}
 \end{columns}
 \end{frame}
