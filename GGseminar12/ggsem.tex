@@ -178,8 +178,12 @@
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow force balance}} \\
 \mathbf{D}u_{ij} &= A \tau^2 \tau_{ij} &&\text{\emph{Glen flow law}}
 \end{align*}
-\item equations above are true at every instant
 \end{itemize}
+
+\bigskip
+\begin{beamercolorbox}[shadow=true,rounded=true]{boxed} \centering\small
+    equations above are true at every instant
+\end{beamercolorbox}
 \end{frame}
 
 
@@ -335,8 +339,10 @@ Lambert Glacier \& Amery Ice Shelf, Antarctica
   \item[$\circ$] \alert{top}: time-dependent exact solution to the ``SIA'' = shallow ice approximation
   \item[$\circ$] \alert{bottom}: steady exact solution to the ``SSA'' = shallow shelf approximation
   \end{itemize}
-\item \dots but I suppress the equations for the SIA and SSA models
+\item \dots but I'll suppress the partial differential equations for the SIA and SSA models in this talk
 \end{itemize}
+\bigskip
+\bigskip\bigskip\bigskip
 \end{column}
 
 \begin{column}{0.5\textwidth}
@@ -366,13 +372,13 @@ equal spaced in \emph{exponential} time
 \begin{column}{0.45\textwidth}
 \small
 \begin{itemize}
-\item so now we are \alert{ice sheet modellers}, the chosen few \dots
+\item suppose we are now \alert{ice sheet modellers}, the chosen few \dots
 \item we take the SIA, SSA, etc.~equations and turn them into computer programs
 \item \dots and get pretty pictures
 \bigskip
 
 \item but last slide showed \emph{exact} solutions
-\item instead of ``eyeballing'' we can \emph{measure} errors from the numerical code
+\item instead of ``eyeballing'' we can \emph{measure} errors from the numerical code, as at right
 \end{itemize}
 \end{column}
 
@@ -384,11 +390,10 @@ equal spaced in \emph{exponential} time
 \end{column}
 \end{columns}
 
-\small
-\begin{itemize}
-\item from now on, let's assume we have built an ``ice sheet model'' and have already spent some time verifying it
-\item i.e.~let's skip over \emph{my} career, as some kind of minor detail \dots
-\end{itemize}
+\bigskip
+\begin{beamercolorbox}[shadow=true,rounded=true]{boxed} \centering\small
+    from now on in this talk, I'll assume we have a verified ice sheet model in hand
+\end{beamercolorbox}
 \end{frame}
 
 
@@ -607,17 +612,42 @@ observed ice thickness is from Griggs \& Bamber (unpublished)
 
 \begin{frame}{do we know the basal resistance under an ice sheet?}
 
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\vspace{-0.3in}
 \begin{itemize}
-\item FIXME:  figure from Habermann?
+\item no
+\item to slightly better approximation, at times like the present where we know surface velocities, we can \alert{invert} the ice flow model for basal shear stress
+\item (in forward mode, the ice flow model turns basal resistance into surface velocity)
+\item \alert{at right:} figure from Habermann et al (2012)
 \end{itemize}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\vspace{-0.1in}
+  \includegraphics[width=1.0\textwidth]{basal-stress-initial-and-errors}
+\end{column}
+\end{columns}
 \end{frame}
+
 
 
 \begin{frame}{can we effectively use paleo- constraints?}
 
+\begin{columns}
+\begin{column}{0.45\textwidth}
 \begin{itemize}
-\item FIXME:  figure from Golledge S New Zealand LGM: how to use paleo constraints?
+\item some of the best information about underneath ice sheets is from geomorphology
+\item for example, \alert{at right} is comparison of the LGM moraines of the New Zealand (South Island) ice cap versus a 500 m resolution PISM simulation (Golledge et al., 2012)
+\item major goal here: recover the climate at the LGM
 \end{itemize}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+\vspace{-0.1in}
+  \includegraphics[width=1.0\textwidth]{nz-pism-vs-lgm}
+\end{column}
+\end{columns}
 \end{frame}
 
 
