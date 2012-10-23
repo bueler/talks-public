@@ -20,7 +20,12 @@
 % Or whatever. Note that the encoding and the font should match. If T1
 % does not look nice, try deleting the line with the fontenc.
 
-\usepackage{hyperref}
+%\usepackage{hyperref}
+
+\usepackage{pdfanim}
+\usepackage{multimedia,xmpmulti}
+
+\PDFAnimLoad[width=\textwidth,loop,interval=40]{exp3a}{exp3a/pic}{310}%
 
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\NN}{\mathbb{N}}
@@ -513,6 +518,15 @@ $$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
 \section[ice streams]{a model for ice streaming}
 
 \section[marine ice sheets]{a model for marine ice sheet evolution}
+
+\begin{frame}
+  \frametitle{FIXME Polynomial bedrock (Adaptive grid) }
+
+\begin{center}
+\PDFAnimation{exp3a}
+\end{center}
+\end{frame}
+
 
 \section[polythermal ice]{awaiting a weak formulation: polythermal ice}
 
