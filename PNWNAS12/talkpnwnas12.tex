@@ -27,6 +27,17 @@
 
 \PDFAnimLoad[width=\textwidth,loop,interval=40]{exp3a}{exp3a/pic}{310}%
 
+\definecolor{dark red}{HTML}{E41A1C}
+\definecolor{dark green}{HTML}{4DAF4A}
+\definecolor{dark violet}{HTML}{984EA3}
+\definecolor{dark blue}{HTML}{084594}
+\definecolor{dark orange}{HTML}{FF7F00}
+\definecolor{light blue}{HTML}{377EB8}
+\definecolor{light red}{HTML}{FB9A99}
+\definecolor{light violet}{HTML}{CAB2D6}
+
+\setbeamercolor{boxed}{fg=black,bg=uaf yellow}
+
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\NN}{\mathbb{N}}
 \newcommand{\RR}{\mathbb{R}}
@@ -110,7 +121,7 @@
 
 
 \begin{document}
-\graphicspath{{figs/},{../commonfigs/}}
+\graphicspath{{figs/},{../commonfigs/},{photos/}}
 
 \begin{frame}
   \titlepage
@@ -129,13 +140,143 @@
 \end{comment}
 
 
-\section[intro]{ice sheets: an introduction}
+\section[intro]{ice sheet flow: an introduction for non-glaciologists}
+
+
+\begin{frame}{ice in glaciers is a \emph{viscous fluid}}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\includegraphics[width=1.0\textwidth]{polaris}
+\end{column}
+\begin{column}{0.35\textwidth}
+\includegraphics[width=1.0\textwidth]{pancakes}
+\end{column}
+\end{columns}
+
+\bigskip\bigskip
+\begin{itemize}
+\item \dots at least: glaciers are viscous at the big scale
+\item \emph{definition}: ice sheets are big, shallow glaciers
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{ice in glaciers is a \emph{viscous fluid}}
+
+\begin{itemize}
+\item primary unknowns: velocity field $\mathbf{u}(\bx,t)$ and pressure $p(\bx,t)$
+\item other notation: $\rho$ is density, $\mathbf{g}$ is gravity, $\nu$ is viscosity
+\item if the glacier fluid were ``typical'' like liquid water we would model with Navier-Stokes equations:
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
+\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{stress balance}}
+\end{align*}
+\item but it is not typical!
+\item e.g.~not addressed in ice sheet flow models:
+  \begin{itemize}
+  \item[$\circ$] turbulence
+  \item[$\circ$] convection
+  \item[$\circ$] coriolis force
+  \item[$\circ$] density-driven flow
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{ice is a slow, shear-thinning viscous fluid}
+
+\begin{itemize}
+\item our glacier fluid is:
+\smallskip
+
+  \begin{tabular}{lc}
+  \emph{slow}: & $\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0$ \\
+  \emph{non-Newtonian (shear-thinning)}: & viscosity $\nu$ is not constant
+  \end{tabular}
+\item ``slow'':
+  $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
+\item notation: $\tau_{ij}$ is deviatoric stress tensor, $\mathbf{D}u_{ij}$ is strain rate tensor
+\item the standard ice flow model is Glen-law Stokes:
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
+0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow stress balance}} \\
+\mathbf{D}u_{ij} &= A \tau^{n-1} \tau_{ij} &&\text{\emph{Glen flow law}}
+\end{align*}
+\item $1.8 < n < 4.0$ ?  \quad when in doubt: $n=3$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{because ice is a slow fluid \dots}
+
+\begin{itemize}
+\item it is a time-independent Stokes problem:
+  \begin{quote}
+  \alert{geometry, boundary stress, and viscosity determine velocity field and pressure instantaneously} (in the model)
+  \end{quote}
+\item so: a time-stepping ice sheet code recomputes the velocity field at every time step, without requiring velocity from the previous step\footnote{to be a weatherman you've got to know which way the wind blows \dots but don't expect that much from a glaciologist}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{yes, ice sheets are ``shallow''}
+
+\begin{itemize}
+\item consider cross section of Greenland ice sheet at $71^\circ$ N
+\small
+  \begin{itemize}
+  \item[$\circ$] {\color{dark green}{green}} and {\color{dark blue}{blue}}: standard vertically-exaggerated cross section
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{greentrans}
+  \end{center}
+\normalsize
+\item in {\color{dark red}{red}}: a view without this vertical exaggeration
+\item so: numerical Stokes equations solvers require care \dots most simulations use shallow limits of Stokes
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{deformation versus basal motion}
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\small
+\begin{itemize}
+\item \emph{top}:  non-sliding (SIA) and sliding/floating (SSA) modes
+\item \emph{bottom}:  real transition sheet-stream-shelf (Lambert Glacier \& Amery Ice Shelf, Antarctica)
+\end{itemize}
+\end{column}
+
+\begin{column}{0.65\textwidth}
+\includegraphics[width=\textwidth]{siassacartoon-lambert}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+
+\begin{frame}{summary so far}
+
+\begin{itemize}
+\item ice sheets have four outstanding properties \emph{as viscous flows}:
+  \begin{enumerate}
+  \item \alert{slow}
+  \item \alert{shear-thinning}
+  \item \alert{shallow}
+  \item \alert{contact slip}
+  \end{enumerate}
+\end{itemize}
+\end{frame}
 
 
 \begin{frame}
-  \frametitle{ice sheet flow affects sea level}
+  \frametitle{big picture: ice sheet flow affects sea level}
 
 \small
+if we think of an ice sheet as an input/output device:
 \begin{itemize}
 \item \emph{inputs}: (1) snow adds, (2) sun heats, (3) earth heats
 \item \emph{outputs}: (1) surface meltwater, (2) basal meltwater, (3) ice discharge
@@ -150,30 +291,22 @@
 
 
 \begin{frame}
-  \frametitle{ice sheet flow changes over time}
+  \frametitle{big picture: ice sheet flow changes over time}
 
 \small
 \begin{itemize}
-\item Greenland ice sheet mass is $2.7 \times 10^9$ gigatonnes (Gt) % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
-\item if \emph{all} ice melts then we get 7 m of sea level rise
-\end{itemize}
-
+\item boxes show estimates of mass loss rate from Greenland:
 \begin{center}
-    \includegraphics[width=0.7\textwidth]{greenlandboxes}
+    \includegraphics[width=0.6\textwidth]{greenlandboxes}
 \end{center}
-\end{frame}
 
-
-\begin{frame}
-  \frametitle{ice sheet flow varies in space}
-
-\small
-\begin{itemize}
-\item csurf from PISM
-\item cbase from PISM
-\item FIXME: dh/dt for greenland from some source
+\vspace{-0.21in}
+\item context:
+  \begin{itemize}
+  \item[$\circ$]  Greenland ice sheet mass is $2.7 \times 10^9$ gigatonnes (Gt $\approx \text{km}^3$) % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
+  \item[$\circ$]  if \emph{all} ice melts then we get 7 m of sea level rise
+  \end{itemize}
 \end{itemize}
-
 \end{frame}
 
 
@@ -224,87 +357,7 @@
 \end{frame}
 
 
-\frame{  \frametitle{ Full and simplified ice flow models }
 
-\onslide<+-> 
-
-Ice is considered as a non-Newtonian incompressible fluid. \\
-\hfill $\Rightarrow$ non-linear Stokes equations.
-
-\onslide<+-> 
- 
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline Order & Name & Unknowns  & Equation (+Incompressibility)   \\ 
-\hline $\infty$-th &  Stokes & 
-$\left(
-\begin{array}{c}
-u \\ 
-v \\ 
-w  
-\end{array} \right),p$ &  
-$  \nabla \cdot \left(
-\begin{array}{ccc}
-\tau_{xx} & \tau_{xy} & \tau_{xz} \\ 
-\tau_{yx} & \tau_{yy} & \tau_{yz} \\ 
-\tau_{zx} & \tau_{zy} & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-0 \\ 
-0 \\ 
-\rho g  
-\end{array} \right)$  \\ 
-\hline $1$-th & FOA\footnote{First Order Approximation} & 
-$\left(
-\begin{array}{c}
-u \\ 
-v 
-\end{array} \right) $  & 
-$ \nabla \cdot \left(
-\begin{array}{ccc}
-\tau_{xx} & \tau_{xy} & \tau_{xz} \\ 
-\tau_{yx} & \tau_{yy} & \tau_{yz} \\ 
-0 & 0 & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-0 \\ 
-0 \\ 
-\rho g  
-\end{array} \right)$  \\  
-\hline $0$-th & SSA\footnote{Shallow Shelf Approximation} &
-$ \left(
-\begin{array}{c}
-u \\ 
-v  
-\end{array} \right) $ & 
-$ \nabla \cdot \left(
-\begin{array}{ccc}
-\tau_{xx} & \tau_{xy} & 0 \\ 
-\tau_{yx} & \tau_{yy} & 0 \\ 
-0 & 0 & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-0 \\ 
-0 \\ 
-\rho g  
-\end{array} \right)$ \\ 
-\hline $0$-th & SIA\footnote{Shallow Ice Approximation} & $\emptyset$ &
-$ \nabla \cdot \left(
-\begin{array}{ccc}
-0 & 0 & \tau_{xz} \\ 
-0 & 0 & \tau_{yz} \\ 
-0 & 0 & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-\rho g \frac{\partial s}{\partial x}\\ 
-\rho g \frac{\partial s}{\partial y} \\ 
-\rho g  
-\end{array} \right)$ \\ 
-\hline 
-\end{tabular}  
-\end{center}
-  
-}
   
 
 \frame{  \frametitle{ The Shallow Ice Approximation / Mass conservation }
@@ -529,6 +582,85 @@ $$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
 
 
 \section[polythermal ice]{awaiting a weak formulation: polythermal ice}
+
+
+\section*{Extra slides}
+
+\begin{frame}
+  \frametitle{full and simplified (shallow) ice flow models }
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline name & unknowns  & equation (+incompressibility)   \\ 
+\hline Stokes & 
+$\left(
+\begin{array}{c}
+u \\ 
+v \\ 
+w  
+\end{array} \right),p$ &  
+$  \nabla \cdot \left(
+\begin{array}{ccc}
+\tau_{xx} & \tau_{xy} & \tau_{xz} \\ 
+\tau_{yx} & \tau_{yy} & \tau_{yz} \\ 
+\tau_{zx} & \tau_{zy} & \tau_{zz}  
+\end{array} \right) = \left(
+\begin{array}{c}
+0 \\ 
+0 \\ 
+\rho g  
+\end{array} \right)$  \\ 
+\hline B.-P.\footnote{\tiny Blatter-Pattyn approximation} & 
+$\left(
+\begin{array}{c}
+u \\ 
+v 
+\end{array} \right) $  & 
+$ \nabla \cdot \left(
+\begin{array}{ccc}
+\tau_{xx} & \tau_{xy} & \tau_{xz} \\ 
+\tau_{yx} & \tau_{yy} & \tau_{yz} \\ 
+0 & 0 & \tau_{zz}  
+\end{array} \right) = \left(
+\begin{array}{c}
+0 \\ 
+0 \\ 
+\rho g  
+\end{array} \right)$  \\  
+\hline SSA\footnote{\tiny shallow shelf approximation} &
+$ \left(
+\begin{array}{c}
+u \\ 
+v  
+\end{array} \right) $ & 
+$ \nabla \cdot \left(
+\begin{array}{ccc}
+\tau_{xx} & \tau_{xy} & 0 \\ 
+\tau_{yx} & \tau_{yy} & 0 \\ 
+0 & 0 & \tau_{zz}  
+\end{array} \right) = \left(
+\begin{array}{c}
+0 \\ 
+0 \\ 
+\rho g  
+\end{array} \right)$ \\ 
+\hline SIA\footnote{\tiny shallow ice approximation} & $\emptyset$ &
+$ \nabla \cdot \left(
+\begin{array}{ccc}
+0 & 0 & \tau_{xz} \\ 
+0 & 0 & \tau_{yz} \\ 
+0 & 0 & \tau_{zz}  
+\end{array} \right) = \left(
+\begin{array}{c}
+\rho g \frac{\partial s}{\partial x}\\ 
+\rho g \frac{\partial s}{\partial y} \\ 
+\rho g  
+\end{array} \right)$ \\ 
+\hline 
+\end{tabular}  
+\end{center}
+  
+\end{frame}
 
 
 \end{document}
