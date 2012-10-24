@@ -255,9 +255,6 @@
 \end{frame}
 
 
-
-
-
 \begin{frame}{summary so far}
 
 \begin{itemize}
@@ -314,7 +311,16 @@ if we think of an ice sheet as an input/output device:
 
 
 \begin{frame}
-  \frametitle{a shallow ice approximation (SIA) analogy}
+  \frametitle{shallow ice approximation (SIA): a definition}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{shallow ice approximation (SIA): an analogy}
 
 \begin{columns}
 \begin{column}{0.35\textwidth}
@@ -322,20 +328,17 @@ if we think of an ice sheet as an input/output device:
 \item ice sheet surface \\ = \alert{membrane}
 \item bedrock = \alert{obstacle}
 \end{itemize}
-
 \vfill
 \begin{center}
 \includegraphics[width=1.1\textwidth]{classicalobs}
 \end{center}
 \end{column}
-
 \begin{column}{0.65\textwidth}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{polaris} \\
 \includegraphics[width=\textwidth]{capnonflatobs}
 \end{center}
 \end{column}
-
 \end{columns}
 \end{frame}
 
@@ -356,38 +359,20 @@ if we think of an ice sheet as an input/output device:
 \end{itemize}
 \end{frame}
 
-
-
   
-
-\frame{  \frametitle{ The Shallow Ice Approximation / Mass conservation }
- 
-\onslide<+-> 
+\begin{frame}
+  \frametitle{shallow ice approximation: formulas}
  
 \begin{itemize}
-\item Assuming no sliding and isothermal ice,  
-ice velocity ${\bf U}$ is given  by: 
-$$ {\bf U}(\bx,z)  =  - (2A/p) (\rho_i g)^{p-1}  \left[ (s-b)^p - (s - z)^p  \right] 
-|\nabla s |^{p-2} \nabla s.$$ 
+\item assuming no sliding and isothermal ice, horizontal ice velocity ${\bf U}$ is given by: 
+  $${\bf U}(\bx,z)  =  - (2A/p) (\rho_i g)^{p-1}  \left[ (s-b)^p - (s - z)^p  \right] 
+|\nabla s |^{p-2} \nabla s$$
 
-\onslide<+->
+\item mass conservation (in steady state): 
+  $$\Div \left(  \int_b^s {\bf U} dz \right)  =  a$$
 
-\item Mass conservation (in a steady state) writes: 
-$\displaystyle \Div \left(  \int_b^s {\bf U} dz \right)  =  a. $
-
-\end{itemize}  
-  
-\begin{center}
-%\includegraphics[height=4cm]{fig/MC.pdf}
-\begin{picture}(0,0)(0,0)
-\put(-75,40){$ {\bf U} $} 
-\put(-90,110){Mass balance $a$} 
-\put(-105,85){$s$}  
-\put(-110,15){$b$}  
-\end{picture}    
-\end{center}
- 
-}
+\end{itemize}
+\end{frame}
 
 
 \frame{  \frametitle{ Change of variable }
@@ -570,10 +555,31 @@ $$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
 
 \section[ice streams]{a model for ice streaming}
 
+
+\begin{frame}
+  \frametitle{shallow shelf approximation (SSA): a definition}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{shallow shelf approximation (SIA): an analogy}
+
+\begin{itemize}
+\item FIXME: schoof's sliders picture
+\end{itemize}
+\end{frame}
+
+
 \section[marine ice sheets]{a model for marine ice sheet evolution}
 
 \begin{frame}
-  \frametitle{FIXME Polynomial bedrock (Adaptive grid) }
+  \frametitle{moving grounding line}
+
+FIXME: model is SIA+SSA with adaptive grid
 
 \begin{center}
 \PDFAnimation{exp3a}
