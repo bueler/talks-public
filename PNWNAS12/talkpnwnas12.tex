@@ -119,7 +119,7 @@
 {
   \begin{frame}<beamer>
     \frametitle{Outline}
-    \tableofcontents[currentsection]
+    \tableofcontents[currentsection,hideallsubsections]
   \end{frame}
 }
 %\end{comment}
@@ -136,20 +136,39 @@
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{weak, shallow, and fairly new}
+
+\begin{itemize}
+\small
+\item C.~Schoof (\textbf{2006}) \emph{A variational approach to ice stream flow}, J.~Fluid Mech.~556, 227--251
+\medskip
+\item E.~Bueler, J.~Brown (\textbf{2009}) \emph{Shallow shelf approximation as a “sliding law” in a thermodynamically coupled ice sheet model}, J.~Geophys.~Res.~114, F03008
+\medskip
+\item \alert<2>{G.~Jouvet}, E.~Bueler (\textbf{2012}) \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math.~72 (4), 1292--1314
+\medskip
+\item \alert<2>{G.~Jouvet}, E.~Bueler, C.~Gr\"aser, R.~Kornhuber (\textbf{to appear})  \emph{A nonsmooth Newton multigrid method for a hybrid, shallow model of marine ice sheets}, Proc.~8th ICSCA, AMS Cont.~Math.
+\end{itemize}
+
+\small
+\onslide<2>{\alert{G.~Jouvet} = Guillaume Jouvet, Free University of Berlin}
+\end{frame}
+
+
 % NO OUTLINE BECAUSE ONE APPEARS AT START OF EACH SECTION:
-\begin{comment}
+%\begin{comment}
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents[hideallsubsections]
   % You might wish to add the option [pausesections]
 \end{frame}
-\end{comment}
+%\end{comment}
 
 
 \section[intro]{ice sheet flow: an introduction for non-glaciologists}
 
 
-\begin{frame}{ice in glaciers is a \emph{viscous fluid}}
+\begin{frame}{ice in glaciers is a viscous fluid}
 \begin{columns}
 \begin{column}{0.65\textwidth}
 \includegraphics[width=1.0\textwidth]{polaris}
@@ -161,17 +180,17 @@
 
 \bigskip\bigskip
 \begin{itemize}
-\item \dots at least: glaciers are viscous at the big scale
-\item \emph{definition}: ice sheets are big, shallow glaciers
+\item \dots at least: glaciers are viscous flows at the big scale
+\item \emph{usage}: ``ice sheets'' are big, shallow glaciers
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{ice in glaciers is a \emph{viscous fluid}}
+\begin{frame}{ice in glaciers is a viscous fluid}
 
 \begin{itemize}
-\item primary unknowns: velocity field $\mathbf{u}(\bx,t)$ and pressure $p(\bx,t)$
-\item other notation: $\rho$ is density, $\mathbf{g}$ is gravity, $\nu$ is viscosity
+\item primary variables: velocity $\mathbf{u}(\bx,t)$ and pressure $p(\bx,t)$
+\item also: $\rho$ is density, $\mathbf{g}$ is gravity, $\nu$ is viscosity
 \item if the glacier fluid were ``typical'' like liquid water we would model with Navier-Stokes equations:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
@@ -192,15 +211,20 @@
 \begin{frame}{ice is a slow, shear-thinning viscous fluid}
 
 \begin{itemize}
-\item our glacier fluid is:
-\smallskip
+\item our glacier fluid is
+  \begin{enumerate}
+  \item ``slow'':
+    $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
+  \item non-Newtonian (shear-thinning):
+    $$\text{viscosity $\nu$ is not constant}$$
+  \end{enumerate}
+\end{itemize}
+\end{frame}
 
-  \begin{tabular}{lc}
-  \emph{slow}: & $\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0$ \\
-  \emph{non-Newtonian (shear-thinning)}: & viscosity $\nu$ is not constant
-  \end{tabular}
-\item ``slow'':
-  $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
+
+\begin{frame}{ice is a slow, shear-thinning viscous fluid}
+
+\begin{itemize}
 \item notation: $\tau_{ij}$ is deviatoric stress tensor, $\mathbf{D}u_{ij}$ is strain rate tensor
 \item the standard ice flow model is Glen-law Stokes:
 \begin{align*}
@@ -231,7 +255,7 @@
 \item consider cross section of Greenland ice sheet at $71^\circ$ N
 \small
   \begin{itemize}
-  \item[$\circ$] {\color{dark green}{green}} and {\color{dark blue}{blue}}: standard vertically-exaggerated cross section
+  \item[$\circ$] {\color{dark green}{green}} and {\color{dark blue}{blue}}: usual vertically-exaggerated version
   \end{itemize}
   \begin{center}
     \includegraphics[width=0.5\textwidth]{greentrans}
