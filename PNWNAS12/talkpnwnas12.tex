@@ -3,9 +3,14 @@
 
 \mode<presentation>
 {
-  \usetheme{CambridgeUS}
+  %\usetheme{CambridgeUS}
+  %\usetheme{Frankfurt}
+  \usetheme{Singapore}
+  %\usecolortheme{crane}
   \usefonttheme{professionalfonts}
-  \usefonttheme[onlymath]{serif}
+  %\usefonttheme[onlymath]{serif}
+  
+  \setbeamertemplate{blocks}[rounded][shadow=true]
 }
 
 \usepackage{pgfpages}
@@ -129,6 +134,7 @@
   \tiny supported by NASA grant NNX09AJ38C
   \end{center}
 \end{frame}
+
 
 % NO OUTLINE BECAUSE ONE APPEARS AT START OF EACH SECTION:
 \begin{comment}
@@ -294,28 +300,115 @@ if we think of an ice sheet as an input/output device:
 \begin{itemize}
 \item boxes show estimates of mass loss rate from Greenland:
 \begin{center}
-    \includegraphics[width=0.6\textwidth]{greenlandboxes}
+    \includegraphics[width=0.55\textwidth]{greenlandboxes}
 \end{center}
 
 \vspace{-0.21in}
 \item context:
   \begin{itemize}
   \item[$\circ$]  Greenland ice sheet mass is $2.7 \times 10^9$ gigatonnes (Gt $\approx \text{km}^3$) % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
-  \item[$\circ$]  if \emph{all} ice melts then we get 7 m of sea level rise
+  \item[$\circ$]  if \emph{all} Greenland ice melts then we get 7 m of sea level rise
+  \item[$\circ$]  if \emph{all} Antarctic ice melts then we get about 60 m of sea level rise
   \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\section[shallow ice approximation]{the shallow ice sheet approximation}
+\section[shallow ice approximation]{shallow ice approximation for grounded ice sheets}
 
 
 \begin{frame}
-  \frametitle{shallow ice approximation (SIA): a definition}
+  \frametitle{the main variables}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{groundedscheme}
+\end{center}
 
 \begin{itemize}
-\item FIXME
+\item $b=b(\bx)$ the bedrock elevation
+\item $s=s(\bx,t)$ the top surface elevation
+\item $h=h(\bx,t)$ the ice thickness
+\item ${\bf U}={\bf U}(\bx,z)$ the horizontal velocity field
+\item $a=a(\bx,z)$ the yearly-average mass balance
 \end{itemize}
+
+\begin{alertblock}{key idea: \alert{ice surface is always above the bedrock}}
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{shallow ice approximation (SIA)}
+
+\begin{itemize}
+\item SIA = lubrication approximation of Stokes flow problem
+\item applies when zero or minimal sliding
+\item derive SIA equations by scaling Stokes model with small parameter $\eps = [h] / [x]$ where $[h]$ is a typical thickness scale and $[x]$ is a typical width scale
+\end{itemize}
+\end{frame}
+
+  
+\begin{frame}
+  \frametitle{shallow ice approximation: formulas}
+ 
+\begin{itemize}
+\item let $p=n+1>2$
+\item assuming no sliding and isothermal ice, horizontal ice velocity ${\bf U}$ is given by: 
+  $${\bf U}(\bx,z)  =  - (2A/p) (\rho_i g)^{p-1}  \left[ (s-b)^p - (s - z)^p  \right] 
+|\nabla s |^{p-2} \nabla s$$
+\item mass conservation (in steady state): 
+  $$\Div \left(  \int_b^s {\bf U} dz \right)  =  a$$
+\item shallow ice approximation + (steady) mass conservation:
+  $$- \Gamma  \Div \left( (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a(s)$$
+  \begin{itemize}
+  \vspace{-0.2in}
+  \item[$\circ$] which is the major SIA equation \dots a PDE?
+  \item[$\circ$] generalizes $p$-Laplace equation $\Div \left( | \nabla u |^{p-2} \nabla u  \right) =  0$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{a change of variable}
+ 
+\begin{itemize}
+\item using the change of variable  $u=(s-b)^{ \frac{2p}{p-1}}$, we obtain a revised $p$-Laplace equation
+\begin{equation*}
+ -  \Div \left( \mu  | \nabla u - \Phi(u) |^{p-2}
+  ( \nabla u - \Phi(u) )  \right)  = \alpha(u)
+\end{equation*}
+where
+  \begin{itemize}
+  \item[$\circ$]  $\Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b(\bx)$ is a transformed bedrock topography which ``tilts'' the $p$
+  \item[$\circ$]  $\alpha(u) = a(\bx,u^{\frac{p-1}{2p}} )$ is transformed mass balance (source term)
+  \end{itemize}
+and $\mu>0$ is constant (in the isothermal case)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ variational inequality } 
+
+\begin{itemize}
+\item $u=(s-b)^{ \frac{2p}{p-1}}$ is a power of the \emph{thickness} $h=s-b$
+\item thickness is nonnegative!
+\item the change $s \to u$ transforms the constraint $s \ge b$ into $u \ge 0$
+\item previous PDE applies only when $u>0$
+\item to get a weak formulation we integrate-by-parts as usual
+\end{itemize}
+
+\begin{block}{Definition} 
+A function $u \in \Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$ 
+solves the (transformed) steady shallow ice sheet problem if
+\begin{align*}
+\int_{\Omega}    \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
+( \nabla u - \Phi(u) )    \right)  \cdot \nabla ( v - u )  
+\ge \int_{\Omega} \alpha(u) (  v -  u ) 
+\end{align*}
+for all $v \in \Kcal$.
+\end{block}
 \end{frame}
 
 
@@ -341,98 +434,6 @@ if we think of an ice sheet as an input/output device:
 \end{column}
 \end{columns}
 \end{frame}
-
-
-\begin{frame}
-  \frametitle{physical variables}
-
-\begin{center}
-\includegraphics[width=0.7\textwidth]{groundedscheme}
-\end{center}
-
-\begin{itemize}
-\item $b=b(\bx)$ the bedrock
-\item $s=s(\bx,t)$ the top surface elevation
-\item $h=h(\bx,t)$ the ice thickness
-\item ${\bf U}={\bf U}(\bx,z)$ the horizontal velocity field
-\item $a=a(\bx,z)$ the yearly-average mass balance
-\end{itemize}
-\end{frame}
-
-  
-\begin{frame}
-  \frametitle{shallow ice approximation: formulas}
- 
-\begin{itemize}
-\item assuming no sliding and isothermal ice, horizontal ice velocity ${\bf U}$ is given by: 
-  $${\bf U}(\bx,z)  =  - (2A/p) (\rho_i g)^{p-1}  \left[ (s-b)^p - (s - z)^p  \right] 
-|\nabla s |^{p-2} \nabla s$$
-
-\item mass conservation (in steady state): 
-  $$\Div \left(  \int_b^s {\bf U} dz \right)  =  a$$
-
-\end{itemize}
-\end{frame}
-
-
-\frame{  \frametitle{ Change of variable }
- 
-\onslide<+-> 
-
-The Shallow Ice Approximation + Mass conservation:
-
-$$ - \Gamma  \; {\rm div} \left( (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a(s). $$
-  
-\onslide<+->   
-  
-Using the change of variable  $u=(s-b)^{ \frac{2p}{p-1}}$, we obtain:
-
-\begin{equation*}
- -  \Div \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
-  ( \nabla u - \Phi(u) )  \right)  = \alpha(u), 
-\end{equation*}   
-
-\onslide<+-> 
-
-where 
-$$ \Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b(\bx),
- \qquad \alpha(u) = a(\bx,u^{\frac{p-1}{2p}} )
-\qquad {\rm and} \qquad \mu>0. $$
- 
-}
-
-
-\frame{  \frametitle{ Variational inequality } 
-
-\onslide<+-> 
-
-In fact, we have:
- 
-\begin{align*}
- -  \Div \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
-  ( \nabla u - \Phi(u) )  \right) & = \alpha(u), & {\rm if} \; u > 0, \\
-  u & = 0, & {\rm else.}
-\end{align*}  
-
-\onslide<+-> 
-
-The change $u=(s-b)^{ \frac{2p}{p-1}}$ 
-transforms the constrain $s \ge b$ into $u \ge 0$. 
-
-\onslide<+-> 
-    
-\begin{block}{Definition} 
-A function $u \in \Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$ 
-solves the (transformed) steady shallow ice sheet problem if
-\begin{align*}
-\int_{\Omega}    \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
-( \nabla u - \Phi(u) )    \right)  \cdot \nabla ( v - u )  
-\ge \int_{\Omega} \alpha(u) (  v -  u ) 
-\end{align*}
-for all $v \in \Kcal$.
-\end{block}
-
-}
 
 
 \frame{  \frametitle{ Existence and uniqueness of solutions } 
@@ -589,8 +590,29 @@ FIXME: model is SIA+SSA with adaptive grid
 
 \section[polythermal ice]{awaiting a weak formulation: polythermal ice}
 
+\section*{conclusion}
 
-\section*{Extra slides}
+\begin{frame}
+  \frametitle{conclusion: some new thinking which is weak and shallow}
+
+\begin{itemize}
+\item work on steady states (walk before fly)
+\item steady grounded ice sheets now have a well-posed obstacle-like formulation (a $p>2$-Laplace variational inequality for SIA+mass)
+\item sliding ice sheets have a theory in which ice streams ``emerge naturally'' (a $p<2$-Laplace variational inequality for SSA)
+\item marine ice sheet paradigm from time-splitting:
+  \begin{itemize}
+  \item[$\circ$]  solve SSA problem
+  \item[$\circ$]  advection with SSA velocity
+  \item[$\circ$]  solve SIA+mass obstacle problem
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%
+
+
+\section*{extra slides}
 
 \begin{frame}
   \frametitle{full and simplified (shallow) ice flow models }
