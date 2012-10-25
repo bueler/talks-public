@@ -15,7 +15,7 @@
 
 \usepackage{pgfpages}
 
-\usepackage{alltt,verbatim,amsmath,times}
+\usepackage{alltt,verbatim,amsmath,times,empheq}
 \usepackage{bm}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -387,7 +387,6 @@ if we think of an ice sheet as an input/output device:
   \begin{itemize}
   \vspace{-0.2in}
   \item[$\circ$] which is the major SIA equation \dots a PDE?
-  \item[$\circ$] generalizes $p$-Laplace equation $\Div \left( | \nabla u |^{p-2} \nabla u  \right) =  0$
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -397,17 +396,20 @@ if we think of an ice sheet as an input/output device:
   \frametitle{a change of variable}
  
 \begin{itemize}
-\item using the change of variable  $u=(s-b)^{ \frac{2p}{p-1}}$, we obtain a revised $p$-Laplace equation
-\begin{equation*}
+\item using the change of variable  $u=(s-b)^{ \frac{2p}{p-1}}$, we obtain
+\begin{empheq}[box=\fbox]{equation*}
  -  \Div \left( \mu  | \nabla u - \Phi(u) |^{p-2}
   ( \nabla u - \Phi(u) )  \right)  = \alpha(u)
-\end{equation*}
+\end{empheq}
+
 where
   \begin{itemize}
   \item[$\circ$]  $\Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b(\bx)$ is a transformed bedrock topography which ``tilts'' the $p$
   \item[$\circ$]  $\alpha(u) = a(\bx,u^{\frac{p-1}{2p}} )$ is transformed mass balance (source term)
   \end{itemize}
 and $\mu>0$ is constant (in the isothermal case)
+\item boxed is a generalized $p$-Laplace equation
+\item three fundamental nonlinearities: $p>2$, $\Phi(u)$, $\alpha(u)$
 \end{itemize}
 \end{frame}
 
@@ -416,22 +418,21 @@ and $\mu>0$ is constant (in the isothermal case)
   \frametitle{ variational inequality } 
 
 \begin{itemize}
-\item $u=(s-b)^{ \frac{2p}{p-1}}$ is a power of the \emph{thickness} $h=s-b$
+\item previous PDE applies only when $s>b$
+\item transform: $u=h^{ \frac{2p}{p-1}}$, a power of the \emph{thickness} $h=s-b$
 \item thickness is nonnegative!
 \item the change $s \to u$ transforms the constraint $s \ge b$ into $u \ge 0$
-\item previous PDE applies only when $u>0$
-\item to get a weak formulation we integrate-by-parts as usual
+\item define constraint set $\Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$
 \end{itemize}
 
-\begin{block}{Definition} 
-A function $u \in \Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$ 
-solves the (transformed) steady shallow ice sheet problem if
+\begin{block}{definition} 
+$u \in \Kcal$ solves the \emph{steady shallow ice sheet problem} if
 \begin{align*}
 \int_{\Omega}    \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
 ( \nabla u - \Phi(u) )    \right)  \cdot \nabla ( v - u )  
 \ge \int_{\Omega} \alpha(u) (  v -  u ) 
 \end{align*}
-for all $v \in \Kcal$.
+for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
 \end{block}
 \end{frame}
 
@@ -460,121 +461,79 @@ for all $v \in \Kcal$.
 \end{frame}
 
 
-\frame{  \frametitle{ Existence and uniqueness of solutions } 
+\begin{frame}
+  \frametitle{flat bed case: existence and uniqueness of solutions} 
 
- \onslide<+-> 
-
-\begin{block}{Convex minimization}
-If $a$ is independent of $u$, the variational inequality rewrites:
+\begin{block}{easy theorem}
+if $\alpha,\Phi$ are independent of $u$ then the variational inequality is the minimization of
 \begin{equation*}
-J(u) = \min_{v \in \Kcal} \left\{  J(v):= \frac{\mu}{p} \int_{\Omega} 
- |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v \right\} 
+J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v
 \end{equation*}
-which admits a unique solution.
+over $\mathcal{K}$, which admits a unique solution \hfill \scriptsize (Jouvet-Bueler 2012)
 \end{block}
 
- \onslide<+->
-
-\hfill $ \Rightarrow $ Existence and uniqueness only if the bedrock is flat ($\Phi = 0$). \\
-
- \onslide<+->
+\noindent this gives ice sheet existence and uniqueness only if the bedrock is flat ($\Phi = 0$) and the mass balance is elevation-independent
+\end{frame}
  
-\begin{block}{Monotone operator}
-If $a$ is not increasing with respect to $u$, 
-we still have a unique solution by monotonicity of 
-\begin{center}
-$(Av)(w)= \mu \int_{\Omega} | \nabla v - \Phi|^{p-2} ( \nabla v  - \Phi )
-\cdot \nabla w - \int_{\Omega}  \alpha(v) w .$
-\end{center}
-\end{block}
-}
- 
- 
-\frame{  \frametitle{ Existence in the general case } 
 
- \onslide<+->
+\begin{frame} 
+  \frametitle{ existence in the general case } 
 
-Define the map $\mathcal{A}:C(\overline{\Omega}) \rightarrow C(\overline{\Omega})$,
-which takes $w$ to the unique $u$ solving, for all $v \in \mathcal{K}$:
+\begin{itemize}
+\item if $p>2$ then $W^{1,p}_0 (\Omega) \subset C(\overline{\Omega})$
+\item define map $\mathcal{A}:C(\overline{\Omega}) \rightarrow C(\overline{\Omega})$,
+which takes $w$ to the unique $u$ solving (over $v\in \mathcal{K}$)
 \begin{align*}
 \int_{\Omega}   \mu  \left( | \nabla u - \Phi(w) |^{p-2} 
 ( \nabla u - \Phi(w) )    \right)  \cdot \nabla ( v - u )  
-\ge \int_{\Omega} \alpha(w) (  v -  u ),
-\end{align*} 
-
-\begin{block}{Result}
-If $p>2$, the map $\mathcal{A}$ admits at least one fixed point.
-\end{block}
-
-  \onslide<+->
-  
-\begin{block}{Idea of the proof}
-\begin{itemize}
-\item $\mathcal{A}$ is continuous and compact.
-\item $\{ w \in C(\overline{\Omega}), \; \exists \lambda \in [0,1] , 
-\, \quad w = \lambda \mathcal{A}(w)   \}$ is bounded. 
-\item Conclude with Schaefer's fixed point theorem.
-\end{itemize}
-\end{block}
- 
-} 
-
-
-\frame{  \frametitle{ In the most general case  } 
-
-\onslide<+->
-If we include the temperature dependence and the basal sliding, 
-ice velocity ${\bf U}$ is given by:
-
-\begin{equation*}
-{\bf U}(\bx,z)  = \underbrace{ -2 (\rho_i g)^{p-1} 
-\left[ \int_b^z A(\bx,s)(s-t)^{p-1} dt \right] 
-|\nabla s |^{p-2} \nabla s}_{\text{Ice shearing}} +   
-\underbrace{{\bf U}_b}_{\text{Basal sliding}}, 
-\end{equation*}
-
-\onslide<+->
-
-and the mass conservation equation rewrites: 
-
-\begin{equation*}
- -  \Div \left( \mu(u) | \nabla u - \Phi(u) |^{p-2} 
-  ( \nabla u - \Phi(u) ) - \Psi (u)  \right)  = \alpha(u), 
-\end{equation*}   
-where 
-\begin{align*}
- \mu(u)  = C  \int_0^1 A(\bx,  b + t u^{\frac{p-1}{2p}}) ( 1 - t )^p dt, 
- \quad {\rm and} \quad 
- \Psi(u)  = u^{\frac{p-1}{2p}} \, {\bf U}_b(\bx). 
+\ge \int_{\Omega} \alpha(w) (  v -  u )
 \end{align*}
+\end{itemize}
 
-\onslide<+->
+\begin{block}{result}
+the map $\mathcal{A}$ admits at least one fixed point \hfill \scriptsize (Jouvet-Bueler 2012)
+\end{block}
 
-The variational inequality rewrites 
-\begin{align*}
-\int_{\Omega}    \left( \mu(u)  | \nabla u - \Phi(u) |^{p-2} 
-( \nabla u - \Phi(u) )  - \Psi (u )  \right)  \cdot \nabla ( v - u )
-\ge \int_{\Omega} \alpha(u) (  v -  u ). 
-\end{align*} 
+\vfill
+\scriptsize
+sketch proof:
+\begin{itemize}
+\item $\mathcal{A}$ is continuous and compact
+\item set $\{ w \in C(\overline{\Omega}), \exists \lambda \in [0,1]\, \text{so that} \,w = \lambda \mathcal{A}(w)\}$ is bounded 
+\item Schaefer's fixed point theorem
+\end{itemize}
+\end{frame}
 
-\onslide<+->
 
-Existence can be extended but uniqueness issues remain open.
-}
+\begin{frame}
+  \frametitle{thus: fixed-point iteration on variational inequality} 
+
+\begin{itemize}
+\item given mass-balance $a$ and bedrock topography $b$
+\item to compute: steady state ice sheet shape
+\item set $u_0 = 0$
+\item do fixed point iterations ($i=0,1,2,3$):
+$$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
+( \nabla u_{i+1} - \Phi(u_i) )    \right)  \cdot \nabla ( v - u_{i+1} )
+\ge \int_{\Omega} \alpha (  v -  u_{i+1} ).$$
+\end{itemize}
+\end{frame}
 
 
 \begin{frame}
   \frametitle{steady ice sheet over Greenland bedrock }
 
-\small
-Given: $a$ and $b$.  Set $u_0 = 0$.  Do fixed point iterations ($i=0,1,2,3$):
-$$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
-( \nabla u_{i+1} - \Phi(u_i) )    \right)  \cdot \nabla ( v - u_{i+1} )
-\ge \int_{\Omega} \alpha (  v -  u_{i+1} ).$$
-
+first three iterations from zero ice:
 \begin{center}
 \includegraphics[width=0.9\textwidth]{greenland-result.jpg}
 \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{qualitative variational inequality} 
+
+FIXME: blistering property
 \end{frame}
 
 
@@ -601,6 +560,68 @@ $$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
 
 \section[marine ice sheets]{a model for marine ice sheet evolution}
 
+\newcommand{\Tnorm}[1]{\left|\!\left|\!\left|#1\right|\!\right|\!\right|}
+\newcommand{\rhow}{\rho_{\text{w}}}
+\newcommand{\Wq}{W^{1,q}(\Omega)}
+\newcommand{\half}{\frac12}
+
+\begin{frame}
+  \frametitle{setting marine ice sheet evolution}
+
+\begin{itemize}
+\item $x$ is a point in the map-plane (i.e.~$(x,y)$)
+\item $t_0,t_1,\dots,t_K$ is time-discretization with spacing $\tau_k = t_{k+1}-t_k$
+\item $p = n+1$, $q = 1 + \frac{1}{n}$
+\item $G(h) = \left\{x \in \Omega \Big| b(x) + \frac{\rho}{\rhow} h(x) > 0\right\}$ is the \emph{grounded set} for thickness $h$
+\item $\tau_c(x)$ is the yield stress distribution
+\item $\Tnorm{\mathbf{V}}^2 = \frac{1}{2} \sum_{i,j=1}^2 (D_{ij} \mathbf{V})^2 + \frac{1}{2} \sum_{i=1}^2 (D_{ii} \mathbf{V})^2$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{an algorithm for marine ice sheet evolution}
+
+
+\begin{enumerate}
+\small
+\item find velocity $\mathbf{U}_k \in \Wq$ that minimizes
+\begin{align*}
+\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \frac{2 A^{1-q}}{q} \int_\Omega h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} \\
+  &\qquad\qquad + \int_{G(h_k)} \tau_c |\mathbf{V}| + \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
+\end{align*}
+\item find $h_{k+\frac12}$, the solution at $t_{k+1}$ of the advection problem:
+$$\begin{cases}
+  \frac{\partial h}{\partial t} + \Div \left(\mathbf{U}_k\, h\right) = 0, & t_k \le t \le t_{k+1}, \\
+  h(t_k) = h_k. &
+\end{cases}$$
+\item find thickness $h_{k+1} = u^{\frac{p-1}{2p}}$, i.e.~find $u\in\mathcal{K}$, that minimizes  % $u=h^{ \frac{2p}{p-1}}$
+\begin{align*}
+\mathcal{J}_{\text{SIA}}(v) &= \frac{1}{2 \tau_k} \int_\Omega v^2 + FIXME
+\end{align*}
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{an algorithm for marine ice sheet evolution}
+
+some concerns:
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{FEM solution of var ineq}
+
+\begin{itemize}
+\item FIXME: TNNMG
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}
   \frametitle{moving grounding line}
 
@@ -612,7 +633,14 @@ FIXME: model is SIA+SSA with adaptive grid
 \end{frame}
 
 
-\section[polythermal ice]{awaiting a weak formulation: polythermal ice}
+\begin{frame}
+  \frametitle{mundane}
+
+\begin{itemize}
+\item FIXME: PISM results for Greenland and Antarctica
+\end{itemize}
+\end{frame}
+
 
 \section*{conclusion}
 
@@ -635,8 +663,7 @@ FIXME: model is SIA+SSA with adaptive grid
 
 %%%%%%%%%%%%%%
 
-
-\section*{extra slides}
+% EXTRA SLIDES
 
 \begin{frame}
   \frametitle{full and simplified (shallow) ice flow models }
