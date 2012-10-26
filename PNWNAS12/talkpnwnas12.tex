@@ -661,9 +661,32 @@ sketch of proof:
 
 
 \begin{frame}
-  \frametitle{qualitative variational inequality} 
+  \frametitle{quality of this variational inequality} 
 
-FIXME: blistering property
+\begin{itemize}
+\item every glaciologist believes this about steady climates:
+	$$\text{if } a > 0 \text{ on a sub-domain } R \text{ then } s > b \text{ on } R$$
+\item that is:
+\begin{center}
+ if it snows more than it melts then you get a glacier there
+\end{center}
+\end{itemize}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\small
+\item uniformly-elliptic variational inequalities, e.g.~the classical obstacle problem,
+\begin{align*}
+\int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
+\end{align*}
+for all $v\ge \psi$, do not have the analogous property
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[width=\textwidth]{classicalobs}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -671,29 +694,63 @@ FIXME: blistering property
 
 
 \begin{frame}
-  \frametitle{shallow shelf approximation (SSA): a definition}
+  \frametitle{shallow shelf approximation (SSA): a ``definition''}
+
+\begin{columns}
+\begin{column}{0.52\textwidth}
+\begin{itemize}
+\small
+\item SSA = ``membrane'' or ``plug'' flow approximation of Stokes
+\item a good approximation when there is low basal resistance and minimal basal topography
+\item a very good approximation for ice shelves (next slide)
+\item derived by scaling with $\eps = [h]/[x]$ \emph{and} requirement that basal resistance is low (see Schoof (2006))
+\end{itemize}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\includegraphics[width=1.1\textwidth]{siassacartoon-lambert}
+
+\begin{center}
+\vspace{-0.18in}
+\tiny [Lambert glacier and Amery ice shelf, Antarctic]
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{SSA works well for ice shelves}
 
 \begin{itemize}
-\item FIXME
+\item Ross ice shelf (Antarctica) below:
+  \begin{itemize}
+  \item[$\circ$] observed velocity (left)
+  \item[$\circ$] velocity computed by SSA model in PISM  (right)
+  \end{itemize}
 \end{itemize}
+
+\begin{center}
+  \includegraphics[width=0.45\textwidth]{rossquiver} \quad  \includegraphics[width=0.45\textwidth]{rossscatter}
+\end{center}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{shallow shelf approximation (SIA): an analogy}
+  \frametitle{SSA for ice streams: an analogy}
 
 \begin{columns}
-\begin{column}{0.45\textwidth}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
-\item FIXME: say somethin
+\item ice shelves have zero (essentially) resistance at base
+\item ice streams emerge in grounded ice sheets where resistance at base is sufficiently low
+\item C.~Schoof's analogy for how FIXME
 \end{itemize}
 \end{column}
-\begin{column}{0.55\textwidth}
-\begin{center}
-\includegraphics[width=0.75\textwidth]{schoof-sliders}
-\end{center}
-
-\includegraphics[width=1.1\textwidth]{schoof-planform}
+\begin{column}{0.4\textwidth}
+%\begin{center}
+\includegraphics[width=\textwidth]{schoof-sliders}
+%\end{center}
+%\includegraphics[width=1.1\textwidth]{schoof-planform}
 \end{column}
 \end{columns}
 \end{frame}
