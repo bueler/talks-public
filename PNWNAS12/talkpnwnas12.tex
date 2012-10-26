@@ -81,6 +81,11 @@
 \newcommand{\ppxx}[1]{\frac{\partial^2 #1}{\partial x^2}}
 \newcommand{\ppzz}[1]{\frac{\partial^2 #1}{\partial z^2}}
 
+\newcommand{\Tnorm}[1]{\left|\!\left|\!\left|#1\right|\!\right|\!\right|}
+\newcommand{\rhow}{\rho_{\text{w}}}
+\newcommand{\Wq}{W^{1,q}(\Omega)}
+\newcommand{\half}{\frac12}
+
 %\setbeamercolor{redtext}{fg=red!80!black}
 \setbeamercolor{redtext}{fg=red!94!black}
 %\setbeamercolor{greentext}{fg=green!80!black}
@@ -742,26 +747,55 @@ for all $v\ge \psi$, do not have the analogous property
 \begin{column}{0.6\textwidth}
 \begin{itemize}
 \item ice shelves have zero (essentially) resistance at base
-\item ice streams emerge in grounded ice sheets where resistance at base is sufficiently low
-\item C.~Schoof's analogy for how FIXME
+\item ice streams emerge in grounded ice sheets where resistance at base is sufficiently low (\emph{top})
+\item basal resistance:
+  \begin{itemize}
+  \item[$\circ$] ``plastic'' or Coulomb friction 
+  \item[$\circ$] distribution of yield stress $\tau_c$
+  \end{itemize}
+\item ice membrane connects to upstream and/or lateral high friction with viscous stresses (Schoof's slider analogy, \emph{bottom})
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
-%\begin{center}
-\includegraphics[width=\textwidth]{schoof-sliders}
-%\end{center}
-%\includegraphics[width=1.1\textwidth]{schoof-planform}
+\includegraphics[width=\textwidth]{siple}
+
+\vspace{0.3in}
+
+\includegraphics[width=1.1\textwidth]{schoof-sliders}
+
+%\includegraphics[width=\textwidth]{schoof-planform}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\section[marine ice sheets]{a model for marine ice sheet evolution}
+\begin{frame}
+  \frametitle{SSA variational inequality}
 
-\newcommand{\Tnorm}[1]{\left|\!\left|\!\left|#1\right|\!\right|\!\right|}
-\newcommand{\rhow}{\rho_{\text{w}}}
-\newcommand{\Wq}{W^{1,q}(\Omega)}
-\newcommand{\half}{\frac12}
+\begin{itemize}
+\item to solve for horizontal velocity $\mathbf{U}$ in ice stream
+\item let $q = 1+\frac{1}{n}$
+\item $G(h) = \left\{x \in \Omega \Big| b(x) + \frac{\rho}{\rhow} h(x) > 0\right\}$ is the \emph{grounded set} for thickness $h$
+\item $\tau_c(x)$ is the yield stress distribution
+\item $\Tnorm{\mathbf{V}}^2 = \frac{1}{2} \sum_{i,j=1}^2 (D_{ij} \mathbf{V})^2 + \frac{1}{2} \sum_{i=1}^2 (D_{ii} \mathbf{V})^2$
+\item FIXME
+\begin{align*}
+\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \frac{2 A^{1-q}}{q} \int_\Omega h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} \\
+  &\qquad\qquad + \int_{G(h_k)} \tau_c |\mathbf{V}| + \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{SIA+SSA hybrid velocity model}
+
+\begin{itemize}
+\item FIXME:
+\end{itemize}
+\end{frame}
+
+\section[marine ice sheets]{a model for marine ice sheet evolution}
 
 \begin{frame}
   \frametitle{setting marine ice sheet evolution}
@@ -769,10 +803,8 @@ for all $v\ge \psi$, do not have the analogous property
 \begin{itemize}
 \item $x$ is a point in the map-plane (i.e.~$(x,y)$)
 \item $t_0,t_1,\dots,t_K$ is time-discretization with spacing $\tau_k = t_{k+1}-t_k$
-\item $p = n+1$, $q = 1 + \frac{1}{n}$
-\item $G(h) = \left\{x \in \Omega \Big| b(x) + \frac{\rho}{\rhow} h(x) > 0\right\}$ is the \emph{grounded set} for thickness $h$
-\item $\tau_c(x)$ is the yield stress distribution
-\item $\Tnorm{\mathbf{V}}^2 = \frac{1}{2} \sum_{i,j=1}^2 (D_{ij} \mathbf{V})^2 + \frac{1}{2} \sum_{i=1}^2 (D_{ii} \mathbf{V})^2$
+\item recall $p = n+1$ and $q = 1 + \frac{1}{n}$ and $n\approx 3$
+
 \end{itemize}
 \end{frame}
 
