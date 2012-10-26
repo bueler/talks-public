@@ -477,6 +477,7 @@ if we think of an ice sheet as an input/output device:
   \item[$\circ$] this is the major SIA equation (\dots a PDE?)
   \item[$\circ$] computes ice surface $s$
   \item[$\circ$] constant $\Gamma > 0$ combines $\rho,g,A,p$
+  \item[$\circ$] $p$-Laplacish \dots but coefficient $(s-b)^{p+1} \to 0$ at margins
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -527,14 +528,14 @@ where
   \item[$\circ$]  $\Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b$ is transformed bedrock topography
   \item[$\circ$]  $\alpha(u) = a(x,y,z\!=\!u^{\frac{p-1}{2p}} )$ is transformed mass balance
   \end{itemize}
-\item a generalized $p$-Laplace equation (``tilted'' by $\Phi$?)
-\item three fundamental nonlinearities: $p>2$, $\Phi(u)$, $\alpha(u)$
+\item a generalized $p$-Laplace equation with added nonlinearities
+\item change of vars means uniform $p$-ellipticity recovered (i.e.~$\mu>0$) but at cost of ``tilt'' ($\nabla u - \Phi(u)$)
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{ variational inequality } 
+  \frametitle{SIA: weak formulation = variational inequality} 
 
 \begin{itemize}
 \item issue: SIA equation applies only on domain where $s>b \iff h > 0$
@@ -583,7 +584,7 @@ for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
   \frametitle{existence and uniqueness for a restricted problem} 
 
 \begin{block}{(easy) theorem}
-if $\alpha,\Phi$ are independent of $u$ then the variational inequality is equivalent to:
+if $\alpha,\Phi$ were independent of $u$ then the variational inequality is equivalent to:
 
 \begin{equation*}
 u \text{ minimizes} \qquad J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v
@@ -592,12 +593,14 @@ u \text{ minimizes} \qquad J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |
 over $v\in\mathcal{K}$; this admits a unique solution \hfill \scriptsize (Jouvet-Bueler 2012)
 \end{block}
 
+\bigskip
 \begin{itemize}
 \item gives ice sheet existence and uniqueness only if
   \begin{itemize}
   \item[$\circ$]  bedrock is flat ($\Phi = 0$) and
   \item[$\circ$]  mass balance is elevation-independent ($a=a(x,y)$)
   \end{itemize}
+\item but otherwise: $\alpha,\Phi$ are not independent of $u$
 \end{itemize}
 \end{frame}
  
@@ -652,15 +655,15 @@ sketch of proof:
 
 
 \begin{frame}
-  \frametitle{steady ice sheet over Greenland bedrock }
+  \frametitle{example: steady ice sheet on Greenland bedrock}
 
 \begin{itemize}
-\item first three iterations from zero ice:
+\item first iterations from zero ice:
 
 \begin{center}
 \includegraphics[width=0.9\textwidth]{greenland-result.jpg}
 \end{center}
-\item as far as we can tell: this 2012 computation is the first for the steady state of the Greenland ice sheet \emph{without} a time-stepping model
+\item as far as we can tell: this 2011 computation was the first of the steady state of a real ice sheet \emph{without} time-stepping
 \end{itemize}
 \end{frame}
 
@@ -685,7 +688,7 @@ sketch of proof:
 \begin{align*}
 \int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
 \end{align*}
-for all $v\ge \psi$, do not have the analogous property
+for all $v\ge \psi$, do \emph{not} have the analogous property
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
@@ -724,18 +727,19 @@ for all $v\ge \psi$, do not have the analogous property
 \end{frame}
 
 
-\begin{frame}{SSA works well for ice shelves}
+\begin{frame}{SSA works \emph{well} for ice shelves}
 
 \begin{itemize}
-\item Ross ice shelf (Antarctica) below:
+\item Ross ice shelf (Antarctica) velocity below
   \begin{itemize}
-  \item[$\circ$] observed velocity (left)
-  \item[$\circ$] velocity computed by SSA model in PISM  (right)
+  \item[$\circ$] observed versus computed by SSA model in PISM
+  \item[$\circ$] tuned: single, constant $A$
   \end{itemize}
 \end{itemize}
+\vspace{-0.3in}
 
 \begin{center}
-  \includegraphics[width=0.45\textwidth]{rossquiver} \quad  \includegraphics[width=0.45\textwidth]{rossscatter}
+  \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
 \end{center}
 \end{frame}
 
@@ -746,14 +750,16 @@ for all $v\ge \psi$, do not have the analogous property
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item ice shelves have zero (essentially) resistance at base
-\item ice streams emerge in grounded ice sheets where resistance at base is sufficiently low (\emph{top})
-\item basal resistance:
+\item ice shelves have zero basal resistance
+\item ice streams emerge where basal resistance is sufficiently low
+
+(\emph{top}: Siple coast ice streams)
+\item a basal resistance model:
   \begin{itemize}
   \item[$\circ$] ``plastic'' or Coulomb friction 
   \item[$\circ$] distribution of yield stress $\tau_c$
   \end{itemize}
-\item ice membrane connects to upstream and/or lateral high friction with viscous stresses (Schoof's slider analogy, \emph{bottom})
+\item ice membrane connects to upstream and/or lateral high friction with viscous stresses (\emph{bottom}: Schoof's slider analogy)
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
@@ -770,19 +776,26 @@ for all $v\ge \psi$, do not have the analogous property
 
 
 \begin{frame}
-  \frametitle{SSA variational inequality}
+  \frametitle{SSA weak formulation}
 
 \begin{itemize}
-\item to solve for horizontal velocity $\mathbf{U}$ in ice stream
-\item let $q = 1+\frac{1}{n}$
-\item $G(h) = \left\{x \in \Omega \Big| b(x) + \frac{\rho}{\rhow} h(x) > 0\right\}$ is the \emph{grounded set} for thickness $h$
-\item $\tau_c(x)$ is the yield stress distribution
-\item $\Tnorm{\mathbf{V}}^2 = \frac{1}{2} \sum_{i,j=1}^2 (D_{ij} \mathbf{V})^2 + \frac{1}{2} \sum_{i=1}^2 (D_{ii} \mathbf{V})^2$
-\item FIXME
+\item let $q = 1+\frac{1}{n}$ and $B = A^{1-q}$
+\item suppose a basal yield stress distribution $\tau_c(x,y)$, zero on ice shelves
+\item $2\,\Tnorm{\mathbf{V}}^2 := \sum_{i,j} (\mathbf{D}V_{ij})^2 + \sum_{i} (\mathbf{D}V_{ii})^2$
+\item $\mathbf{F}$ is lateral force along calving front
+\end{itemize}
+
+\begin{block}{definition}
+the horizontal velocity $\mathbf{U}\in W^{1,q}(\Omega)$ solves the SSA if it minimizes
+\small
 \begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \frac{2 A^{1-q}}{q} \int_\Omega h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} \\
-  &\qquad\qquad + \int_{G(h_k)} \tau_c |\mathbf{V}| + \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
+\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \rho g h \grad s \cdot \mathbf{V} + \tau_c |\mathbf{V}| + \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
 \end{align*}
+\end{block}
+
+\normalsize
+\begin{itemize}
+\item because $\mathcal{J}_{\text{SSA}}$ is not differentiable (``$\tau_c |\mathbf{V}|$''), minimization is equivalent to variational inequality
 \end{itemize}
 \end{frame}
 
