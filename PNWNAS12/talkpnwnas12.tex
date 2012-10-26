@@ -32,6 +32,8 @@
 
 \PDFAnimLoad[width=\textwidth,loop,interval=40]{exp3a}{exp3a/pic}{310}%
 
+\usepackage{animate}
+
 \definecolor{dark red}{HTML}{E41A1C}
 \definecolor{dark green}{HTML}{4DAF4A}
 \definecolor{dark violet}{HTML}{984EA3}
@@ -407,13 +409,13 @@ if we think of an ice sheet as an input/output device:
 \begin{itemize}
 \small
 \item $b(x,y)=$ bedrock elevation
-\item $s(t,x,y)=$ top surface elevation
-\item $h(t,x,y)=$ ice thickness
-\item ${\bf U}={\bf U}(t,x,y,z)=$ horizontal velocity field
+\item $s(t,x,y)=$ ice surface elevation
+\item $h(t,x,y)=$ ice thickness $ = s-b$
+\item ${\bf U}(t,x,y,z)=$ horizontal velocity field
 \item $a(t,x,y,z)=$ yearly-average mass balance \onslide<2>{\color{dark green} [Ed: explain m.b.]}
 \end{itemize}
 
-\begin{alertblock}<3>{key idea: \alert{ice surface is always above the bedrock}}
+\begin{alertblock}<3>{key idea: ice surface $s$ is always above the bedrock $b$}
 \end{alertblock}
 \end{frame}
 
@@ -422,30 +424,85 @@ if we think of an ice sheet as an input/output device:
   \frametitle{shallow ice approximation (SIA)}
 
 \begin{itemize}
-\item SIA = lubrication approximation of Stokes flow problem
-\item applies when zero or minimal sliding
-\item derive SIA equations by scaling Stokes model with small parameter $\eps = [h] / [x]$ where $[h]$ is a typical thickness scale and $[x]$ is a typical width scale
+\item SIA = lubrication approximation of Stokes model
+\item good approximation when:
+  \begin{itemize}
+  \item[$\circ$] sliding is small or zero
+  \item[$\circ$] bedrock slope is modest
+  \end{itemize}
+\item derive SIA equations by scaling Stokes:
+  \begin{itemize}
+  \item[$\circ$] $[h]$ is a typical thickness scale
+  \item[$\circ$] $[x]$ is a typical width scale
+  \item[$\circ$] small parameter is $\eps = [h] / [x]$
+  \end{itemize}
+\item for this part of the talk: consider only grounded ice sheets
+  \begin{itemize}
+  \item[$\circ$] so $h \to 0$ continuously at margin
+  \item[$\circ$] i.e.~\emph{not} marine ice sheets
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
-  
+
 \begin{frame}
-  \frametitle{shallow ice approximation: formulas}
+  \frametitle{SIA: velocity}
  
 \begin{itemize}
 \item let $p=n+1>2$
-\item assuming no sliding and isothermal ice, horizontal ice velocity ${\bf U}$ is given by: 
-  $${\bf U}(\bx,z)  =  - (2A/p) (\rho_i g)^{p-1}  \left[ (s-b)^p - (s - z)^p  \right] 
+\item assume: no sliding and isothermal
+\item horizontal ice velocity is given by: 
+  $${\bf U}  =  - \frac{2 A}{p} (\rho g)^{p-1} \left[ (s-b)^p - (s - z)^p  \right] 
 |\nabla s |^{p-2} \nabla s$$
-\item mass conservation (in steady state): 
-  $$\Div \left(  \int_b^s {\bf U} dz \right)  =  a$$
+\item no PDE needs to be solved to compute velocity!
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{SIA: steady state}
+
+\begin{itemize}
+\item mass conservation in steady state: 
+  $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
 \item shallow ice approximation + (steady) mass conservation:
-  $$- \Gamma  \Div \left( (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a(s)$$
+  $$- \Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a$$
   \begin{itemize}
   \vspace{-0.2in}
-  \item[$\circ$] which is the major SIA equation \dots a PDE?
+  \item[$\circ$] this is the major SIA equation (\dots a PDE?)
+  \item[$\circ$] computes ice surface $s$
+  \item[$\circ$] constant $\Gamma > 0$ combines $\rho,g,A,p$
   \end{itemize}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{time-dependent SIA}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\small
+\begin{itemize}
+\item instead of formulas, show a similarity solution
+\item at right is the Halfar (1981) solution, an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
+\item compare Barenblatt solution of porous medium equation
+\end{itemize}
+\end{column}
+
+\begin{column}{0.65\textwidth}
+\vspace{-0.25in}
+
+\begin{center}
+\animategraphics[autoplay,loop,height=4.7cm]{4}{../GGseminar12/anim/halfar}{0}{26}
+
+\bigskip
+\tiny
+frames from $t=4$ months to $t = 10^6$ years,
+
+equal spaced in \emph{exponential} time
+\end{center}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -453,19 +510,19 @@ if we think of an ice sheet as an input/output device:
   \frametitle{a change of variable}
  
 \begin{itemize}
-\item using the change of variable  $u=(s-b)^{ \frac{2p}{p-1}}$, we obtain
-\begin{empheq}[box=\fbox]{equation*}
+\item using the change of variable  $u=h^{ \frac{2p}{p-1}}$, the steady SIA equation is:
+\begin{empheq}[]{equation*}
  -  \Div \left( \mu  | \nabla u - \Phi(u) |^{p-2}
   ( \nabla u - \Phi(u) )  \right)  = \alpha(u)
 \end{empheq}
 
 where
   \begin{itemize}
-  \item[$\circ$]  $\Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b(\bx)$ is a transformed bedrock topography which ``tilts'' the $p$
-  \item[$\circ$]  $\alpha(u) = a(\bx,u^{\frac{p-1}{2p}} )$ is transformed mass balance (source term)
+  \item[$\circ$]  $\mu>0$ is constant (isothermal case)
+  \item[$\circ$]  $\Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b$ is transformed bedrock topography
+  \item[$\circ$]  $\alpha(u) = a(x,y,z\!=\!u^{\frac{p-1}{2p}} )$ is transformed mass balance
   \end{itemize}
-and $\mu>0$ is constant (in the isothermal case)
-\item boxed is a generalized $p$-Laplace equation
+\item a generalized $p$-Laplace equation (``tilted'' by $\Phi$?)
 \item three fundamental nonlinearities: $p>2$, $\Phi(u)$, $\alpha(u)$
 \end{itemize}
 \end{frame}
@@ -475,11 +532,10 @@ and $\mu>0$ is constant (in the isothermal case)
   \frametitle{ variational inequality } 
 
 \begin{itemize}
-\item previous PDE applies only when $s>b$
-\item transform: $u=h^{ \frac{2p}{p-1}}$, a power of the \emph{thickness} $h=s-b$
-\item thickness is nonnegative!
-\item the change $s \to u$ transforms the constraint $s \ge b$ into $u \ge 0$
-\item define constraint set $\Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$
+\item issue: SIA equation applies only on domain where $s>b \iff h > 0$
+\item the change $h \to u$ transforms  constraint $s \ge b$ into $u \ge 0$
+\item define convex constraint set
+  $$\Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$$
 \end{itemize}
 
 \begin{block}{definition} 
@@ -495,7 +551,7 @@ for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
 
 
 \begin{frame}
-  \frametitle{shallow ice approximation (SIA): an analogy}
+  \frametitle{SIA: an analogy}
 
 \begin{columns}
 \begin{column}{0.35\textwidth}
@@ -519,17 +575,25 @@ for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
 
 
 \begin{frame}
-  \frametitle{flat bed case: existence and uniqueness of solutions} 
+  \frametitle{existence and uniqueness for a restricted problem} 
 
-\begin{block}{easy theorem}
-if $\alpha,\Phi$ are independent of $u$ then the variational inequality is the minimization of
+\begin{block}{(easy) theorem}
+if $\alpha,\Phi$ are independent of $u$ then the variational inequality is equivalent to:
+
 \begin{equation*}
-J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v
+u \text{ minimizes} \qquad J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v
 \end{equation*}
-over $\mathcal{K}$, which admits a unique solution \hfill \scriptsize (Jouvet-Bueler 2012)
+
+over $v\in\mathcal{K}$; this admits a unique solution \hfill \scriptsize (Jouvet-Bueler 2012)
 \end{block}
 
-\noindent this gives ice sheet existence and uniqueness only if the bedrock is flat ($\Phi = 0$) and the mass balance is elevation-independent
+\begin{itemize}
+\item gives ice sheet existence and uniqueness only if
+  \begin{itemize}
+  \item[$\circ$]  bedrock is flat ($\Phi = 0$) and
+  \item[$\circ$]  mass balance is elevation-independent ($a=a(x,y)$)
+  \end{itemize}
+\end{itemize}
 \end{frame}
  
 
@@ -537,7 +601,7 @@ over $\mathcal{K}$, which admits a unique solution \hfill \scriptsize (Jouvet-Bu
   \frametitle{ existence in the general case } 
 
 \begin{itemize}
-\item if $p>2$ then $W^{1,p}_0 (\Omega) \subset C(\overline{\Omega})$
+\item $p>2$ so $W^{1,p}_0 (\Omega) \hookrightarrow C(\overline{\Omega})$
 \item define map $\mathcal{A}:C(\overline{\Omega}) \rightarrow C(\overline{\Omega})$,
 which takes $w$ to the unique $u$ solving (over $v\in \mathcal{K}$)
 \begin{align*}
@@ -553,10 +617,10 @@ the map $\mathcal{A}$ admits at least one fixed point \hfill \scriptsize (Jouvet
 
 \vfill
 \scriptsize
-sketch proof:
+sketch of proof:
 \begin{itemize}
 \item $\mathcal{A}$ is continuous and compact
-\item set $\{ w \in C(\overline{\Omega}), \exists \lambda \in [0,1]\, \text{so that} \,w = \lambda \mathcal{A}(w)\}$ is bounded 
+\item the set $\{ w \in C(\overline{\Omega}), \exists \lambda \in [0,1]\, \text{so that} \,w = \lambda \mathcal{A}(w)\}$ is bounded 
 \item Schaefer's fixed point theorem
 \end{itemize}
 \end{frame}
@@ -566,13 +630,18 @@ sketch proof:
   \frametitle{thus: fixed-point iteration on variational inequality} 
 
 \begin{itemize}
-\item given mass-balance $a$ and bedrock topography $b$
-\item to compute: steady state ice sheet shape
+\item given bedrock topography $b(x,y)$
+\item given mass-balance $a(x,y)$ (steady climate)
 \item set $u_0 = 0$
-\item do fixed point iterations ($i=0,1,2,3$):
-$$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
-( \nabla u_{i+1} - \Phi(u_i) )    \right)  \cdot \nabla ( v - u_{i+1} )
-\ge \int_{\Omega} \alpha (  v -  u_{i+1} ).$$
+\item do fixed point iterations for $u_{k+1} \in \mathcal{K}$:
+\begin{align*}
+\int_{\Omega} &\left( \mu |\nabla u_{k+1} - \Phi(u_k)|^{p-2}
+(\nabla u_{k+1} - \Phi(u_k) ) \right) \cdot \nabla (v - u_{k+1}) \\
+&\qquad\qquad \ge \int_{\Omega} \alpha (v -  u_{k+1})
+\end{align*}
+
+\bigskip
+\item \emph{computes}: steady state ice sheet shape
 \end{itemize}
 \end{frame}
 
@@ -580,10 +649,14 @@ $$  \int_{\Omega}    \left( \mu  | \nabla u_{i+1} - \Phi(u_i) |^{p-2}
 \begin{frame}
   \frametitle{steady ice sheet over Greenland bedrock }
 
-first three iterations from zero ice:
+\begin{itemize}
+\item first three iterations from zero ice:
+
 \begin{center}
 \includegraphics[width=0.9\textwidth]{greenland-result.jpg}
 \end{center}
+\item as far as we can tell: this 2012 computation is the first for the steady state of the Greenland ice sheet \emph{without} a time-stepping model
+\end{itemize}
 \end{frame}
 
 
