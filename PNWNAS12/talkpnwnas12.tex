@@ -134,7 +134,7 @@
 
 
 \begin{document}
-\graphicspath{{figs/},{../commonfigs/},{photos/}}
+\graphicspath{{figs/},{../commonfigs/},{/home/bueler/icerepo/UAF-misc/nwgm2012/figures/}}
 
 \begin{frame}
   \titlepage
@@ -813,7 +813,6 @@ if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)
 \end{frame}
 
 
-
 \section[marine ice sheets]{a model for marine ice sheet evolution}
 
 \begin{frame}
@@ -843,6 +842,7 @@ if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)
   \item[$\circ$] define $r = \frac{p-1}{2p}$; \quad SIA change of variables is $u=h^r$
   \item[$\circ$] $q = 1 + \frac{1}{n} < 2$ \quad  is for SSA weak formulation
   \end{itemize}
+\item time-discretization $t_k$ with spacing $\tau_k = t_{k+1}-t_k$
 
 \bigskip
 \item time-dependent mass conservation: 
@@ -858,8 +858,6 @@ if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)
 
 \begin{enumerate}
 \small
-\setcounter{enumi}{-1}
-\item time-discretization $t_k$ with spacing $\tau_k = t_{k+1}-t_k$
 \item find velocity $\mathbf{U}_k \in \Wq$ that minimizes
 \begin{align*}
 \mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
@@ -869,29 +867,49 @@ $$\begin{cases}
   \frac{\partial h}{\partial t} + \Div \left(h\, \mathbf{U}_k\right) = 0, & t_k \le t \le t_{k+1}, \\
   h(t_k) = h_k. &
 \end{cases}$$
-\item find thickness $h_{k+1} = u^r$, i.e.~find $u\in\mathcal{K}$, that minimizes  % $u=h^{ \frac{2p}{p-1}}$
+\item transform: $u_{k+\frac12} = (h_{k+\frac12})^{1/r}$
+\item find thickness $h_{k+1} = u^r$, i.e.~find $u\in\mathcal{K}$, that minimizes
 \begin{align*}
-\mathcal{J}_{\text{SIA}}(v) &= \frac{1}{2 \tau_k} \int_\Omega v^2 + FIXME
+\mathcal{J}_{\text{SIA}}(v) &= \int_{\Omega} \frac{1}{(r+1)\tau_k} v^{r+1} + \frac{\mu}{p} |\nabla v - \Phi(u_{k+\frac12})|^p - \left(\frac{1}{\tau_k} u_k^r + \alpha(u_{k+\frac12})\right) v
 \end{align*}
 \item repeat at {\color{dark blue} 1.} \hfill \scriptsize (Jouvet et al.~to appear)
 \end{enumerate}
 \end{frame}
 
 
-
 \begin{frame}
-  \frametitle{FEM solution of var ineq}
+  \frametitle{known concerns}
 
 \begin{itemize}
-\item FIXME: TNNMG
+\item in $\mathcal{J}_{\text{SSA}}$ it is not clear that $h_k$ will remain lower bounded
+\item advection scheme should maintain $h\ge 0$
+\item first-order time-splitting
+\item for now: first-order upwinding on advection problem
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{moving grounding line}
+  \frametitle{FEM solution of weak formulations}
 
-FIXME: model is SIA+SSA with adaptive grid
+\begin{itemize}
+\item the $W^{1,p}$ and $W^{1,q}$ solutions to these free boundary problems have low regularity
+  \begin{itemize}
+  \item[$\circ$] we use $P^1$ finite elements
+  \end{itemize}
+
+\bigskip
+\item results on the next slide use:
+  \begin{itemize}
+  \item[$\circ$] Truncated Nonsmooth Newton MultiGrid (TNNMG) method for both $\mathcal{J}_{\text{SSA}}$ and $\mathcal{J}_{\text{SIA}}$ minimizations
+  \item[$\circ$] implemented in DUNE (\texttt{dune-project.org})
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{moving grounding line movie}
 
 \begin{center}
 \PDFAnimation{exp3a}
@@ -900,28 +918,37 @@ FIXME: model is SIA+SSA with adaptive grid
 
 
 \begin{frame}
-  \frametitle{mundane}
+  \frametitle{older results from PISM}
 
 \begin{itemize}
-\item FIXME: PISM results for Greenland and Antarctica
+\item PISM = Parallel Ice Sheet Model (\texttt{pism-docs.org})
+\item below are 2 km grid results for Greenland; everything evolves; only showing surface velocities
+\item PISM is ``old technology'':  implements SIA+SSA hybrid but in (by comparison) ad hoc strong form
 \end{itemize}
+
+\vspace{-0.1in}
+\begin{center}
+    \includegraphics<1>[height=4.2cm]{csurf_insar_pism_all} \\
+   \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
+\end{center}
 \end{frame}
 
 
 \section*{conclusion}
 
 \begin{frame}
-  \frametitle{conclusion: some new thinking which is weak and shallow}
+  \frametitle{conclusion}
+  \framesubtitle{some new thinking which is weak and shallow}
 
 \begin{itemize}
-\item work on steady states (walk before fly)
-\item steady grounded ice sheets now have a well-posed obstacle-like formulation (a $p>2$-Laplace variational inequality for SIA+mass)
-\item sliding ice sheets have a theory in which ice streams ``emerge naturally'' (a $p<2$-Laplace variational inequality for SSA)
-\item marine ice sheet paradigm from time-splitting:
+\item steady grounded ice sheets now have a (mostly) well-posed shallow, weak, obstacle-like formulation (SIA)
+\item sliding ice sheets have a shallow weak formulation in which ice streams ``emerge naturally'' (SSA)
+\item both of above are $p$-Laplace-like problems
+\item new marine ice sheet paradigm from time-splitting:
   \begin{itemize}
-  \item[$\circ$]  solve SSA problem
+  \item[$\circ$]  solve SSA weak form
   \item[$\circ$]  advection with SSA velocity
-  \item[$\circ$]  solve SIA+mass obstacle problem
+  \item[$\circ$]  solve SIA+(mass conservation) obstacle problem
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1004,9 +1031,31 @@ $ \nabla \cdot \left(
 \hline 
 \end{tabular}  
 \end{center}
-  
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{on TNNMG}
+
+\small
+to minimize a constrained or non-differentiable functional $\mathcal{J}$:
+\begin{itemize}
+\item let $I$ be the entire node index set, $\mathcal{I}=\mathcal{I}(v)$ the active set where $v$ is away from the obstacle/non-differentiability
+\item let $\mathcal{F}:\RR^I \to \RR^I$ be a ``nonlinear Gauss-Seidel smoother'':
+  \begin{itemize}
+  \item[$\circ$]  gives correction that minimizes $\mathcal{J}$ at each node separately
+  \item[$\circ$]  can be inexact
+  \item[$\circ$]  the active set $\mathcal{I}$ can change
+  \end{itemize}
+\item let $\mathcal{D}$ be the domain of $\mathcal{J}$ and $\mathcal{P}_{\mathcal{D}}$ be a projection onto $\mathcal{D}$
+\item then TNNMG generates sequence $u^l$ by:
+\begin{align*}
+  u^{l+\frac13} &= u^l + \mathcal{F}(u^l), \\
+  u^{l+\frac23} &= u^{l+\frac13} - \left(\mathcal{J}''(u^{l+\frac13})_{\mathcal{I},\mathcal{I}}\right)^{-1} \mathcal{J}'(u^{l+\frac13})_{\mathcal{I}}, \\
+  u^{l+1}       &= \operatorname{argmin}_{w,\rho\in[0,1]} \left\{\mathcal{J}(w) \big| w= \rho u^{l+\frac13} + (1-\rho) \mathcal{P}_{\mathcal{D}}(u^{l+\frac23}) \right\}
+\end{align*}
+\end{itemize}
+\end{frame}
 
 \end{document}
 
