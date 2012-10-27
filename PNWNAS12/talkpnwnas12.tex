@@ -824,16 +824,17 @@ $$\begin{cases}
 
 
 \begin{frame}
-  \frametitle{FEM solution of weak formulations}
+  \frametitle{numerical solution of the weak formulations}
 
 \begin{itemize}
-\item the $W^{1,p}$ and $W^{1,q}$ solutions to these free boundary problems have low regularity
+\item the $W^{1,p}$ (SIA) and $W^{1,q}$ (SSA) solutions to these free boundary problems have low regularity
   \begin{itemize}
-  \item[$\circ$] we use $P^1$ finite elements
+  \item[$\circ$] so we use $P_1$ finite elements
+  \item[$\circ$] $\|u-u_{\text{h}}\|_{W^{1,p}} \le C \text{h}^{2/p}$: convergence is slow
   \end{itemize}
 
 \bigskip
-\item results on the previous movie use:
+\item previous movie used:
   \begin{itemize}
   \item[$\circ$] Truncated Nonsmooth Newton MultiGrid (TNNMG) method for both $\mathcal{J}_{\text{SSA}}$ and $\mathcal{J}_{\text{SIA}}$ minimizations
   \item[$\circ$] implemented in DUNE (\texttt{dune-project.org})
@@ -846,10 +847,12 @@ $$\begin{cases}
   \frametitle{known concerns with algorithm}
 
 \begin{itemize}
-\item in $\mathcal{J}_{\text{SSA}}$ it is not clear that $h_k$ will remain lower bounded
+\item $\mathcal{J}_{\text{SSA}}$ needs regularization so that $h_k$ is lower bounded
 \item advection scheme should maintain $h\ge 0$
-\item first-order time-splitting
-\item for now: first-order upwinding on advection problem
+  \begin{itemize}
+  \item[$\circ$] for now: first-order upwinding on advection problem
+  \end{itemize}
+\item first-order time-splitting 
 \end{itemize}
 \end{frame}
 
