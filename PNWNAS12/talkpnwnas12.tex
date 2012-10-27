@@ -256,6 +256,7 @@
 \end{frame}
 
 
+\begin{comment}
 \begin{frame}{because ice is a slow fluid \dots}
 
 \begin{itemize}
@@ -265,6 +266,7 @@
 \item \emph{thus}: a time-stepping ice sheet code recomputes the velocity field at every time step, without requiring previous velocity \footnote{to be a weatherman you've got to know which way the wind blows \dots but not to be a glaciologist}
 \end{itemize}
 \end{frame}
+\end{comment}
 
 
 \begin{frame}{ice sheets are ``shallow''}
@@ -289,7 +291,7 @@
 \end{frame}
 
 
-\begin{frame}{ice sheets versus ice shelves}
+\begin{frame}{sheets versus streams versus shelves}
 
 \begin{columns}
 \begin{column}{0.35\textwidth}
@@ -299,38 +301,11 @@
 \item non-sliding portions of ice sheets flow by shear deformation
 \item ice streams slide
 \item ``ice shelves'' are floating thick ice
-  \begin{itemize}
-  \scriptsize
-  \item[$\circ$] $\ne$ sea ice
-  \end{itemize}
 \item ice shelves flow by extension
   \begin{itemize}
   \scriptsize
   \item[$\circ$] ``membrane'' or ``plug'' flow
   \end{itemize}
-\end{itemize}
-\end{column}
-
-\begin{column}{0.65\textwidth}
-\includegraphics[width=\textwidth]{siassacartoon-lambert}
-
-\begin{center}
-\vspace{-0.18in}
-\tiny [Lambert glacier and Amery ice shelf, Antarctic]
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}{shear versus extension}
-
-\begin{columns}
-\begin{column}{0.35\textwidth}
-\small
-\begin{itemize}
-\item \emph{top}:  non-sliding, sliding, and floating modes
-\item \emph{bottom}:  real sheet-stream-shelf transition
 \item ``SIA'' and ``SSA'' will be explained later
 \end{itemize}
 \end{column}
@@ -366,10 +341,9 @@
 
 \medskip
 \small
-if we think of an ice sheet as an input/output device:
 \begin{itemize}
-\item \emph{inputs}: (1) snow adds, (2) sun heats, (3) ocean heats, (4) earth heats
-\item \emph{outputs}: (1) surface meltwater, (2) basal meltwater, (3) ice discharge
+\item \emph{mass and energy inputs}: (1) snow adds, (2) sun heats, (3) ocean heats, (4) earth heats
+\item \emph{mass outputs}: (1) surface meltwater, (2) basal meltwater, (3) ice discharge
 \end{itemize}
 
 \begin{center}
@@ -381,6 +355,7 @@ if we think of an ice sheet as an input/output device:
 \end{frame}
 
 
+\begin{comment}
 \begin{frame}
   \frametitle{big picture: ice sheet flow changes over time}
 
@@ -400,6 +375,7 @@ if we think of an ice sheet as an input/output device:
   \end{itemize}
 \end{itemize}
 \end{frame}
+\end{comment}
 
 
 \section[shallow ice approximation]{shallow ice approximation for grounded ice sheets}
@@ -666,36 +642,6 @@ sketch of proof:
 \end{center}
 \item as far as we can tell: this 2011 computation was the first of the steady state of a real ice sheet \emph{without} time-stepping
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{quality of this variational inequality} 
-
-\begin{itemize}
-\item every glaciologist believes this about steady climates:
-	$$\text{if } a > 0 \text{ on a sub-domain } R \text{ then } s > b \text{ on } R$$
-\item that is:
-\begin{center}
- if it snows more than it melts then you get a glacier there
-\end{center}
-\end{itemize}
-
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{itemize}
-\small
-\item uniformly-elliptic variational inequalities, e.g.~the classical obstacle problem,
-\begin{align*}
-\int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
-\end{align*}
-for all $v\ge \psi$, do \emph{not} have the analogous property
-\end{itemize}
-\end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{classicalobs}
-\end{column}
-\end{columns}
 \end{frame}
 
 
@@ -1031,6 +977,36 @@ $ \nabla \cdot \left(
 \hline 
 \end{tabular}  
 \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{quality of this variational inequality} 
+
+\begin{itemize}
+\item every glaciologist believes this about steady climates:
+	$$\text{if } a > 0 \text{ on a sub-domain } R \text{ then } s > b \text{ on } R$$
+\item that is:
+\begin{center}
+ if it snows more than it melts then you get a glacier there
+\end{center}
+\end{itemize}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\small
+\item uniformly-elliptic variational inequalities, e.g.~the classical obstacle problem,
+\begin{align*}
+\int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
+\end{align*}
+for all $v\ge \psi$, do \emph{not} have the analogous property
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[width=\textwidth]{classicalobs}
+\end{column}
+\end{columns}
 \end{frame}
 
 
