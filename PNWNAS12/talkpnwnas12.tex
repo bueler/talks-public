@@ -246,12 +246,9 @@
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow stress balance}} \\
 \mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^{n-1} \tau_{ij} &&\text{\emph{Glen flow law}}
 \end{align*}
-\item $1.8 < n < 4.0$ ?  \quad \fbox{when in doubt: $n=3$}
+\item $1.8 < n < 4.0$ ?  \quad \alert{when in doubt: $n=3$}
 \medskip
-\item $A>0$ is called ``ice softness''
-  \begin{itemize}
-  \item[$\circ$] strongly $T$-dependent \dots but we'll not worry about that here
-  \end{itemize}
+\item $A>0$ is ``ice softness''
 \end{itemize}
 \end{frame}
 
@@ -269,7 +266,7 @@
 \end{comment}
 
 
-\begin{frame}{ice sheets are ``shallow''}
+\begin{frame}{but ice sheets are shallow}
 
 \begin{itemize}
 \item consider cross section of Greenland ice sheet at $71^\circ$ N
@@ -390,14 +387,14 @@
 
 \begin{itemize}
 \small
+\item $a(t,x,y,z)=$ yearly-average mass balance
 \item $b(x,y)=$ bedrock elevation
 \item $s(t,x,y)=$ ice surface elevation
 \item $h(t,x,y)=$ ice thickness $ = s-b$
 \item ${\bf U}(t,x,y,z)=$ horizontal velocity field
-\item $a(t,x,y,z)=$ yearly-average mass balance \onslide<2>{\color{dark green} [Ed: explain m.b.]}
 \end{itemize}
 
-\begin{alertblock}<3>{key idea: ice surface $s$ is always above the bedrock $b$}
+\begin{alertblock}{key idea: ice surface $s$ is always above the bedrock $b$}
 \end{alertblock}
 \end{frame}
 
@@ -418,14 +415,37 @@
   \item[$\circ$] $[x]$ is a typical width scale
   \item[$\circ$] small parameter is $\eps = [h] / [x]$
   \end{itemize}
-\item for this part of the talk: consider only grounded ice sheets
-  \begin{itemize}
-  \item[$\circ$] so $h \to 0$ continuously at margin
-  \item[$\circ$] i.e.~\emph{not} marine ice sheets
-  \end{itemize}
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}{movie of time-dependent SIA}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\small
+\begin{itemize}
+\item at right is the Halfar similarity solution
+\item an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
+\item compare Barenblatt solution of porous medium equation
+\end{itemize}
+\end{column}
+
+\begin{column}{0.65\textwidth}
+\vspace{-0.25in}
+
+\begin{center}
+\animategraphics[autoplay,loop,height=4.7cm]{4}{../GGseminar12/anim/halfar}{0}{26}
+
+\bigskip
+\tiny
+frames from $t=4$ months to $t = 10^6$ years,
+
+equal spaced in \emph{exponential} time
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
 
 \begin{frame}
   \frametitle{SIA: velocity}
@@ -460,35 +480,6 @@
 \end{frame}
 
 
-\begin{frame}{time-dependent SIA}
-
-\begin{columns}
-\begin{column}{0.4\textwidth}
-\small
-\begin{itemize}
-\item instead of formulas, show a similarity solution
-\item at right is the Halfar (1981) solution, an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
-\item compare Barenblatt solution of porous medium equation
-\end{itemize}
-\end{column}
-
-\begin{column}{0.65\textwidth}
-\vspace{-0.25in}
-
-\begin{center}
-\animategraphics[autoplay,loop,height=4.7cm]{4}{../GGseminar12/anim/halfar}{0}{26}
-
-\bigskip
-\tiny
-frames from $t=4$ months to $t = 10^6$ years,
-
-equal spaced in \emph{exponential} time
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-
-
 \begin{frame}
   \frametitle{a change of variable}
  
@@ -506,7 +497,7 @@ where
   \item[$\circ$]  $\alpha(u) = a(x,y,z\!=\!u^{\frac{p-1}{2p}} )$ is transformed mass balance
   \end{itemize}
 \item a generalized $p$-Laplace equation with added nonlinearities
-\item change of vars means uniform $p$-ellipticity recovered (i.e.~$\mu>0$) but at cost of ``tilt'' ($\nabla u - \Phi(u)$)
+\item change of vars means uniform $p$-ellipticity recovered, but at cost of ``tilt'' ($\nabla u - \Phi(u)$)
 \end{itemize}
 \end{frame}
 
@@ -721,7 +712,7 @@ sketch of proof:
 
 
 \begin{frame}
-  \frametitle{SSA weak formulation: definition}
+  \frametitle{SSA weak formulation}
 
 \begin{itemize}
 \item let $q = 1+\frac{1}{n}$ and $B = A^{1-q}$
@@ -742,7 +733,7 @@ the horizontal velocity $\mathbf{U}\in W^{1,q}(\Omega)$ solves the coulomb frict
 
 
 \begin{frame}
-  \frametitle{SSA weak formulation: well-posed}
+  \frametitle{SSA weak formulation is well-posed}
 
 \bigskip
 \begin{block}{Theorem}
@@ -824,14 +815,11 @@ $$\begin{cases}
 
 
 \begin{frame}
-  \frametitle{known concerns}
+  \frametitle{moving grounding line movie}
 
-\begin{itemize}
-\item in $\mathcal{J}_{\text{SSA}}$ it is not clear that $h_k$ will remain lower bounded
-\item advection scheme should maintain $h\ge 0$
-\item first-order time-splitting
-\item for now: first-order upwinding on advection problem
-\end{itemize}
+\begin{center}
+\PDFAnimation{exp3a}
+\end{center}
 \end{frame}
 
 
@@ -845,7 +833,7 @@ $$\begin{cases}
   \end{itemize}
 
 \bigskip
-\item results on the next slide use:
+\item results on the previous movie use:
   \begin{itemize}
   \item[$\circ$] Truncated Nonsmooth Newton MultiGrid (TNNMG) method for both $\mathcal{J}_{\text{SSA}}$ and $\mathcal{J}_{\text{SIA}}$ minimizations
   \item[$\circ$] implemented in DUNE (\texttt{dune-project.org})
@@ -855,27 +843,33 @@ $$\begin{cases}
 
 
 \begin{frame}
-  \frametitle{moving grounding line movie}
+  \frametitle{known concerns with algorithm}
 
-\begin{center}
-\PDFAnimation{exp3a}
-\end{center}
+\begin{itemize}
+\item in $\mathcal{J}_{\text{SSA}}$ it is not clear that $h_k$ will remain lower bounded
+\item advection scheme should maintain $h\ge 0$
+\item first-order time-splitting
+\item for now: first-order upwinding on advection problem
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{older results from PISM}
+  \frametitle{results from PISM}
 
 \begin{itemize}
 \item PISM = Parallel Ice Sheet Model (\texttt{pism-docs.org})
 \item below are 2 km grid results for Greenland; everything evolves; only showing surface velocities
-\item PISM is ``old technology'':  implements SIA+SSA hybrid but in (by comparison) ad hoc strong form
+\item PISM is ``old technology'':  implements SIA+SSA hybrid but in strong form with ad hoc treatment of free boundaries
 \end{itemize}
 
 \vspace{-0.1in}
 \begin{center}
     \includegraphics<1>[height=4.2cm]{csurf_insar_pism_all} \\
    \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
+
+\bigskip
+\tiny (computations by Andy Aschwanden)
 \end{center}
 \end{frame}
 
@@ -888,9 +882,9 @@ $$\begin{cases}
 
 \begin{itemize}
 \item steady grounded ice sheets now have a (mostly) well-posed shallow, weak, obstacle-like formulation (SIA)
-\item sliding ice sheets have a shallow weak formulation in which ice streams ``emerge naturally'' (SSA)
-\item both of above are $p$-Laplace-like problems
-\item new marine ice sheet paradigm from time-splitting:
+\item sliding velocity computations are by a shallow weak formulation in which ice streams ``emerge naturally'' (SSA)
+\item both of above are generalizations of $p$-Laplace problems
+\item new marine ice sheet algorithm from time-splitting:
   \begin{itemize}
   \item[$\circ$]  solve SSA weak form
   \item[$\circ$]  advection with SSA velocity
@@ -981,7 +975,7 @@ $ \nabla \cdot \left(
 
 
 \begin{frame}
-  \frametitle{quality of this variational inequality} 
+  \frametitle{a quality of the SIA variational inequality} 
 
 \begin{itemize}
 \item every glaciologist believes this about steady climates:
