@@ -153,13 +153,14 @@
 \medskip
 \item E.~Bueler, J.~Brown (\textbf{2009}) \emph{Shallow shelf approximation as a “sliding law” in a thermodynamically coupled ice sheet model}, J.~Geophys.~Res.~114, F03008
 \medskip
-\item \alert<2>{G.~Jouvet}, E.~Bueler (\textbf{2012}) \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math.~72 (4), 1292--1314
+\item \alert{G.~Jouvet}, E.~Bueler (\textbf{2012}) \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math.~72 (4), 1292--1314
 \medskip
-\item \alert<2>{G.~Jouvet}, E.~Bueler, C.~Gr\"aser, R.~Kornhuber (\textbf{to appear})  \emph{A nonsmooth Newton multigrid method for a hybrid, shallow model of marine ice sheets}, Proc.~8th ICSCA, AMS Cont.~Math.
+\item \alert{G.~Jouvet}, E.~Bueler, C.~Gr\"aser, R.~Kornhuber (\textbf{to appear})  \emph{A nonsmooth Newton multigrid method for a hybrid, shallow model of marine ice sheets}, Proc.~8th ICSCA, AMS Cont.~Math.
 \end{itemize}
 
+\medskip
 \small
-\onslide<2>{\alert{G.~Jouvet} = Guillaume Jouvet, Free University of Berlin}
+\alert{G.~Jouvet} = Guillaume Jouvet, Free University of Berlin
 \end{frame}
 
 
@@ -774,101 +775,108 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 
 
 \begin{frame}
-  \frametitle{SSA weak formulation}
+  \frametitle{SSA weak formulation: definition}
 
 \begin{itemize}
 \item let $q = 1+\frac{1}{n}$ and $B = A^{1-q}$
 \item suppose a basal yield stress distribution $\tau_c(x,y)$, zero on ice shelves
 \item $2\,\Tnorm{\mathbf{V}}^2 := \sum_{i,j} (\mathbf{D}V_{ij})^2 + \sum_{i} (\mathbf{D}V_{ii})^2$
-\item $\mathbf{F}$ is lateral force along calving front
+\item $\mathbf{F}$ denotes lateral force along calving front
 \end{itemize}
 
 \begin{block}{definition}
-the horizontal velocity $\mathbf{U}\in W^{1,q}(\Omega)$ solves the SSA if it minimizes
+the horizontal velocity $\mathbf{U}\in W^{1,q}(\Omega)$ solves the coulomb friction SSA if it minimizes
 \small
 \begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \rho g h \grad s \cdot \mathbf{V} + \tau_c |\mathbf{V}| + \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
+\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \rho g h \grad s \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
 \end{align*}
 \end{block}
 
-\normalsize
-\begin{itemize}
-\item because $\mathcal{J}_{\text{SSA}}$ is not differentiable (``$\tau_c |\mathbf{V}|$''), minimization is equivalent to variational inequality
-\end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{SIA+SSA hybrid velocity model}
+  \frametitle{SSA weak formulation: well-posed}
 
+\bigskip
+\begin{block}{Theorem}
+if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)}(\Omega)$, and if  $\tau_c \in L^{q/(q-1)}(\Omega)$, and as long as there is sufficient total basal resistance,$^\ast$ then the Coulomb friction SSA is well-posed problem for computing the velocity $\mathbf{U}\in W^{1,q}(\Omega)$ \hfill \scriptsize (Schoof, 2006)
+\end{block}
+
+\bigskip
 \begin{itemize}
-\item FIXME:
+\item \emph{note}: because $\mathcal{J}_{\text{SSA}}$ is not differentiable, minimization on last slide is equivalent to a variational inequality but not to a PDE
 \end{itemize}
+
+\vfill
+\scriptsize $\ast$: To stop the ice sheet from sliding whole into the sea.  There is a precise inequality.
 \end{frame}
+
 
 
 \section[marine ice sheets]{a model for marine ice sheet evolution}
 
 \begin{frame}
-  \frametitle{marine ice sheets: setting}
+  \frametitle{marine ice sheets}
 
 \begin{itemize}
 \item marine ice sheets have all modes of flow
 \item full of free boundaries
-\item there is only one marine ice sheet:  Antarctic ice sheet
+\item the Antarctic ice sheet is the marine ice sheet
 \end{itemize}
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{schoof-planform}
 
-\tiny figure from (Schoof, 2006)
+\tiny cartoon from (Schoof, 2006)
 \end{center}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{setting marine ice sheet evolution}
+  \frametitle{ice sheet geometry evolution: set-up}
 
 \begin{itemize}
-\item $x$ is a point in the map-plane (i.e.~$(x,y)$)
-\item $t_0,t_1,\dots,t_K$ is time-discretization with spacing $\tau_k = t_{k+1}-t_k$
-\item recall $p = n+1$ and $q = 1 + \frac{1}{n}$ and $n\approx 3$
+\item recall $n\approx 3$ (i.e.~$n>1$):
+  \begin{itemize}
+  \item[$\circ$] $p = n+1 > 2$ \quad  is for SIA weak formulation
+  \item[$\circ$] define $r = \frac{p-1}{2p}$; \quad SIA change of variables is $u=h^r$
+  \item[$\circ$] $q = 1 + \frac{1}{n} < 2$ \quad  is for SSA weak formulation
+  \end{itemize}
+
+\bigskip
+\item time-dependent mass conservation: 
+  $$\frac{\partial h}{\partial t} + \Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
+\item we hybridize: \hfill \scriptsize (Bueler \& Brown, 2009) \normalsize
+  $$\mathbf{U} = \mathbf{U}_{\text{SIA}} + \mathbf{U}_{\text{SSA}}$$
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{an algorithm for marine ice sheet evolution}
-
+  \frametitle{ice sheet geometry evolution: a new algorithm}
 
 \begin{enumerate}
 \small
+\setcounter{enumi}{-1}
+\item time-discretization $t_k$ with spacing $\tau_k = t_{k+1}-t_k$
 \item find velocity $\mathbf{U}_k \in \Wq$ that minimizes
 \begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \frac{2 A^{1-q}}{q} \int_\Omega h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} \\
-  &\qquad\qquad + \int_{G(h_k)} \tau_c |\mathbf{V}| + \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
+\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
 \end{align*}
 \item find $h_{k+\frac12}$, the solution at $t_{k+1}$ of the advection problem:
 $$\begin{cases}
-  \frac{\partial h}{\partial t} + \Div \left(\mathbf{U}_k\, h\right) = 0, & t_k \le t \le t_{k+1}, \\
+  \frac{\partial h}{\partial t} + \Div \left(h\, \mathbf{U}_k\right) = 0, & t_k \le t \le t_{k+1}, \\
   h(t_k) = h_k. &
 \end{cases}$$
-\item find thickness $h_{k+1} = u^{\frac{p-1}{2p}}$, i.e.~find $u\in\mathcal{K}$, that minimizes  % $u=h^{ \frac{2p}{p-1}}$
+\item find thickness $h_{k+1} = u^r$, i.e.~find $u\in\mathcal{K}$, that minimizes  % $u=h^{ \frac{2p}{p-1}}$
 \begin{align*}
 \mathcal{J}_{\text{SIA}}(v) &= \frac{1}{2 \tau_k} \int_\Omega v^2 + FIXME
 \end{align*}
+\item repeat at {\color{dark blue} 1.} \hfill \scriptsize (Jouvet et al.~to appear)
 \end{enumerate}
 \end{frame}
 
-
-\begin{frame}
-  \frametitle{an algorithm for marine ice sheet evolution}
-
-some concerns:
-\begin{itemize}
-\item 
-\end{itemize}
-\end{frame}
 
 
 \begin{frame}
