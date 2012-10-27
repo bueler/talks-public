@@ -899,82 +899,7 @@ $$\begin{cases}
 
 %%%%%%%%%%%%%%
 
-% EXTRA SLIDES
-
-\begin{frame}
-  \frametitle{full and simplified (shallow) ice flow models }
-
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline name & unknowns  & equation (+incompressibility)   \\ 
-\hline Stokes & 
-$\left(
-\begin{array}{c}
-u \\ 
-v \\ 
-w  
-\end{array} \right),p$ &  
-$  \nabla \cdot \left(
-\begin{array}{ccc}
-\tau_{xx} & \tau_{xy} & \tau_{xz} \\ 
-\tau_{yx} & \tau_{yy} & \tau_{yz} \\ 
-\tau_{zx} & \tau_{zy} & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-0 \\ 
-0 \\ 
-\rho g  
-\end{array} \right)$  \\ 
-\hline B.-P.\footnote{\tiny Blatter-Pattyn approximation} & 
-$\left(
-\begin{array}{c}
-u \\ 
-v 
-\end{array} \right) $  & 
-$ \nabla \cdot \left(
-\begin{array}{ccc}
-\tau_{xx} & \tau_{xy} & \tau_{xz} \\ 
-\tau_{yx} & \tau_{yy} & \tau_{yz} \\ 
-0 & 0 & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-0 \\ 
-0 \\ 
-\rho g  
-\end{array} \right)$  \\  
-\hline SSA\footnote{\tiny shallow shelf approximation} &
-$ \left(
-\begin{array}{c}
-u \\ 
-v  
-\end{array} \right) $ & 
-$ \nabla \cdot \left(
-\begin{array}{ccc}
-\tau_{xx} & \tau_{xy} & 0 \\ 
-\tau_{yx} & \tau_{yy} & 0 \\ 
-0 & 0 & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-0 \\ 
-0 \\ 
-\rho g  
-\end{array} \right)$ \\ 
-\hline SIA\footnote{\tiny shallow ice approximation} & $\emptyset$ &
-$ \nabla \cdot \left(
-\begin{array}{ccc}
-0 & 0 & \tau_{xz} \\ 
-0 & 0 & \tau_{yz} \\ 
-0 & 0 & \tau_{zz}  
-\end{array} \right) = \left(
-\begin{array}{c}
-\rho g \frac{\partial s}{\partial x}\\ 
-\rho g \frac{\partial s}{\partial y} \\ 
-\rho g  
-\end{array} \right)$ \\ 
-\hline 
-\end{tabular}  
-\end{center}
-\end{frame}
+% TWO EXTRA SLIDES NOT SHOWN DURING TALK
 
 
 \begin{frame}
@@ -1031,4 +956,3 @@ to minimize a constrained or non-differentiable functional $\mathcal{J}$:
 \end{frame}
 
 \end{document}
-
