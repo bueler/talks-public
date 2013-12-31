@@ -2,7 +2,10 @@ all: talk.pdf
 
 TIKZFIGURES=
 
-talk.pdf: talk.tex ${TIKZFIGURES}
+convexvar.png: code/convex2var.py
+	(cd code/ && python convex2var.py && mv convexvar.png ../)
+
+talk.pdf: talk.tex ${TIKZFIGURES} convexvar.png
 	pdflatex talk
 	pdflatex talk
 
