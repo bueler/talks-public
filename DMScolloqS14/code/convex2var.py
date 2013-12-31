@@ -8,8 +8,8 @@ def getzero(x):
 def level(x,lev):
     return lev * np.ones(np.shape(x))
 
-psi1 = 0.3
-psi2 = 0.1
+psi1 = 0.1
+psi2 = 0.3
 
 x = np.linspace(-0.2,1.2,141)
 y = x.copy()
@@ -27,7 +27,7 @@ plt.text(-0.1,psi2,r'$\psi_2$',fontsize=20)
 plt.plot([-0.02,0.02],[psi2,psi2],'k')
 # contour lines dashed black on circles around (0.5,-0.1)
 theta = np.linspace(0.0,2.0*np.pi,201)
-for r in [0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 0.7, 0.85, 1.0, 1.15]:
+for r in [0.35, 0.4, 0.45, 0.5, 0.6, 0.7, 0.85, 1.0, 1.15]:
     cx = 0.5 + r * np.cos(theta)
     cy = -0.1 + r * np.sin(theta)
     ins = (cx >= psi1) & (cy >= psi2) & (cx < 1.2)
