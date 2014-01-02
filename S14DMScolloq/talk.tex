@@ -149,13 +149,93 @@
 
 \section[problems]{problems you can write as variational inequalities}
 
+
+
+\begin{frame}
+  \frametitle{functional and convex set}
+
+$$J[v] = \int_0^L \frac{1}{2} (v')^2 - f v$$
+
+$$\mathcal{K} = \left\{v \in H_0^1 \,:\, v \ge \psi\right\}$$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{convexity}
+
+if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \le 1$ then
+
+$(1 - \eps) u + \eps v = u + \eps (v-u) \in \mathcal{K}$ because $\mathcal{K}$ is convex 
+
+\vspace{0.5in}
+
+FIXME: picture first as linear combination
+
+\vspace{0.5in}
+
+FIXME: ... then as vector directed from base $u$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{first variation calculation}
+
+if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \le 1$ then
+   \begin{align*}
+   0 &\le J[u + \eps(v-u)] - J[u] \\
+     &= \int_0^L \frac{1}{2} \left[(u'+\eps (v-u)')^2-(u')^2\right] - f \left(u+\eps(v-u) - u\right) \\
+     &= \int_0^L \frac{1}{2} \left[(u')^2+ 2 \eps u' (v'-u') + \eps^2 (v'-u')^2 - (u')^2\right] - f \eps(v-u) \\
+     &= \eps \int_0^L u' (v'-u') - f (v-u) + \eps^2 \int_0^L (v'-u')^2
+   \end{align*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{whence the variational inequality}
+
+\begin{itemize}
+\item so far: if $0<\eps\le 1$
+\begin{align*}
+0 &\le \frac{J[u + \eps(v-u)] - J[u]}{\eps} \\
+  &= \int_0^L u' (v'-u') - f (v-u) + \eps \int_0^L (v'-u')^2
+\end{align*}
+\item \emph{thus} as $\eps \to 0$, we know that $u\in\mathcal{K}$ satisfies
+  $$\int_0^L u' (v'-u') - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{FIXME}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{FIXME}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{FIXME}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{FIXME}
+
+\end{frame}
+
+
 \begin{frame}
   \frametitle{the 3-point case of obstacle problem, pictured}
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{center}
-\includegraphics[width=1.0\textwidth]{oned-basecase}
+%\includegraphics[width=1.0\textwidth]{oned-basecase}
 \end{center}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -171,7 +251,7 @@ FIXME: show three-axis view of same thing here
   \frametitle{convex set and solution of variational inequality}
 
 \begin{center}
-\includegraphics[width=0.65\textwidth]{convexvar}
+%\includegraphics[width=0.65\textwidth]{convexvar}
 \end{center}
 \end{frame}
 
