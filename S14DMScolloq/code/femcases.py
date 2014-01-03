@@ -81,7 +81,7 @@ if __name__ == '__main__':
     #gstestcase()
     x = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
     dx = 0.25
-    for (f0,mpsi) in (0,1), (2,0), (2,1), (2,3), (-1,-1):
+    for (f0,mpsi) in (0,1), (2,0), (2,3), (-1,-1):
         if mpsi > -1:
             psi = mpsi * np.array([-0.2,0.1,0.2,0.15,-0.1])
         else:

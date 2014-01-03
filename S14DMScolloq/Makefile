@@ -2,13 +2,10 @@ all: talk.pdf
 
 TIKZFIGURES=
 
-convexvar.png: code/convex2var.py
-	(cd code/ && python convex2var.py && mv convexvar.png ../)
+case_f0_psi1_oneD.png: code/genfig.py code/femcases.py
+	(cd code/ && python femcases.py && mv case_f*psi*.png ../)
 
-oned-basecase.png: code/onedtwoviews.py
-	(cd code/ && python onedtwoviews.py && mv oned-basecase.png ../)
-
-talk.pdf: talk.tex ${TIKZFIGURES} convexvar.png oned-basecase.png
+talk.pdf: talk.tex ${TIKZFIGURES} case_f0_psi1_oneD.png
 	mogrify -trim +repage *.png
 	pdflatex talk
 	pdflatex talk
