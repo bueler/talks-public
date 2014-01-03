@@ -1,5 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
+from numpy import linalg as LA
+from matplotlib import pyplot as plt
+#import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 def convex2var(psi,u,center,name):
@@ -27,18 +29,19 @@ def convex2var(psi,u,center,name):
     plt.plot([-0.02,0.02],[psi[1],psi[1]],'k')
     # contour lines dashed black on circles around (0.5,-0.1)
     theta = np.linspace(0.0,2.0*np.pi,201)
-    for r in [0.35, 0.4, 0.45, 0.5, 0.6, 0.7, 0.85, 1.0, 1.15]:
+    for r in [0.1, 0.2, 0.3, 0.4, 0.5, 0.65, 0.8, 1.0, 1.2]:
         cx = center[0] + r * np.cos(theta)
         cy = center[1] + r * np.sin(theta)
-        ins = (cx >= psi[0]) & (cy >= psi[1]) & (cx < 1.2)
-        plt.plot(cx[ins], cy[ins],'k--')
+        ins = (cx > psi[0]) & (cy > psi[1]) & (cx < 1.2) & (cy < 1.2)
+        plt.plot(cx[ins], cy[ins],'k.')
     # label big ideas: convex set K, solution location, unconstrained minimizer
     plt.text(1.0,1.0,r'$\mathcal{K}$',fontsize=28)
-    plt.plot(center[0],psi[1],'ko',markersize=14)
-    plt.text(center[0]-0.1,psi[1]+0.1,'solution',fontsize=24)
-    plt.plot(center[0],center[1],'ko',markersize=9)
-    plt.text(center[0]-0.1,center[1]-0.1,'unconstrained',fontsize=20)
-    plt.text(center[0]-0.05,center[1]-0.2,'minimizer',fontsize=20)
+    plt.plot(u[0],u[1],'ko',markersize=14)
+    plt.text(u[0]-0.1,u[1]+0.1,'solution',fontsize=24)
+    if LA.norm([u[0]-center[0],u[1]-center[1]]) > 0.01:
+        plt.plot(center[0],center[1],'ko',markersize=9)
+        plt.text(center[0]-0.1,center[1]-0.1,'unconstrained',fontsize=20)
+        plt.text(center[0]-0.05,center[1]-0.2,'minimizer',fontsize=20)
     plt.axis('off')
     if name != None:
         plt.savefig(name)
@@ -51,7 +54,7 @@ def oneD(x,psi,u,name):
     def getzero(x):
         return np.zeros(np.shape(x))
     xx = np.linspace(min(x)-0.2,max(x)+0.2,141)
-    yy = np.linspace(min(psi)-0.1,max(u)+0.1,101)
+    yy = np.linspace(-0.2,1.2,101)
     plt.plot(xx,getzero(xx),'k')
     plt.plot(getzero(yy),yy,'k')
     plt.text(1.22,-0.01,r'$x$',fontsize=20)
@@ -73,12 +76,13 @@ def oneD(x,psi,u,name):
     # solution as stronger black
     plt.plot(x,u,'k',lw=4.0)
     plt.plot(x[1:4],u[1:4],'ko',markersize=9)
-    plt.text(0.1,0.15,r'$u$',fontsize=20)
+    plt.text(0.1,max(u),r'$u$',fontsize=20)
+    plt.axis([min(x)-0.2,max(x)+0.2,-0.2,0.9])
     plt.axis('off')
     if name != None:
         plt.savefig(name)
 
-def constraints3D(u,psi,myfig):
+def constraints3D(u,psi,myfig,name):
     assert len(u)==5
     assert len(psi)==5
     ax = myfig.gca(projection='3d')
@@ -111,6 +115,8 @@ def constraints3D(u,psi,myfig):
     #ax.set_xlabel(r'$u_1$', fontsize=16)
     #ax.set_ylabel(r'$u_2$', fontsize=16)
     #ax.set_zlabel(r'$u_3$', fontsize=16)
+    if name != None:
+        plt.savefig(name)
 
 if __name__ == '__main__':
     x = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
