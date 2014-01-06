@@ -1,13 +1,14 @@
 import numpy as np
 from numpy import linalg as LA
 from matplotlib import pyplot as plt
-#import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def convex2var(psi,u,center,name):
+from fem1d import minJ, contourgen
+
+def convex2var(u,psi,center,name,**kwargs):
     '''Figure showing convex set K and solution in a 2-variable slice.'''
-    assert len(psi)==2
-    assert len(u)==2
+    assert len(u)==5
+    assert len(psi)==5
     assert len(center)==2
     def getzero(x):
         return np.zeros(np.shape(x))
@@ -21,24 +22,26 @@ def convex2var(psi,u,center,name):
     plt.text(1.22,0.0,r'$u_1$',fontsize=20)
     plt.text(-0.02,1.24,r'$u_2$',fontsize=20)
     # constraints in color
-    plt.plot(x[x>=psi[0]],level(x[x>=psi[0]],psi[1]),'g',lw=4.0)
-    plt.plot(level(y[y>=psi[1]],psi[0]),y[y>=psi[1]],'r',lw=4.0)
-    plt.text(psi[0]-0.02,-0.1,r'$\psi_1$',fontsize=20,color='r')
-    plt.plot([psi[0],psi[0]],[-0.02,0.02],'k')
-    plt.text(-0.1,psi[1],r'$\psi_2$',fontsize=20,color='g')
-    plt.plot([-0.02,0.02],[psi[1],psi[1]],'k')
-    # contour lines dashed black on circles around (0.5,-0.1)
-    theta = np.linspace(0.0,2.0*np.pi,201)
-    for r in [0.1, 0.2, 0.3, 0.4, 0.5, 0.65, 0.8, 1.0, 1.2]:
-        cx = center[0] + r * np.cos(theta)
-        cy = center[1] + r * np.sin(theta)
-        ins = (cx > psi[0]) & (cy > psi[1]) & (cx < 1.2) & (cy < 1.2)
-        plt.plot(cx[ins], cy[ins],'k.')
+    plt.plot(x[x>=psi[1]],level(x[x>=psi[1]],psi[2]),'g',lw=4.0)
+    plt.plot(level(y[y>=psi[2]],psi[1]),y[y>=psi[2]],'r',lw=4.0)
+    plt.text(psi[1]-0.02,-0.1,r'$\psi_1$',fontsize=20,color='r')
+    plt.plot([psi[1],psi[1]],[-0.02,0.02],'k')
+    plt.text(-0.1,psi[2],r'$\psi_2$',fontsize=20,color='g')
+    plt.plot([-0.02,0.02],[psi[2],psi[2]],'k')
+    ## contour lines dashed black on circles around (0.5,-0.1)
+    theta = np.linspace(0.0,2.0*np.pi,1501)
+    dx = kwargs.get('dx',0.25)
+    f0 = kwargs.get('f0',0.0)
+    CC = minJ(dx,f0,u[3]) + [0.0, 0.05, 0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0]
+    for j in range(len(CC)):
+         x,y = contourgen(dx,f0,CC[j],u[3],theta)
+         ins = (x > psi[1]) & (y > psi[2]) & (x < 1.2) & (y < 1.2)
+         plt.plot(x[ins],y[ins],'k.',markersize=2)
     # label big ideas: convex set K, solution location, unconstrained minimizer
     plt.text(1.0,1.0,r'$\mathcal{K}$',fontsize=28)
-    plt.plot(u[0],u[1],'ko',markersize=14)
-    plt.text(u[0]-0.1,u[1]+0.1,'solution',fontsize=24)
-    if LA.norm([u[0]-center[0],u[1]-center[1]]) > 0.01:
+    plt.plot(u[1],u[2],'ko',markersize=14)
+    plt.text(u[1]-0.1,u[2]+0.1,'solution',fontsize=24)
+    if LA.norm([u[1]-center[0],u[2]-center[1]]) > 0.01:
         plt.plot(center[0],center[1],'ko',markersize=9)
         plt.text(center[0]-0.1,center[1]-0.1,'unconstrained',fontsize=20)
         plt.text(center[0]-0.05,center[1]-0.2,'minimizer',fontsize=20)
@@ -112,9 +115,6 @@ def constraints3D(u,psi,myfig,name):
     ax.set_xlim3d(0.0,1.0)
     ax.set_ylim3d(0.0,1.0)
     ax.set_zlim3d(0.0,1.0)
-    #ax.set_xlabel(r'$u_1$', fontsize=16)
-    #ax.set_ylabel(r'$u_2$', fontsize=16)
-    #ax.set_zlabel(r'$u_3$', fontsize=16)
     if name != None:
         plt.savefig(name)
 
