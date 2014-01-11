@@ -3,7 +3,7 @@ from numpy import linalg as LA
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from genfig import convex2var, oneD, constraints3D
+from femgenfig import convex2var, oneD, constraints3D
 from fem1d import solvefem
 
 if __name__ == '__main__':
