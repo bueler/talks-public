@@ -149,7 +149,59 @@
 
 \section[problems]{problems you can write as variational inequalities}
 
+\begin{frame}
+  \frametitle{calculus 1}
 
+\begin{center}
+\includegraphics<1>[height=0.5\textheight]{calcprob_bare.png}
+\includegraphics<2>[height=0.5\textheight]{calcprob_soln.png}
+\end{center}
+
+\begin{itemize}
+\item<1-> suppose you have a smooth function
+\item<2> \emph{on a closed, bounded interval}
+\item<1-> and you want to minimize it
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{calculus 1}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{calcprob_soln_interior.png}
+\end{center}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{calcprob_soln_endpoint.png}
+\end{center}
+\end{column}
+\end{columns}
+
+\vspace{8mm}
+
+because it is smooth, you can say about $u$ that:
+\only<1>{
+\vspace{1mm}
+
+\begin{itemize}
+\item if $a < u < b$ then $f'(u)=0$, or
+\item if $u = a$ then $f'(u) \ge 0$, or \hfill [$\longleftarrow$ \emph{not shown}]
+\item if $u = b$ then $f'(u) \le 0$
+\end{itemize}
+}
+\only<2>{
+
+the single \alert{variational inequality} applies,
+    $$f'(u) (u - v) \ge 0$$
+}
+\end{frame}
+
+
+\section[obstacle]{obstacle problem example}
 
 \begin{frame}
   \frametitle{functional and convex set}
@@ -202,24 +254,6 @@ if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \l
 \item \emph{thus} as $\eps \to 0$, we know that $u\in\mathcal{K}$ satisfies
   $$\int_0^L u' (v'-u') - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{FIXME}
-
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{FIXME}
-
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{FIXME}
-
 \end{frame}
 
 
@@ -291,16 +325,7 @@ if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \l
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{convex set and solution of variational inequality}
-
-\begin{center}
-%\includegraphics[width=0.65\textwidth]{convexvar}
-\end{center}
-\end{frame}
-
-
-
+\section[applications]{other applications}
 
 
 \begin{frame}
@@ -424,7 +449,6 @@ sketch of proof:
 
 
 
-\section[obstacle]{obstacle problem example}
 
 
 \begin{frame}
