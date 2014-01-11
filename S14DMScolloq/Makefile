@@ -13,5 +13,5 @@ talk.pdf: talk.tex ${TIKZFIGURES} case_f0_psi1_oneD.png
 .PHONY: clean
 
 clean:
-	@rm -f *.out *.aux *.log *.bbl *.blg *.snm *.toc *.nav *.synctex.gz *~ *.png
+	rm -f *.out *.aux *.log *.bbl *.blg *.snm *.toc *.nav *.synctex.gz *~ .gitignore~ *.png code/*.pyc code/*~
 
