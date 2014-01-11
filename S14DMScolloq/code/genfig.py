@@ -118,16 +118,3 @@ def constraints3D(u,psi,myfig,name):
     if name != None:
         plt.savefig(name)
 
-if __name__ == '__main__':
-    x = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
-    psi = np.array([-0.2,0.1,0.2,0.3,-0.12])
-    u = np.array([0.0, 0.2, 0.35, 0.4, 0.0])   # FIXME: this could come from FEM calculation
-    fig1 = plt.figure()
-    with plt.xkcd():
-        convex2var(psi[1:3],u[1:3], [0.5,-0.1], None)
-    fig2 = plt.figure()
-    oneD(x,psi,u,None)
-    fig3 = plt.figure()
-    constraints3D(u,psi,fig3)
-    plt.show()
-

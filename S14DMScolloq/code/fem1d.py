@@ -90,7 +90,7 @@ def contourgen(dx,f0,C,v3,theta):
        J[v] = C,
     but with v3 fixed, i.e.
        J[x,y,v3] = C.
-    This contour is an ellipse.  Input theta should be values in [0,2 pi].
+    This contour is an ellipse.  Input theta is the parameter for the curve.
     Returns x,y.'''
     ee = f0 * dx**2
     dd = dx * C - v3**2 + ee * v3

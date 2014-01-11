@@ -1,11 +1,11 @@
 all: talk.pdf
 
-TIKZFIGURES=
+FIGURES=case_f0_psi1_oneD.png #calcprob.png
 
 case_f0_psi1_oneD.png: code/genfig.py code/femcases.py
 	(cd code/ && python femcases.py && mv case_f*psi*.png ../)
 
-talk.pdf: talk.tex ${TIKZFIGURES} case_f0_psi1_oneD.png
+talk.pdf: talk.tex ${FIGURES}
 	mogrify -trim +repage *.png
 	pdflatex talk
 	pdflatex talk
