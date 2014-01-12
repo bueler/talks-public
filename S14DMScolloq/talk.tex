@@ -98,6 +98,28 @@
 \renewcommand{\L}{\emph{Left}}
 \newcommand{\R}{\emph{Right}}
 
+% this slide reappears
+\newcommand{\whatvi}[5]{
+\begin{frame}
+  \frametitle{what is a \emph{variational inequality}?}
+
+\begin{enumerate}
+#1{\item a cute way to rewrite a calc problem:
+   $$u: \qquad f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$}
+\vspace{-5mm}
+#2{\item a dot-product way to describe projection onto $K\subseteq \mathcal{H}$:
+   $$y=\Pi_K x: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
+\vspace{-5mm}
+#3{\item any horrible, nonlinear system of equation has a solution:
+   $$FIXME: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
+\vspace{-5mm}
+#4{\item rewrite constrained minimization (e.g.~obstacle) problems:
+   $$\int_0^L u' (v'-u') - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$}
+\vspace{-5mm}
+#5{\item a well-posed problem when there is a free boundary:}
+\end{enumerate}
+\end{frame}
+}
 
 
 \title[what is a variational inequality]{What is a \emph{variational inequality}?}
@@ -139,11 +161,11 @@
 
 % NO OUTLINE BECAUSE ONE APPEARS AT START OF EACH SECTION:
 %\begin{comment}
-\begin{frame}
-  \frametitle{Outline}
-  \tableofcontents[hideallsubsections]
-  % You might wish to add the option [pausesections]
-\end{frame}
+%\begin{frame}
+%  \frametitle{Outline}
+%  \tableofcontents[hideallsubsections]
+%  % You might wish to add the option [pausesections]
+%\end{frame}
 %\end{comment}
 
 
@@ -157,48 +179,78 @@
 \includegraphics<2>[height=0.5\textheight]{calcprob_soln.png}
 \end{center}
 
-\begin{itemize}
-\item<1-> suppose you have a smooth function
-\item<2> \emph{on a closed, bounded interval}
-\item<1-> and you want to minimize it
-\end{itemize}
+suppose you have a smooth function \only<2>{\emph{on a closed, bounded interval }}and you want to minimize it
 \end{frame}
 
 
 \begin{frame}
   \frametitle{calculus 1}
 
-\begin{columns}
-\begin{column}{0.5\textwidth}
 \begin{center}
-\includegraphics[height=0.4\textheight]{calcprob_soln_interior.png}
+\includegraphics[width=0.33\textwidth]{calcprob_soln_interior.png}
+\includegraphics[width=0.33\textwidth]{calcprob_soln_leftendpoint.png}
+\includegraphics[width=0.33\textwidth]{calcprob_soln_rightendpoint.png}
 \end{center}
-\end{column}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[height=0.4\textheight]{calcprob_soln_endpoint.png}
-\end{center}
-\end{column}
-\end{columns}
 
 \vspace{8mm}
 
-because it is smooth, you can say about $u$ that:
+because $f$ is smooth, you can say about the minimizer $u$ that:
 \only<1>{
 \vspace{1mm}
 
 \begin{itemize}
-\item if $a < u < b$ then $f'(u)=0$, or
-\item if $u = a$ then $f'(u) \ge 0$, or \hfill [$\longleftarrow$ \emph{not shown}]
+\item if $a < u < b$ then $f'(u)=0$ \emph{or}
+\item if $u = a$ then $f'(u) \ge 0$ \emph{or}
 \item if $u = b$ then $f'(u) \le 0$
 \end{itemize}
 }
 \only<2>{
 
 the single \alert{variational inequality} applies,
-    $$f'(u) (u - v) \ge 0$$
+    $$f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$
 }
 \end{frame}
+
+% where we stand; skip the first
+%\whatvi{\visible}{\invisible}{\invisible}{\invisible}{\invisible}
+
+\begin{frame}
+  \frametitle{projection onto a closed, convex set $K$}
+
+\begin{center}
+\includegraphics[height=0.4\textheight]{proj_xy.png}
+\end{center}
+
+Suppose $K \subseteq \RR^n$ (or $K \subseteq \mathcal{H}$ in a Hilbert space) is closed and convex.
+\medskip
+
+Definition.  If $x\in\RR^n$ (or $x \in \mathcal{H}$) then the unique minimizer
+    $$y = \min_{z\in K} \|x-z\|$$
+is the \emph{projection} of $x$ onto $K$, written $y = \Pi_K x$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{projection onto a closed, convex set $K$}
+
+\begin{center}
+\includegraphics<1>[height=0.4\textheight]{proj_xy_vect.png}
+\includegraphics<2>[height=0.4\textheight]{proj_xyprime_vect.png}
+\end{center}
+
+Theorem.
+   $$y = \Pi_K x \qquad \iff \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$
+
+\medskip
+This is also a \alert{variational inequality}.
+
+\medskip
+Idea.  The angle between $y-x$ and $\eta - y$ is $\le 90^\circ$ for all $\eta \in K$.
+\end{frame}
+
+
+% where we stand
+\whatvi{\visible}{\visible}{\invisible}{\invisible}{\invisible}
 
 
 \section[obstacle]{obstacle problem example}
@@ -253,8 +305,14 @@ if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \l
 \end{align*}
 \item \emph{thus} as $\eps \to 0$, we know that $u\in\mathcal{K}$ satisfies
   $$\int_0^L u' (v'-u') - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$
+which is a \alert{variational inequality}
 \end{itemize}
 \end{frame}
+
+
+
+% where we stand
+\whatvi{\visible}{\visible}{\visible}{\visible}{\invisible}
 
 
 \begin{frame}
