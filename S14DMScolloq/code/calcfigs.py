@@ -92,5 +92,9 @@ def calcprob(root):
         plt.show()
 
 if __name__ == '__main__':
-    with plt.xkcd():
+    try:
+        with plt.xkcd():
+            calcprob('calcprob_')
+    except:
+        print 'WARNING: xkcd() failed ... continuing without ...'
         calcprob('calcprob_')
