@@ -104,25 +104,24 @@
   \frametitle{what is a \emph{variational inequality}?}
 
 \begin{enumerate}
-#1{\item a cute way to rewrite a calc problem:
+#1{\item a cute way to rewrite a calc problem in $\RR^1$; min $f$ solves:
    $$u: \qquad f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$}
-\vspace{-5mm}
-#2{\item a dot-product way to describe projection onto $K\subseteq \mathcal{H}$:
+\vspace{-4mm}
+#2{\item a dot-product method for projection onto convex $K\subseteq \mathcal{H}$:
    $$y=\Pi_K x: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
-\vspace{-5mm}
-#3{\item any horrible, nonlinear system of equation has a solution:
-   $$FIXME: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
-\vspace{-5mm}
-#4{\item rewrite constrained minimization (e.g.~obstacle) problems:
-   $$\int_0^L u' (v'-u') - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$}
-\vspace{-5mm}
-#5{\item a well-posed problem when there is a free boundary:}
+\vspace{-4mm}
+#3{\item rewrite minimization; min $f$ on convex $K\subseteq \RR^n$ solves:
+   $$u: \qquad \grad f (u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K$$}
+\vspace{-4mm}
+#4{\item solve any nonlinear eqns on compact, convex $K_0\subset \RR^n$:
+   $$u: \qquad F(u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K_0$$}
+\vspace{-4mm}
 \end{enumerate}
 \end{frame}
 }
 
 
-\title[what is a variational inequality]{What is a \emph{variational inequality}?}
+\title[what is \dots a variational inequality]{What is \dots a \emph{variational inequality}?}
 
 \author[Bueler]{Ed Bueler}
 
@@ -169,7 +168,21 @@
 %\end{comment}
 
 
-\section[problems]{problems you can write as variational inequalities}
+\begin{frame}
+  \frametitle{what is \dots \,the source of my title?}
+
+\begin{center}
+\includegraphics[height=0.205\textheight]{what-is-grobner}
+
+\includegraphics[height=0.2\textheight]{what-is-quasimorphism}
+
+\includegraphics[height=0.2\textheight]{what-is-random-matrix}
+
+\includegraphics[height=0.195\textheight]{what-is-systole}
+\end{center}
+\end{frame}
+
+\section[problems]{mathematical problems that you can write as variational inequalities}
 
 \begin{frame}
   \frametitle{calculus 1}
@@ -179,7 +192,11 @@
 \includegraphics<2>[height=0.5\textheight]{calcprob_soln.png}
 \end{center}
 
-suppose you have a smooth function \only<2>{\emph{on a closed, bounded interval }}and you want to minimize it
+\begin{itemize}
+\item suppose you have a smooth function \uncover<2>{\emph{on a closed, bounded interval }}
+\item and you want to minimize it
+\end{itemize}
+
 \end{frame}
 
 
@@ -211,8 +228,8 @@ the single \alert{variational inequality} applies,
 }
 \end{frame}
 
-% where we stand; skip the first
-%\whatvi{\visible}{\invisible}{\invisible}{\invisible}{\invisible}
+% where we stand
+\whatvi{\visible}{\invisible}{\invisible}{\invisible}
 
 \begin{frame}
   \frametitle{projection onto a closed, convex set $K$}
@@ -245,12 +262,28 @@ Theorem.
 This is also a \alert{variational inequality}.
 
 \medskip
-Idea.  The angle between $y-x$ and $\eta - y$ is $\le 90^\circ$ for all $\eta \in K$.
+\emph{Idea}.  The angle between $y-x$ and $\eta - y$ is $\le 90^\circ$ for all $\eta \in K$.
 \end{frame}
 
 
 % where we stand
-\whatvi{\visible}{\visible}{\invisible}{\invisible}{\invisible}
+\whatvi{\visible}{\visible}{\invisible}{\invisible}
+
+\begin{frame}
+  \frametitle{FIXME: min $f$ on convex $K\subset \RR^n$}
+
+\end{frame}
+
+% where we stand
+\whatvi{\visible}{\visible}{\visible}{\invisible}
+
+\begin{frame}
+  \frametitle{FIXME: solve $F(u)=0$ on compact, convex $K_0\subset \RR^n$}
+
+\end{frame}
+
+% where we stand
+\whatvi{\visible}{\visible}{\visible}{\visible}
 
 
 \section[obstacle]{obstacle problem example}
@@ -308,11 +341,6 @@ if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \l
 which is a \alert{variational inequality}
 \end{itemize}
 \end{frame}
-
-
-
-% where we stand
-\whatvi{\visible}{\visible}{\visible}{\visible}{\invisible}
 
 
 \begin{frame}
@@ -383,7 +411,7 @@ which is a \alert{variational inequality}
 \end{frame}
 
 
-\section[applications]{other applications}
+\section[glaciers]{three applications to glacier problems}
 
 
 \begin{frame}
@@ -593,49 +621,9 @@ if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{ice sheet geometry evolution: set-up}
-
-\begin{itemize}
-\item recall $n\approx 3$ (i.e.~$n>1$):
-  \begin{itemize}
-  \item[$\circ$] $p = n+1 > 2$ \quad  is for SIA weak formulation
-  \item[$\circ$] define $r = \frac{p-1}{2p}$; \quad SIA change of variables is $u=h^r$
-  \item[$\circ$] $q = 1 + \frac{1}{n} < 2$ \quad  is for SSA weak formulation
-  \end{itemize}
-\item time-discretization $t_k$ with spacing $\tau_k = t_{k+1}-t_k$
-
-\bigskip
-\item time-dependent mass conservation: 
-  $$\frac{\partial h}{\partial t} + \Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
-\item we hybridize: \hfill \scriptsize (Bueler \& Brown, 2009) \normalsize
-  $$\mathbf{U} = \mathbf{U}_{\text{SIA}} + \mathbf{U}_{\text{SSA}}$$
-\end{itemize}
-\end{frame}
 
 
-\begin{frame}
-  \frametitle{ice sheet geometry evolution: a new algorithm}
 
-\begin{enumerate}
-\small
-\item find velocity $\mathbf{U}_k \in \Wq$ that minimizes
-\begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
-\end{align*}
-\item find $h_{k+\frac12}$, the solution at $t_{k+1}$ of the advection problem:
-$$\begin{cases}
-  \frac{\partial h}{\partial t} + \Div \left(h\, \mathbf{U}_k\right) = 0, & t_k \le t \le t_{k+1}, \\
-  h(t_k) = h_k. &
-\end{cases}$$
-\item transform: $u_{k+\frac12} = (h_{k+\frac12})^{1/r}$
-\item find thickness $h_{k+1} = u^r$, i.e.~find $u\in\mathcal{K}$, that minimizes
-\begin{align*}
-\mathcal{J}_{\text{SIA}}(v) &= \int_{\Omega} \frac{1}{(r+1)\tau_k} v^{r+1} + \frac{\mu}{p} |\nabla v - \Phi(u_{k+\frac12})|^p - \left(\frac{1}{\tau_k} u_k^r + \alpha(u_{k+\frac12})\right) v
-\end{align*}
-\item repeat at {\color{dark blue} 1.} \hfill \scriptsize (Jouvet et al.~to appear)
-\end{enumerate}
-\end{frame}
 
 
 \begin{frame}
@@ -668,27 +656,6 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{on TNNMG}
 
-\small
-to minimize a constrained or non-differentiable functional $\mathcal{J}$:
-\begin{itemize}
-\item let $I$ be the entire node index set, $\mathcal{I}=\mathcal{I}(v)$ the active set where $v$ is away from the obstacle/non-differentiability
-\item let $\mathcal{F}:\RR^I \to \RR^I$ be a ``nonlinear Gauss-Seidel smoother'':
-  \begin{itemize}
-  \item[$\circ$]  gives correction that minimizes $\mathcal{J}$ at each node separately
-  \item[$\circ$]  can be inexact
-  \item[$\circ$]  the active set $\mathcal{I}$ can change
-  \end{itemize}
-\item let $\mathcal{D}$ be the domain of $\mathcal{J}$ and $\mathcal{P}_{\mathcal{D}}$ be a projection onto $\mathcal{D}$
-\item then TNNMG generates sequence $u^l$ by:
-\begin{align*}
-  u^{l+\frac13} &= u^l + \mathcal{F}(u^l), \\
-  u^{l+\frac23} &= u^{l+\frac13} - \left(\mathcal{J}''(u^{l+\frac13})_{\mathcal{I},\mathcal{I}}\right)^{-1} \mathcal{J}'(u^{l+\frac13})_{\mathcal{I}}, \\
-  u^{l+1}       &= \operatorname{argmin}_{w,\rho\in[0,1]} \left\{\mathcal{J}(w) \big| w= \rho u^{l+\frac13} + (1-\rho) \mathcal{P}_{\mathcal{D}}(u^{l+\frac23}) \right\}
-\end{align*}
-\end{itemize}
-\end{frame}
 
 \end{document}
