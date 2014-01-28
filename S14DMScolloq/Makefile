@@ -1,6 +1,6 @@
 all: talk.pdf
 
-FIGURES=case_f0_psi1_oneD.png calcprob_bare.png proj_xy.png
+FIGURES=case_f0_psi1_oneD.png calcprob_bare.png proj_xy.png constrained-opt.pdf what-is-grobner.pdf what-is-random-matrix.pdf what-is-quasimorphism.pdf what-is-systole.pdf
 
 calcprob_bare.png: code/calcfigs.py
 	(cd code/ && python calcfigs.py && mv calcprob_*.png ../)

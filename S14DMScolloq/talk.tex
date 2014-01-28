@@ -98,8 +98,10 @@
 \renewcommand{\L}{\emph{Left}}
 \newcommand{\R}{\emph{Right}}
 
-% this slide reappears
-\newcommand{\whatvi}[5]{
+
+% this slide reappears so it is a 4/5 argument function
+\newcommand{\whatvi}[4]{\longwhatvi{#1}{#2}{#3}{#4}{}}
+\newcommand{\longwhatvi}[5]{
 \begin{frame}
   \frametitle{what is a \emph{variational inequality}?}
 
@@ -107,15 +109,18 @@
 #1{\item a cute way to rewrite a calc problem in $\RR^1$; min $f$ solves:
    $$u: \qquad f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$}
 \vspace{-4mm}
-#2{\item a dot-product method for projection onto convex $K\subseteq \mathcal{H}$:
-   $$y=\Pi_K x: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
+#2{\item a dot-product form for projection to closed, convex $K\subseteq \mathcal{H}$:
+   $$y=\Pi x: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
 \vspace{-4mm}
-#3{\item rewrite minimization; min $f$ on convex $K\subseteq \RR^n$ solves:
+#3{\item a rewriting of 11min $f$ on convex $K\subseteq \RR^n$'':
    $$u: \qquad \grad f (u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K$$}
 \vspace{-4mm}
-#4{\item solve any nonlinear eqns on compact, convex $K_0\subset \RR^n$:
+#4{\item a way to get existence for \emph{any} continuous nonlinear eqns
+
+on compact, convex $K_0\subset \RR^n$:
    $$u: \qquad F(u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K_0$$}
 \vspace{-4mm}
+#5
 \end{enumerate}
 \end{frame}
 }
@@ -182,10 +187,11 @@
 \end{center}
 \end{frame}
 
-\section[problems]{mathematical problems that you can write as variational inequalities}
+
+\section[problems]{problems you can write as variational inequalities}
 
 \begin{frame}
-  \frametitle{calculus 1}
+  \frametitle{calculus I problem}
 
 \begin{center}
 \includegraphics<1>[height=0.5\textheight]{calcprob_bare.png}
@@ -201,7 +207,7 @@
 
 
 \begin{frame}
-  \frametitle{calculus 1}
+  \frametitle{calculus I problem}
 
 \begin{center}
 \includegraphics[width=0.33\textwidth]{calcprob_soln_interior.png}
@@ -223,13 +229,14 @@ because $f$ is smooth, you can say about the minimizer $u$ that:
 }
 \only<2>{
 
-the single \alert{variational inequality} applies,
+the \alert{variational inequality} applies,
     $$f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$
 }
 \end{frame}
 
 % where we stand
-\whatvi{\visible}{\invisible}{\invisible}{\invisible}
+\longwhatvi{\visible}{\invisible}{\invisible}{\invisible}{\uncover<2>{\vspace{-1cm}\\\centerline{the above is a \emph{necessary condition} only}}}
+
 
 \begin{frame}
   \frametitle{projection onto a closed, convex set $K$}
@@ -243,7 +250,7 @@ Suppose $K \subseteq \RR^n$ (or $K \subseteq \mathcal{H}$ in a Hilbert space) is
 
 Definition.  If $x\in\RR^n$ (or $x \in \mathcal{H}$) then the unique minimizer
     $$y = \min_{z\in K} \|x-z\|$$
-is the \emph{projection} of $x$ onto $K$, written $y = \Pi_K x$.
+is the \emph{projection} of $x$ onto $K$, written $y = \Pi x$.
 \end{frame}
 
 
@@ -256,7 +263,7 @@ is the \emph{projection} of $x$ onto $K$, written $y = \Pi_K x$.
 \end{center}
 
 Theorem.
-   $$y = \Pi_K x \qquad \iff \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$
+   $$y = \Pi x \qquad \iff \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$
 
 \medskip
 This is also a \alert{variational inequality}.
@@ -269,13 +276,80 @@ This is also a \alert{variational inequality}.
 % where we stand
 \whatvi{\visible}{\visible}{\invisible}{\invisible}
 
-\begin{frame}
-  \frametitle{FIXME: min $f$ on convex $K\subset \RR^n$}
 
+\begin{frame}
+  \frametitle{minimize $f$ on convex $K\subset \RR^n$}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+Consider a mainstream math problem:
+\begin{itemize}
+\item let $K \subset \RR^n$ be convex
+\item let $f: K \to \RR$ be smooth ($C^1$)
+\item find $u\in K$ so that $f$ is minimum?
+\end{itemize}
+
+\bigskip
+\uncover<2->{Claim: if $u\in K$ minimizes $f$ then $u$ solves
+   $$\grad f(u)\cdot (v-u) \ge 0 \qquad \text{ for all } v \in K$$}
+\uncover<3->{which is a \alert{variational inequality}}
+\end{column}
+\begin{column}{0.3\textwidth}
+\includegraphics<1->[width=1.0\textwidth]{constrained-opt}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{minimize $f$ on convex $K\subset \RR^n$}
+
+\emph{Theorem}.  $K\subset \RR^n$ convex.  $f:K\to\RR$ smooth.
+
+\noindent If $u\in K$ minimizes $f$ then
+   $$\grad f(u)\cdot (v-u) \ge 0 \qquad \text{ for all } v \in K.$$
+
+\emph{Proof}.  If $0\le t\le 1$ then
+    $$(1-t) u + t v\in K$$
+But $t=0$ is minimizer of
+    $$g(t) = f\left((1-t) u + t v\right)$$
+so by the ``calculus I problem'', $g'(0) \ge 0$.  By chain rule
+    $$g'(t) = (\grad f)((1-t) u + t v) \cdot (-u + v)$$
+so $g'(0) = (\grad f)(u) \cdot (v-u) \ge 0$. \qed
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{minimize $f$ on convex $K\subset \RR^n$}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+How about existence of $u$?
+
+It happens if either:
+\begin{itemize}
+\item $K$ is compact
+\item $K$ is closed and $f$ is coercive
+\end{itemize}
+
+\bigskip
+\bigskip
+
+How about uniqueness of $u$?
+
+It happens if:
+\begin{itemize}
+\item $f$ is strictly convex
+\end{itemize}
+\end{column}
+\begin{column}{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{constrained-opt}
+\end{column}
+\end{columns}
 \end{frame}
 
 % where we stand
 \whatvi{\visible}{\visible}{\visible}{\invisible}
+
 
 \begin{frame}
   \frametitle{FIXME: solve $F(u)=0$ on compact, convex $K_0\subset \RR^n$}
@@ -411,7 +485,7 @@ which is a \alert{variational inequality}
 \end{frame}
 
 
-\section[glaciers]{three applications to glacier problems}
+\section[glaciers]{three applications to glaciers}
 
 
 \begin{frame}

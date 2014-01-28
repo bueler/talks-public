@@ -22,14 +22,14 @@ def convexproj(x,y,xstr,ystr,num,**kwargs):
         ax.arrow(x[1], y[1], eta[0]-x[1], eta[1]-y[1],
                  head_width=0.1, head_length=0.2, length_includes_head=True, fc='k', ec='k')
     else:
-        plt.text(x[1]-1.0,y[1]+0.3,ystr,fontsize=22,color='k')
+        plt.text(x[1]-0.8,y[1]+0.2,ystr,fontsize=22,color='k')
     plt.axis([-1.5,4.0,0.0,5.0],'k',lw=2.0)
     plt.axis('off')
     return fig
 
 if __name__ == '__main__':
     #plt.xkcd()
-    convexproj([-1.0,1.0],[2.4,2.0],r"$x$",r"$y=\Pi_K x$",1)
+    convexproj([-1.0,1.0],[2.4,2.0],r"$x$",r"$y=\Pi x$",1)
     plt.savefig('proj_xy.png')
     convexproj([-1.0,1.0],[2.4,2.0],r"$x$",r"$y$",2,eta=[2.0,3.5])
     plt.savefig('proj_xy_vect.png')
