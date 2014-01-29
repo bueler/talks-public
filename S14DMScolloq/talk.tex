@@ -109,10 +109,10 @@
 #1{\item a cute way to rewrite a calc problem in $\RR^1$; min $f$ solves:
    $$u: \qquad f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$}
 \vspace{-4mm}
-#2{\item a dot-product form for projection to closed, convex $K\subseteq \mathcal{H}$:
+#2{\item a dot-product for projection on a closed, convex $K\subset \mathcal{H}$:
    $$y=\Pi x: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
 \vspace{-4mm}
-#3{\item a rewriting of 11min $f$ on convex $K\subseteq \RR^n$'':
+#3{\item a rewriting of ``min $f$ on convex $K\subset \RR^n$'':
    $$u: \qquad \grad f (u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K$$}
 \vspace{-4mm}
 #4{\item a way to get existence for \emph{any} continuous nonlinear eqns
@@ -136,7 +136,7 @@ on compact, convex $K_0\subset \RR^n$:
   University of Alaska Fairbanks
 }
 
-\date{\tiny 23 January, 2014}
+\date{\tiny 30 January, 2014}
 
 
 \setbeamerfont{date}{size=\scriptsize}
@@ -239,23 +239,27 @@ the \alert{variational inequality} applies,
 
 
 \begin{frame}
-  \frametitle{projection onto a closed, convex set $K$}
+  \frametitle{projection onto a closed, convex set $K \subset \mathcal{H}$}
 
 \begin{center}
 \includegraphics[height=0.4\textheight]{proj_xy.png}
 \end{center}
 
-Suppose $K \subseteq \RR^n$ (or $K \subseteq \mathcal{H}$ in a Hilbert space) is closed and convex.
-\medskip
+\vspace{-4mm}
+Suppose $K \subset \RR^n$ is closed and convex.
 
-Definition.  If $x\in\RR^n$ (or $x \in \mathcal{H}$) then the unique minimizer
+(Or $K \subset \mathcal{H}$ closed and convex, where $\mathcal{H}$ is a Hilbert space.)
+
+\bigskip
+
+Definition.  Given $x\in\RR^n$ (or $x \in \mathcal{H}$), the unique minimizer
     $$y = \min_{z\in K} \|x-z\|$$
 is the \emph{projection} of $x$ onto $K$, written $y = \Pi x$.
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{projection onto a closed, convex set $K$}
+  \frametitle{projection onto a closed, convex set $K \subset \mathcal{H}$}
 
 \begin{center}
 \includegraphics<1>[height=0.4\textheight]{proj_xy_vect.png}
@@ -285,14 +289,14 @@ This is also a \alert{variational inequality}.
 Consider a mainstream math problem:
 \begin{itemize}
 \item let $K \subset \RR^n$ be convex
-\item let $f: K \to \RR$ be smooth ($C^1$)
+\item let $f: \RR^n \to \RR$ be smooth ($C^1$)
 \item find $u\in K$ so that $f$ is minimum?
 \end{itemize}
 
 \bigskip
 \uncover<2->{Claim: if $u\in K$ minimizes $f$ then $u$ solves
    $$\grad f(u)\cdot (v-u) \ge 0 \qquad \text{ for all } v \in K$$}
-\uncover<3->{which is a \alert{variational inequality}}
+\uncover<2->{which is a \alert{variational inequality}}
 \end{column}
 \begin{column}{0.3\textwidth}
 \includegraphics<1->[width=1.0\textwidth]{constrained-opt}
@@ -303,7 +307,7 @@ Consider a mainstream math problem:
 \begin{frame}
   \frametitle{minimize $f$ on convex $K\subset \RR^n$}
 
-\emph{Theorem}.  $K\subset \RR^n$ convex.  $f:K\to\RR$ smooth.
+\emph{Theorem}.  $K\subset \RR^n$ convex.  $f:\RR^n\to\RR$ smooth.
 
 \noindent If $u\in K$ minimizes $f$ then
    $$\grad f(u)\cdot (v-u) \ge 0 \qquad \text{ for all } v \in K.$$
