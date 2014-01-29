@@ -115,10 +115,10 @@
 #3{\item a rewriting of ``min $f$ on convex $K\subset \RR^n$'':
    $$u: \qquad \grad f (u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K$$}
 \vspace{-4mm}
-#4{\item a way to get existence for \emph{any} continuous nonlinear eqns
+#4{\item it gets existence for \emph{any} continuous nonlinear eqns
 
-on compact, convex $K_0\subset \RR^n$:
-   $$u: \qquad F(u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K_0$$}
+on compact, convex $K\subset \RR^n$:
+   $$x: \qquad F(x) \cdot (y - x) \ge 0 \qquad \text{ for all } y \in K$$}
 \vspace{-4mm}
 #5
 \end{enumerate}
@@ -356,9 +356,75 @@ It happens if:
 
 
 \begin{frame}
-  \frametitle{FIXME: solve $F(u)=0$ on compact, convex $K_0\subset \RR^n$}
+  \frametitle{solve $F(x)=0$ on $\RR^n$}
 
+Consider another mainstream applied math problem:
+\begin{itemize}
+\item Given continuous function $F:\RR^n \to \RR^n$, find $x\in \RR^n$ so that
+    $$F(x)=0.$$
+\item That is, solve $n$ nonlinear equations in $n$ unknowns.
+\item<2-> \emph{No one has anything positive to say about this problem:}
+  \begin{itemize}
+  \item[-]<2-> no guarantee of existence
+  \item[-]<2-> no guarantee of uniqueness
+  \item[-]<2-> no effective theory of approximation
+  \end{itemize}
+\uncover<3->{\item This is the Osama bin Laden of applied math problems.}
+\end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
+
+\begin{itemize}
+\item Assume $K\subset \RR^n$ is compact and convex.
+\item Suppose you seek $x\in K$ so that $F(x)=0$.
+\end{itemize}
+
+\bigskip
+\uncover<2->{Claim: There is $x\in K$ so that
+   $$F(x) \cdot (y-x) \ge 0 \qquad \text{ for all } y \in K$$}
+\uncover<2->{which is a \alert{variational inequality}}
+\end{frame}
+
+\begin{comment}
+\begin{frame}
+  \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
+
+\vspace{-2mm}
+
+   $$\text{Thm}.\quad \exists x\in K \text{ s.t.} \quad F(x) \cdot (y-x) \ge 0 \quad \text{ for all } y \in K$$
+
+\vspace{-2mm}
+\small
+\begin{itemize}
+\item pick $x \in K$; generally $F(x) \ne 0$
+\item let $z = x - F(x)$ and find $\Pi z \in K$
+\item continuous map takes $K$ to $K$:
+    $$x \mapsto \Pi (x - F(x))$$
+\item Brouwer fixed point thm: $\exists x\in K$ s.t.
+    $$x = \Pi (x - F(x)) = \Pi z$$
+\item by previous char.~of projection,
+    $$\left(\Pi z - z)\right) \cdot \left(y - \Pi z\right) \ge 0 \quad \text{ for all } y \in K$$
+\item using $x = \Pi (x - F(x))$, simplify to
+    $$F(x) \cdot \left(y - x\right) \ge 0 \quad \text{ for all } y \in K$$
+\end{itemize}
+\normalsize
+\end{frame}
+\end{comment}
+
+\begin{frame}
+  \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
+
+   $$\text{Thm}.\quad \exists x\in K \text{ s.t.} \quad F(x) \cdot (y-x) \ge 0 \quad \text{ for all } x \in K$$
+
+\bigskip
+\begin{center}
+\includegraphics[width=0.6\textwidth]{Fx-map-on-K}
+\end{center}
+\end{frame}
+
 
 % where we stand
 \whatvi{\visible}{\visible}{\visible}{\visible}
