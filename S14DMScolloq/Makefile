@@ -1,6 +1,6 @@
 all: talk.pdf
 
-FIGURES=case_f0_psi1_oneD.png calcprob_bare.png proj_xy.png Fx-map-on-K.png convexview-lincomb.png convexview-intoK.png constrained-opt.pdf what-is-grobner.pdf what-is-random-matrix.pdf what-is-quasimorphism.pdf what-is-systole.pdf
+FIGURES=case_f0_psi1_oneD.png calcprob_bare.png proj_xy.png Fx-map-on-K.png convexview-lincomb.png constrained-opt.pdf what-is-grobner.pdf what-is-random-matrix.pdf what-is-quasimorphism.pdf what-is-systole.pdf figs/classicalobs.png figs/martin-cartoon.png figs/obs-soln.png figs/constantineexample3.png figs/obs-coincidence.png
 
 calcprob_bare.png: code/calcfigs.py
 	(cd code/ && python calcfigs.py && mv calcprob_*.png ../)
