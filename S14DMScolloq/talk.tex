@@ -235,7 +235,7 @@ the \alert{variational inequality} applies,
 \end{frame}
 
 % where we stand
-\longwhatvi{\visible}{\invisible}{\invisible}{\invisible}{\uncover<2>{\vspace{-1cm}\\\centerline{the above is a \emph{necessary condition} only}}}
+\longwhatvi{\visible}{\invisible}{\invisible}{\invisible}{{\vspace{-1cm}\\\centerline{the above is a \emph{necessary condition} only}}}
 
 
 \begin{frame}
@@ -764,28 +764,38 @@ for all $\mathbf{V}\in W^{1,q}(\Omega)$
   \frametitle{some glaciers have cold ice}
 
 \begin{itemize}
-\item to a glaciologist, some ice is ``cold'' and some is ``temperate''
+\item to a glaciologist, ice is ``cold'' or ``temperate''
   \begin{itemize}
   \item[$\circ$] cold ice has temperature below $0^\circ$C
-  \item[$\circ$] temperate ice has temperature at $0^\circ$C, but with some
+  \item[$\circ$] temperate ice is at $0^\circ$C, but with liquid water
   \end{itemize}
+\item temperature $u$, flow velocity $\mathbf{V}$
+\item heat flux is $\mathbf{q} = - k \grad u + \rho c \mathbf{V} u$
+  \begin{itemize}
+  \item[$\circ$] conductive flux nearly zero in temperate ice ($\grad u \approx 0$)
+  \end{itemize}
+\item viscous dissipation causes heating at rate $S$
 \end{itemize}
 
-\begin{center}
-\includegraphics[width=0.6\textwidth]{figs/mws-simplified}
-
-\tiny \hfill [figures from A.~Aschwanden]
-\end{center}
+\includegraphics[width=0.6\textwidth]{figs/mws-simplified} \tiny \quad [figures from A.~Aschwanden]
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{v.i.~3: polythermal ice ``equation''}
+  \frametitle{v.i.~3: cold-ice temperature in polythermal glacier}
 
-FIXME
+\begin{itemize}
+\item in cold ice, everyone knows the steady temperature solves
+    $$0 = \Div \left(k \grad u - \rho c \mathbf{V} u\right) + S$$
+\item but where is the free boundary of the cold ice?  (the ``CTS'')
 \begin{center}
 \includegraphics[width=0.8\textwidth]{figs/CTSstructures-2land}
 \end{center}
+\item define convex set $\Kcal = \{ \phi \in H^1(\Omega) \,\big|\, \phi \le 0, \phi \text{ satisfies b.c.s} \}$
+\item Theorem (Gillispie-Bueler, in prep).  there exists $u \in \Kcal$ s.t.
+  $$\int_\Omega \left(k \grad u - \rho c \mathbf{V}\right) \cdot \grad(\phi - u) \ge \int_\Omega S (\phi-u)$$
+for all $\phi \in \Kcal$
+\end{itemize}
 \end{frame}
 
 
