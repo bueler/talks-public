@@ -454,15 +454,15 @@ $u + \eps (v-u)$ as a vector from $u$ directed into $K$
   \frametitle{elastic membrane over obstacle}
 
 \begin{itemize}
-\item an elastic membrane $z = u(x,y)$ minimizes energy
+\item elastic membrane $z = u(x,y)$ minimizes energy
 $$J[v] = \int_\Omega \frac{1}{2} |\grad v|^2 - f v$$
-where $f$ is any force on the membrane
-\item if the membrane is above an obstacle $\psi(x,y)$ then it is in a convex set
+where $f$ is upward force on the membrane
+\item if surface $v(x,y)$ is above an obstacle $\psi(x,y)$ then it's in convex set
 $$\mathcal{K} = \left\{v \in H_0^1(\Omega) \,:\, v \ge \psi\right\}$$
 \end{itemize}
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{figs/obs-soln}
+\includegraphics[width=0.35\textwidth]{figs/classicalobs} \quad \includegraphics[width=0.6\textwidth]{figs/obs-soln}
 \end{center}
 \end{frame}
 
@@ -490,7 +490,11 @@ which is the variational inequality formulation
 
 \small
 \begin{itemize}
-\item where $u>\psi$ it is easy to show that variational inequality implies $-\grad^2 u = f$, the standard PDE for an \emph{unobstructed} elastic membrane
+\item where $u>\psi$, the variational inequality implies $-\grad^2 u = f$
+   \begin{itemize}
+   \item[$\circ$] the standard PDE for an \emph{unobstructed} elastic membrane
+   \item[$\circ$] $-\grad^2 u = f$ is ``Poisson equation''
+   \end{itemize}
 \item an engineer would say
 \begin{quote}
 the membrane $u(x,y)$ solves $-\grad^2 u = f$ except when it is in contact with the obstacle
@@ -748,7 +752,7 @@ with no constraint
 \item then derived the variational inequality form: $\mathbf{U} \in W^{1,q}(\Omega)$ solves
 \begin{align*}
 &\int_\Omega T_{ij}(\mathbf{U}) D_{ij}\left(\mathbf{V} - \mathbf{U}\right) + \tau_c \left(|\mathbf{V}| - |\mathbf{U}|\right) - \mathbf{f} \cdot \left(\mathbf{V} - \mathbf{U}\right) \\
-&\qquad - \int_{\partial\Omega} \mathbf{F} \cdot \left(\mathbf{V} - \mathbf{U}\right) \ge 0
+&\qquad \ge \int_{\partial\Omega} \mathbf{F} \cdot \left(\mathbf{V} - \mathbf{U}\right)
 \end{align*}
 for all $\mathbf{V}\in W^{1,q}(\Omega)$
 \item and then got $J[\mathbf{V}]$ on previous slide
@@ -757,9 +761,31 @@ for all $\mathbf{V}\in W^{1,q}(\Omega)$
 
 
 \begin{frame}
+  \frametitle{some glaciers have cold ice}
+
+\begin{itemize}
+\item to a glaciologist, some ice is ``cold'' and some is ``temperate''
+  \begin{itemize}
+  \item[$\circ$] cold ice has temperature below $0^\circ$C
+  \item[$\circ$] temperate ice has temperature at $0^\circ$C, but with some
+  \end{itemize}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/mws-simplified}
+
+\tiny \hfill [figures from A.~Aschwanden]
+\end{center}
+\end{frame}
+
+
+\begin{frame}
   \frametitle{v.i.~3: polythermal ice ``equation''}
 
 FIXME
+\begin{center}
+\includegraphics[width=0.8\textwidth]{figs/CTSstructures-2land}
+\end{center}
 \end{frame}
 
 
