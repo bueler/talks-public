@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import mlab
 
-def Ffig(x,Fx,z,Piz,**kwargs):
+def Ffig(x,Fx,z,Piz):
     fig = plt.figure(1)
     # draw and label K
     plt.plot([1.0, 2.0, 4.0, 3.0, 1.0],[2.0, 4.0, 4.0, 1.0, 2.0],'b',lw=2.0)
@@ -28,9 +28,7 @@ def Ffig(x,Fx,z,Piz,**kwargs):
              head_width=0.1, head_length=0.2, length_includes_head=True, fc='k', ec='k')
     ax.arrow(Fx[0],Fx[1],x[0]-Fx[0],x[1]-Fx[1],
              head_width=0.1, head_length=0.2, length_includes_head=True, fc='k', ec='k')
-
     plt.axis('off')
-    return fig
 
 if __name__ == '__main__':
     #plt.xkcd()
