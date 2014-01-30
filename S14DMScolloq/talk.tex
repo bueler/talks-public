@@ -431,18 +431,18 @@ Proof. $x' \mapsto \Pi (x'-F(x'))$, as map on $K$, has a fixed point.
   \frametitle{on convex $K$}
 
 if $K$ is convex and $u,v\in K$ and $0\le \varepsilon \le 1$ then
-    $$w = (1 - \eps) u + \eps v = u + \eps (v-u) \in \mathcal{K}$$
+    $$(1 - \eps) u + \eps v = u + \eps (v-u) \in \mathcal{K}$$
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \includegraphics[width=1.0\textwidth]{convexview-lincomb}
 
-$w = (1 - \eps) u + \eps v$ pictured as a linear combination in $K$
+$(1 - \eps) u + \eps v$ as a linear combination in $K$
 \end{column}
 \begin{column}{0.5\textwidth}
 \includegraphics[width=1.0\textwidth]{convexview-intoK}
 
-$w = u + \eps (v-u)$ pictured as a vector from $u$ directed into $K$
+$u + \eps (v-u)$ as a vector from $u$ directed into $K$
 \end{column}
 \end{columns}
 \end{frame}
@@ -490,10 +490,10 @@ which is the variational inequality formulation
 
 \small
 \begin{itemize}
-\item where $u>\psi$ it is easy to show that variational inequality implies $\grad^2 u = f$, the standard PDE for an \emph{unobstructed} elastic membrane
+\item where $u>\psi$ it is easy to show that variational inequality implies $-\grad^2 u = f$, the standard PDE for an \emph{unobstructed} elastic membrane
 \item an engineer would say
 \begin{quote}
-the membrane $u(x,y)$ solves $\grad^2 u = f$ except when it is in contact with the obstacle
+the membrane $u(x,y)$ solves $-\grad^2 u = f$ except when it is in contact with the obstacle
 \end{quote}
 \item but the set on which the contact happens is \emph{a priori} unknown \dots
 \end{itemize}
@@ -596,11 +596,30 @@ the membrane $u(x,y)$ solves $\grad^2 u = f$ except when it is in contact with t
 
 
 
-\section[glaciers]{three applications to glaciers}
+\section[glaciers]{three variational inequalities for glaciers}
 
 
 \begin{frame}
-  \frametitle{ice sheet geometry: an analogy}
+  \frametitle{the steady-climate question for ice sheets}
+
+\begin{itemize}
+\item suppose a steady-state climate
+\item where it snows some places and melts in others
+\item the ice flows into areas where there is melting
+\item questions:
+  \begin{itemize}
+  \item[$\circ$]  what land is covered by ice sheets?
+  \item[$\circ$]  how thick are these sheets?
+  \end{itemize}
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.75\textwidth]{capnonflatobs}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ice sheet geometry: an obstacle analogy}
 
 \begin{columns}
 \begin{column}{0.4\textwidth}
@@ -622,24 +641,6 @@ the membrane $u(x,y)$ solves $\grad^2 u = f$ except when it is in contact with t
 \end{center}
 \end{column}
 \end{columns}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{the steady-climate question for ice sheets}
-
-\begin{itemize}
-\item suppose a steady-state climate
-\item where it snows some places \dots
-\item and melts others
-\item like North America in 90,000--20,000 b.c.e.
-\item question: what land is covered by ice sheets?
-\item<2-> answer: Ontario, mostly.  Illinois, mostly not.
-\end{itemize}
-
-\begin{center}
-\includegraphics[width=0.75\textwidth]{capnonflatobs}
-\end{center}
 \end{frame}
 
 
@@ -727,7 +728,7 @@ for all $v \in \Kcal$
 \begin{itemize}
 \item let $q = 1+\frac{1}{n}$ where $n\approx 3$ for shear-thinning ice
 \item $\mathbf{V}$ is ice stream velocity, $\mathbf{f} = - \rho g h \grad s$ is driving stress, $\mathbf{F}$ is lateral stress along calving front
-\item Theorem (Schoof, 2006).  There is unique velocity $\mathbf{U}=(u,v)\in W^{1,q}(\Omega)$ solving the \emph{coulomb ice stream problem}.  It minimizes
+\item Theorem (C.~Schoof, 2006).  There is unique velocity $\mathbf{U}=(u,v)\in W^{1,q}(\Omega)$ solving the \emph{coulomb ice stream problem}.  It minimizes
 \small
 \begin{equation*}
 J[\mathbf{V}] = \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \tau_c |\mathbf{V}| - \mathbf{f} \cdot \mathbf{V}  - \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
@@ -743,12 +744,14 @@ with no constraint
   \frametitle{v.i.~2: ice stream velocity ``equation''}
 
 \begin{itemize}
-\item Schoof first derived the variational inequality form: $\mathbf{U} \in W^{1,q}(\Omega)$ solves
+\item Schoof started with a PDE for ice stream velocity (MacAyeal, 1989)
+\item then derived the variational inequality form: $\mathbf{U} \in W^{1,q}(\Omega)$ solves
 \begin{align*}
 &\int_\Omega T_{ij}(\mathbf{U}) D_{ij}\left(\mathbf{V} - \mathbf{U}\right) + \tau_c \left(|\mathbf{V}| - |\mathbf{U}|\right) - \mathbf{f} \cdot \left(\mathbf{V} - \mathbf{U}\right) \\
 &\qquad - \int_{\partial\Omega} \mathbf{F} \cdot \left(\mathbf{V} - \mathbf{U}\right) \ge 0
 \end{align*}
 for all $\mathbf{V}\in W^{1,q}(\Omega)$
+\item and then got $J[\mathbf{V}]$ on previous slide
 \end{itemize}
 \end{frame}
 
@@ -764,16 +767,16 @@ FIXME
   \frametitle{variational inequalities for ice: a summary}
 
 \begin{itemize}
-\item of the three v.i.s:
+\item of the three variational inequalities:
   \begin{itemize}
   \item[$\circ$] 1 for the ice sheet surface is \emph{not} a minimization
-  \item[$\circ$] 2 for the ice stream sliding \emph{is} a minimization, but of a non-smooth functional
+  \item[$\circ$] 2 for ice stream sliding is an unconstrained minimization, but of a non-smooth functional
   \item[$\circ$] 3 for the cold ice is \emph{not} a minimization
   \end{itemize}
-\item<2-> v.i.s will be used a lot in the future for glacier and ice sheet problems because of all the free boundaries between different equations
+\item<2-> variational inequalities will be used in future glacier and ice sheet problems because of all the free boundaries between different equations
   \begin{itemize}
-  \item<2->[$\circ$] I've learned that when a glaciologist says ``this equation describes this \dots'' they mean ``this equation describes this \dots \emph{whereever the equation can be applied and I can't generally tell you where that is}''
-  \item<2->[$\circ$] this makes the job of building an ice sheet model hard
+  \item<2->[$\circ$] when a glaciologist says ``this equation describes this \dots'' they mean ``this equation describes this \dots \emph{whereever the equation can be applied and I can't generally tell you where that is}''
+  \item<2->[$\circ$] this makes the job of building an ice sheet model harder
   \end{itemize}
 \item<3-> \alert{and that's it on variational inequalities for today}
 \end{itemize}
