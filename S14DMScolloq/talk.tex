@@ -106,18 +106,18 @@
   \frametitle{what is a \emph{variational inequality}?}
 
 \begin{enumerate}
-#1{\item a cute way to rewrite a calc problem in $\RR^1$; min $f$ solves:
+#1{\item cute way to rewrite a calc problem in $\RR^1$; min $f$ solves:
    $$u: \qquad f'(u) (v - u) \ge 0 \qquad \text{ for all } v \in [a,b]$$}
 \vspace{-4mm}
-#2{\item a dot-product for projection on a closed, convex $K\subset \mathcal{H}$:
+#2{\item dot-product for projection on a closed, convex $K\subset \mathcal{H}$:
    $$y=\Pi x: \qquad (y - x) \cdot (\eta - y) \ge 0 \,\, \text{ for all } \eta \in K$$}
 \vspace{-4mm}
-#3{\item a rewriting of ``min $f$ on convex $K\subset \RR^n$'':
+#3{\item rewriting of ``min $f$ on convex $K\subset \RR^n$'':
    $$u: \qquad \grad f (u) \cdot (v - u) \ge 0 \qquad \text{ for all } v \in K$$}
 \vspace{-4mm}
-#4{\item it gets existence for \emph{any} continuous nonlinear eqns
+#4{\item gets existence for \emph{any} continuous nonlinear eqns on 
 
-on compact, convex $K\subset \RR^n$:
+compact, convex $K\subset \RR^n$:
    $$x: \qquad F(x) \cdot (y - x) \ge 0 \qquad \text{ for all } y \in K$$}
 \vspace{-4mm}
 #5
@@ -363,13 +363,14 @@ Consider another mainstream applied math problem:
 \item Given continuous function $F:\RR^n \to \RR^n$, find $x\in \RR^n$ so that
     $$F(x)=0.$$
 \item That is, solve $n$ nonlinear equations in $n$ unknowns.
+
+\vspace{5mm}
 \item<2-> \emph{No one has anything positive to say about this problem:}
   \begin{itemize}
   \item[-]<2-> no guarantee of existence
   \item[-]<2-> no guarantee of uniqueness
   \item[-]<2-> no effective theory of approximation
   \end{itemize}
-\uncover<3->{\item This is the Osama bin Laden of applied math problems.}
 \end{itemize}
 \end{frame}
 
@@ -377,26 +378,21 @@ Consider another mainstream applied math problem:
 \begin{frame}
   \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
 
+But we can change the problem minimally, and have something positive to say:
 \begin{itemize}
 \item Assume $K\subset \RR^n$ is compact and convex.
-\item Suppose you seek $x\in K$ so that $F(x)=0$.
+\item Seek $x\in K$ so that $F(x)=0$.
+\item Theorem.  There is $x\in K$ so that
+   $$F(x) \cdot (y-x) \ge 0 \qquad \text{ for all } y \in K$$
+which is a \alert{variational inequality}
 \end{itemize}
-
-\bigskip
-\uncover<2->{Claim: There is $x\in K$ so that
-   $$F(x) \cdot (y-x) \ge 0 \qquad \text{ for all } y \in K$$}
-\uncover<2->{which is a \alert{variational inequality}}
 \end{frame}
+
 
 \begin{comment}
 \begin{frame}
   \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
-
-\vspace{-2mm}
-
-   $$\text{Thm}.\quad \exists x\in K \text{ s.t.} \quad F(x) \cdot (y-x) \ge 0 \quad \text{ for all } y \in K$$
-
-\vspace{-2mm}
+   $$\text{Theorem}.\quad \exists x\in K \text{ s.t.} \quad F(x) \cdot (y-x) \ge 0 \quad \text{ for all } y \in K$$
 \small
 \begin{itemize}
 \item pick $x \in K$; generally $F(x) \ne 0$
@@ -414,14 +410,16 @@ Consider another mainstream applied math problem:
 \end{frame}
 \end{comment}
 
+
 \begin{frame}
   \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
 
-   $$\text{Thm}.\quad \exists x\in K \text{ s.t.} \quad F(x) \cdot (y-x) \ge 0 \quad \text{ for all } x \in K$$
+Theorem.  There is $x\in K$ so that
+   $$F(x) \cdot (y-x) \ge 0 \quad \text{ for all } x \in K.$$
 
-\bigskip
+Proof. $x' \mapsto \Pi (x'-F(x'))$, as map on $K$, has a fixed point.
 \begin{center}
-\includegraphics[width=0.6\textwidth]{Fx-map-on-K}
+\includegraphics[width=0.5\textwidth]{Fx-map-on-K}
 \end{center}
 \end{frame}
 
@@ -429,67 +427,94 @@ Consider another mainstream applied math problem:
 % where we stand
 \whatvi{\visible}{\visible}{\visible}{\visible}
 
+\begin{frame}
+  \frametitle{on convex $K$}
+
+if $K$ is convex and $u,v\in K$ and $0\le \varepsilon \le 1$ then
+    $$w = (1 - \eps) u + \eps v = u + \eps (v-u) \in \mathcal{K}$$
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=1.0\textwidth]{convexview-lincomb}
+
+$w = (1 - \eps) u + \eps v$ pictured as a linear combination in $K$
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=1.0\textwidth]{convexview-intoK}
+
+$w = u + \eps (v-u)$ pictured as a vector from $u$ directed into $K$
+\end{column}
+\end{columns}
+\end{frame}
+
 
 \section[obstacle]{obstacle problem example}
 
 \begin{frame}
-  \frametitle{functional and convex set}
-
-$$J[v] = \int_0^L \frac{1}{2} (v')^2 - f v$$
-
-$$\mathcal{K} = \left\{v \in H_0^1 \,:\, v \ge \psi\right\}$$
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{convexity}
-
-if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \le 1$ then
-
-$(1 - \eps) u + \eps v = u + \eps (v-u) \in \mathcal{K}$ because $\mathcal{K}$ is convex 
-
-\vspace{0.5in}
-
-FIXME: picture first as linear combination $(1 - \eps) u + \eps v$
-
-\vspace{0.5in}
-
-FIXME: ... then as vector directed from base: $u + \eps (v-u)$
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{first variation calculation}
-
-if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \le 1$ then
-   \begin{align*}
-   0 &\le J[u + \eps(v-u)] - J[u] \\
-     &= \int_0^L \frac{1}{2} \left[(u'+\eps (v-u)')^2-(u')^2\right] - f \left(u+\eps(v-u) - u\right) \\
-     &= \int_0^L \frac{1}{2} \left[(u')^2+ 2 \eps u' (v'-u') + \eps^2 (v'-u')^2 - (u')^2\right] - f \eps(v-u) \\
-     &= \eps \int_0^L u' (v'-u') - f (v-u) + \eps^2 \int_0^L (v'-u')^2
-   \end{align*}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{whence the variational inequality}
+  \frametitle{elastic membrane over obstacle}
 
 \begin{itemize}
-\item so far: if $0<\eps\le 1$
-\begin{align*}
-0 &\le \frac{J[u + \eps(v-u)] - J[u]}{\eps} \\
-  &= \int_0^L u' (v'-u') - f (v-u) + \eps \int_0^L (v'-u')^2
-\end{align*}
-\item \emph{thus} as $\eps \to 0$, we know that $u\in\mathcal{K}$ satisfies
-  $$\int_0^L u' (v'-u') - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$
-which is a \alert{variational inequality}
+\item an elastic membrane $z = u(x,y)$ minimizes energy
+$$J[v] = \int_\Omega \frac{1}{2} |\grad v|^2 - f v$$
+where $f$ is any force on the membrane
+\item if the membrane is above an obstacle $\psi(x,y)$ then it is in a convex set
+$$\mathcal{K} = \left\{v \in H_0^1(\Omega) \,:\, v \ge \psi\right\}$$
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/obs-soln}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{variational inequality for obstacle problem}
+
+\begin{itemize}
+\item if $u\in \mathcal{K}$ is minimizer and if $v\in\mathcal{K}$ and if $0\le \eps \le 1$ then
+   \begin{align*}
+   0 &\le J[u + \eps(v-u)] - J[u] \\
+     &= \eps \int_\Omega \grad u \cdot \grad(v-u) - f (v-u) + \eps^2 \int_\Omega |\grad(v-u)|^2
+   \end{align*}
+\item thus as $\eps \to 0$, we know that $u\in\mathcal{K}$ satisfies
+  $$\int_\Omega \grad u \cdot \grad(v-u) - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$
+which is the variational inequality formulation
+\item also written:
+  $$\left<\grad J(u), v-u\right> \ge 0 \qquad \forall v\in\mathcal{K}$$
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{FIXME}
+  \frametitle{finite elements}
 
+\begin{itemize}
+\item the finite element method (FEM) was built on variational \emph{equalities}, i.e.~``weak formulations''
+\item so variational inequalities play well with FEM
+\item FEM represents (approximates) function spaces on pretty meshes like this:
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.35\textwidth]{figs/constantineexample3}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{the 3-point case of obstacle problem}
+
+\begin{itemize}
+\item for example, consider a one-dimensional obstacle problem
+\item with an equally-spaced 3-point mesh
+\item and a constant force $f(x) = f_0$
+\item so $\Omega = [0,L]$ has mesh points $\{x_1,x_2,x_3\}$
+\item and $\psi(x)$ and $v(x)$ represented by just three values each
+\item the energy is just a quadratic function in $\RR^3$:
+\begin{align*}
+ J[v] &= \int_0^L \frac{1}{2} (v')^2 - f_0 v \\
+      &\approx \frac{1}{\Delta x} \left(v_1^2 + v_2^2 + v_3^2 - v_1 v_2 - v_2 v_3\right) - f_0 \Delta x (v_1+v_2+v_3)
+\end{align*}
+\end{itemize}
 \end{frame}
 
 
@@ -501,25 +526,22 @@ which is a \alert{variational inequality}
 \begin{center}
 \includegraphics<1>[height=0.5\textheight]{case_f0_psi1_oneD.png}
 \includegraphics<2>[height=0.5\textheight]{case_f2_psi0_oneD.png}
-\includegraphics<3>[height=0.5\textheight]{case_f2_psi3_oneD.png}
-\includegraphics<4>[height=0.5\textheight]{case_f-1_psi-1_oneD.png}
+\includegraphics<3>[height=0.5\textheight]{case_f-1_psi-1_oneD.png}
 \end{center}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{center}
 \includegraphics<1>[height=0.5\textheight]{case_f0_psi1_3D.png}
 \includegraphics<2>[height=0.5\textheight]{case_f2_psi0_3D.png}
-\includegraphics<3>[height=0.5\textheight]{case_f2_psi3_3D.png}
-\includegraphics<4>[height=0.5\textheight]{case_f-1_psi-1_3D.png}
+\includegraphics<3>[height=0.5\textheight]{case_f-1_psi-1_3D.png}
 \end{center}
 \end{column}
 \end{columns}
 
 \begin{center}
-\only<1>{\framebox[7mm]{1}}
-\only<2>{\framebox[7mm]{2}}
-\only<3>{\framebox[7mm]{3}}
-\only<4>{\framebox[7mm]{4}}
+\only<1>{\framebox{1: zero force $f_0=0$, one-hump obstacle}}
+\only<2>{\framebox{2: upward $f_0>0$, flat obstacle}}
+\only<3>{\framebox{3: downward $f_0<0$, two-peak obstacle}}
 \end{center}
 \end{frame}
 
@@ -532,25 +554,22 @@ which is a \alert{variational inequality}
 \begin{center}
 \includegraphics<1>[height=0.5\textheight]{case_f0_psi1_oneD.png}
 \includegraphics<2>[height=0.5\textheight]{case_f2_psi0_oneD.png}
-\includegraphics<3>[height=0.5\textheight]{case_f2_psi3_oneD.png}
-\includegraphics<4>[height=0.5\textheight]{case_f-1_psi-1_oneD.png}
+\includegraphics<3>[height=0.5\textheight]{case_f-1_psi-1_oneD.png}
 \end{center}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{center}
 \includegraphics<1>[height=0.5\textheight]{case_f0_psi1_convex.png}
 \includegraphics<2>[height=0.5\textheight]{case_f2_psi0_convex.png}
-\includegraphics<3>[height=0.5\textheight]{case_f2_psi3_convex.png}
-\includegraphics<4>[height=0.5\textheight]{case_f-1_psi-1_convex.png}
+\includegraphics<3>[height=0.5\textheight]{case_f-1_psi-1_convex.png}
 \end{center}
 \end{column}
 \end{columns}
 
 \begin{center}
-\only<1>{\framebox[7mm]{1}}
-\only<2>{\framebox[7mm]{2}}
-\only<3>{\framebox[7mm]{3}}
-\only<4>{\framebox[7mm]{4}}
+\only<1>{\framebox{1: zero force $f_0=0$, one-hump obstacle}}
+\only<2>{\framebox{2: upward $f_0>0$, flat obstacle}}
+\only<3>{\framebox{3: downward $f_0<0$, two-peak obstacle}}
 \end{center}
 \end{frame}
 

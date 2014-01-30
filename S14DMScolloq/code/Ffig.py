@@ -15,9 +15,9 @@ def Ffig(x,Fx,z,Piz):
     plt.plot([-1.5, 4.0],[0.0, 0.0],'k',lw=2.0)
     # plot and label points
     plt.plot(x[0],x[1],'.',markersize=12,color='k')
-    plt.text(x[0]+0.1,x[1]+0.1,r'$x$',fontsize=24,color='k')
+    plt.text(x[0]+0.1,x[1]+0.1,r"$x'$",fontsize=24,color='k')
     plt.plot(Fx[0],Fx[1],'.',markersize=12,color='k')
-    plt.text(Fx[0]+0.1,Fx[1]+0.1,r'$F(x)$',fontsize=24,color='k')
+    plt.text(Fx[0]+0.1,Fx[1]+0.1,r"$F(x')$",fontsize=24,color='k')
     plt.plot(z[0],z[1],'.',markersize=12,color='k')
     plt.text(z[0]-0.2,z[1]+0.1,r'$z$',fontsize=24,color='k')
     plt.plot(Piz[0],Piz[1],'.',markersize=12,color='k')
