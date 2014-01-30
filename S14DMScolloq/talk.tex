@@ -486,6 +486,26 @@ which is the variational inequality formulation
 
 
 \begin{frame}
+  \frametitle{PDE for obstacle problem}
+
+\small
+\begin{itemize}
+\item where $u>\psi$ it is easy to show that variational inequality implies $\grad^2 u = f$, the standard PDE for an \emph{unobstructed} elastic membrane
+\item an engineer would say
+\begin{quote}
+the membrane $u(x,y)$ solves $\grad^2 u = f$ except when it is in contact with the obstacle
+\end{quote}
+\item but the set on which the contact happens is \emph{a priori} unknown \dots
+\end{itemize}
+\normalsize
+
+\begin{center}
+\includegraphics[width=0.55\textwidth]{figs/obs-soln} \quad \includegraphics[width=0.35\textwidth]{figs/obs-coincidence} 
+\end{center}
+\end{frame}
+
+
+\begin{frame}
   \frametitle{finite elements}
 
 \begin{itemize}
@@ -495,31 +515,31 @@ which is the variational inequality formulation
 \end{itemize}
 
 \begin{center}
-\includegraphics[width=0.35\textwidth]{figs/constantineexample3}
+\includegraphics[width=0.3\textwidth]{figs/constantineexample3}
 \end{center}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{the 3-point case of obstacle problem}
+  \frametitle{the 3-point, one-dimensional obstacle problem}
 
 \begin{itemize}
 \item for example, consider a one-dimensional obstacle problem
 \item with an equally-spaced 3-point mesh
 \item and a constant force $f(x) = f_0$
 \item so $\Omega = [0,L]$ has mesh points $\{x_1,x_2,x_3\}$
-\item and $\psi(x)$ and $v(x)$ represented by just three values each
 \item the energy is just a quadratic function in $\RR^3$:
 \begin{align*}
  J[v] &= \int_0^L \frac{1}{2} (v')^2 - f_0 v \\
       &\approx \frac{1}{\Delta x} \left(v_1^2 + v_2^2 + v_3^2 - v_1 v_2 - v_2 v_3\right) - f_0 \Delta x (v_1+v_2+v_3)
 \end{align*}
+\item and $\psi(x)$ and $u(x)$ represented by just three values each
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{the 3-point case of obstacle problem}
+  \frametitle{a 3-point case of the obstacle problem}
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -540,14 +560,14 @@ which is the variational inequality formulation
 
 \begin{center}
 \only<1>{\framebox{1: zero force $f_0=0$, one-hump obstacle}}
-\only<2>{\framebox{2: upward $f_0>0$, flat obstacle}}
-\only<3>{\framebox{3: downward $f_0<0$, two-peak obstacle}}
+\only<2>{\framebox{2: upward force $f_0>0$, flat obstacle}}
+\only<3>{\framebox{3: downward force $f_0<0$, two-peak obstacle}}
 \end{center}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{the 3-point case of obstacle problem, reconsidered}
+  \frametitle{a 3-point case of obstacle problem}
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -568,54 +588,36 @@ which is the variational inequality formulation
 
 \begin{center}
 \only<1>{\framebox{1: zero force $f_0=0$, one-hump obstacle}}
-\only<2>{\framebox{2: upward $f_0>0$, flat obstacle}}
-\only<3>{\framebox{3: downward $f_0<0$, two-peak obstacle}}
+\only<2>{\framebox{2: upward force $f_0>0$, flat obstacle}}
+\only<3>{\framebox{3: downward force $f_0<0$, two-peak obstacle}}
 \end{center}
 \end{frame}
+
+
 
 
 \section[glaciers]{three applications to glaciers}
 
 
 \begin{frame}
-  \frametitle{SIA: weak formulation = variational inequality} 
-
-\begin{itemize}
-\item issue: SIA equation applies only on domain where $s>b \iff h > 0$
-\item the change $h \to u$ transforms  constraint $s \ge b$ into $u \ge 0$
-\item define convex constraint set
-  $$\Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$$
-\end{itemize}
-
-\begin{block}{definition} 
-$u \in \Kcal$ solves the \emph{steady shallow ice sheet problem} if
-\begin{align*}
-\int_{\Omega}    \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
-( \nabla u - \Phi(u) )    \right)  \cdot \nabla ( v - u )  
-\ge \int_{\Omega} \alpha(u) (  v -  u ) 
-\end{align*}
-for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
-\end{block}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SIA: an analogy}
+  \frametitle{ice sheet geometry: an analogy}
 
 \begin{columns}
-\begin{column}{0.35\textwidth}
+\begin{column}{0.4\textwidth}
 \begin{itemize}
-\item ice sheet surface \\ = \alert{membrane}
-\item bedrock = \alert{obstacle}
+\item ice surface $s(x,y)$ \\ $\sim$ \emph{membrane}
+\item bedrock $b(x,y)$ \\ $\sim$ \emph{obstacle}
 \end{itemize}
 \vfill
 \begin{center}
-\includegraphics[width=1.1\textwidth]{classicalobs}
+\includegraphics[width=1.1\textwidth]{figs/classicalobs}
 \end{center}
 \end{column}
-\begin{column}{0.65\textwidth}
+\begin{column}{0.6\textwidth}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{polaris} \\
+
+\bigskip
 \includegraphics[width=\textwidth]{capnonflatobs}
 \end{center}
 \end{column}
@@ -624,98 +626,88 @@ for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
 
 
 \begin{frame}
-  \frametitle{existence and uniqueness for a restricted problem} 
+  \frametitle{the steady-climate question for ice sheets}
 
-\begin{block}{(easy) theorem}
-if $\alpha,\Phi$ were independent of $u$ then the variational inequality is equivalent to:
-
-\begin{equation*}
-u \text{ minimizes} \qquad J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v
-\end{equation*}
-
-over $v\in\mathcal{K}$; this admits a unique solution \hfill \scriptsize (Jouvet-Bueler 2012)
-\end{block}
-
-\bigskip
 \begin{itemize}
-\item gives ice sheet existence and uniqueness only if
+\item suppose a steady-state climate
+\item where it snows some places \dots
+\item and melts others
+\item like North America in 90,000--20,000 b.c.e.
+\item question: what land is covered by ice sheets?
+\item<2-> answer: Ontario, mostly.  Illinois, mostly not.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{capnonflatobs}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{v.i.~1: steady ice sheet surface ``equation''} 
+
+\begin{itemize}
+\item ice sheet surface equation (so-called ``SIA'') applies only on domain where $s>b$
+\item let $h=s-b$, the ice sheet thickness
+\item equation applies only where $s > b \iff h > 0$
+\item define $p = n+1$ where $n\approx 3$ for shear-thinning ice
+\item change variables $h = u^{(p-1)/(2p)}$
+\item define convex set $\Kcal = \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$
+\item Theorem (Jouvet-Bueler 2012).  There is $u \in \Kcal$ solving the \emph{steady transformed SIA},
+\begin{align*}
+\int_{\Omega}    \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
+( \nabla u - \Phi(u) )    \right)  \cdot \nabla ( v - u )  
+\ge \int_{\Omega} \alpha(u) (  v -  u ) 
+\end{align*}
+for all $v \in \Kcal$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{marine ice sheets: overview}
+
+\begin{itemize}
+\item marine ice sheets are full of free boundaries:
   \begin{itemize}
-  \item[$\circ$]  bedrock is flat ($\Phi = 0$) and
-  \item[$\circ$]  mass balance is elevation-independent ($a=a(x,y)$)
+  \item[$\circ$] boundary between floating (``shelf'') and grounded
+  \item[$\circ$] boundary between sliding (``stream'') and not (``sheet'')
+  \item[$\circ$] boundary between wet base and dry base
   \end{itemize}
-\item but otherwise: $\alpha,\Phi$ are not independent of $u$
-\end{itemize}
-\end{frame}
- 
-
-\begin{frame} 
-  \frametitle{ existence in the general case } 
-
-\begin{itemize}
-\item $p>2$ so $W^{1,p}_0 (\Omega) \hookrightarrow C(\overline{\Omega})$
-\item define map $\mathcal{A}:C(\overline{\Omega}) \rightarrow C(\overline{\Omega})$,
-which takes $w$ to the unique $u$ solving (over $v\in \mathcal{K}$)
-\begin{align*}
-\int_{\Omega}   \mu  \left( | \nabla u - \Phi(w) |^{p-2} 
-( \nabla u - \Phi(w) )    \right)  \cdot \nabla ( v - u )  
-\ge \int_{\Omega} \alpha(w) (  v -  u )
-\end{align*}
+\item the Antarctic ice sheet is a marine ice sheet
 \end{itemize}
 
-\begin{block}{result}
-the map $\mathcal{A}$ admits at least one fixed point \hfill \scriptsize (Jouvet-Bueler 2012)
-\end{block}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=1.0\textwidth]{schoof-planform}
 
-\vfill
-\scriptsize
-sketch of proof:
-\begin{itemize}
-\item $\mathcal{A}$ is continuous and compact
-\item the set $\{ w \in C(\overline{\Omega}), \exists \lambda \in [0,1]\, \text{so that} \,w = \lambda \mathcal{A}(w)\}$ is bounded 
-\item Schaefer's fixed point theorem
-\end{itemize}
+\tiny cartoon from (Schoof, 2006)
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=1.0\textwidth]{figs/martin-cartoon}
+
+\vspace{10mm}
+\tiny \hfill cartoon from (Martin et al., 2011)
+\end{column}
+\end{columns}
+
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{thus: fixed-point iteration on variational inequality} 
-
-\begin{itemize}
-\item given bedrock topography $b(x,y)$
-\item given mass-balance $a(x,y)$ (steady climate)
-\item set $u_0 = 0$
-\item do fixed point iterations for $u_{k+1} \in \mathcal{K}$:
-\begin{align*}
-\int_{\Omega} &\left( \mu |\nabla u_{k+1} - \Phi(u_k)|^{p-2}
-(\nabla u_{k+1} - \Phi(u_k) ) \right) \cdot \nabla (v - u_{k+1}) \\
-&\qquad\qquad \ge \int_{\Omega} \alpha (v -  u_{k+1})
-\end{align*}
-
-\bigskip
-\item \emph{computes}: steady state ice sheet shape
-\end{itemize}
-\end{frame}
-
-
-
-
-
-\begin{frame}
-  \frametitle{SSA for ice streams: an analogy}
+  \frametitle{ice stream sliding: an analogy}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item ice shelves have zero basal resistance
+\item ice stream is a viscous membrane with basal stresses
 \item ice streams emerge where basal resistance is sufficiently low
-
-(\emph{top}: Siple coast ice streams)
 \item a basal resistance model:
   \begin{itemize}
-  \item[$\circ$] ``plastic'' or Coulomb friction 
-  \item[$\circ$] distribution of yield stress $\tau_c$
+  \item[$\circ$] Coulomb friction, with
+  \item[$\circ$] a yield stress distribution $\tau_c$
   \end{itemize}
-\item ice membrane connects to upstream and/or lateral high friction with viscous stresses (\emph{bottom}: Schoof's slider analogy)
+\item Schoof's slider analogy
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
@@ -730,95 +722,61 @@ sketch of proof:
 
 
 \begin{frame}
-  \frametitle{SSA weak formulation}
+  \frametitle{v.i.~2: ice stream velocity ``equation''}
 
 \begin{itemize}
-\item let $q = 1+\frac{1}{n}$ and $B = A^{1-q}$
-\item suppose a basal yield stress distribution $\tau_c(x,y)$, zero on ice shelves
-\item $2\,\Tnorm{\mathbf{V}}^2 := \sum_{i,j} (\mathbf{D}V_{ij})^2 + \sum_{i} (\mathbf{D}V_{ii})^2$
-\item $\mathbf{F}$ denotes lateral force along calving front
-\end{itemize}
-
-\begin{block}{definition}
-the horizontal velocity $\mathbf{U}\in W^{1,q}(\Omega)$ solves the coulomb friction SSA if it minimizes
+\item let $q = 1+\frac{1}{n}$ where $n\approx 3$ for shear-thinning ice
+\item $\mathbf{V}$ is ice stream velocity, $\mathbf{f} = - \rho g h \grad s$ is driving stress, $\mathbf{F}$ is lateral stress along calving front
+\item Theorem (Schoof, 2006).  There is unique velocity $\mathbf{U}=(u,v)\in W^{1,q}(\Omega)$ solving the \emph{coulomb ice stream problem}.  It minimizes
 \small
+\begin{equation*}
+J[\mathbf{V}] = \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \tau_c |\mathbf{V}| - \mathbf{f} \cdot \mathbf{V}  - \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
+\end{equation*}
+\normalsize
+with no constraint
+\item but $J[\mathbf{V}]$ is not smooth because of ``$\tau_c |\mathbf{V}|$''
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{v.i.~2: ice stream velocity ``equation''}
+
+\begin{itemize}
+\item Schoof first derived the variational inequality form: $\mathbf{U} \in W^{1,q}(\Omega)$ solves
 \begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \rho g h \grad s \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
+&\int_\Omega T_{ij}(\mathbf{U}) D_{ij}\left(\mathbf{V} - \mathbf{U}\right) + \tau_c \left(|\mathbf{V}| - |\mathbf{U}|\right) - \mathbf{f} \cdot \left(\mathbf{V} - \mathbf{U}\right) \\
+&\qquad - \int_{\partial\Omega} \mathbf{F} \cdot \left(\mathbf{V} - \mathbf{U}\right) \ge 0
 \end{align*}
-\end{block}
-
+for all $\mathbf{V}\in W^{1,q}(\Omega)$
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{SSA weak formulation is well-posed}
+  \frametitle{v.i.~3: polythermal ice ``equation''}
 
-\bigskip
-\begin{block}{Theorem}
-if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)}(\Omega)$, and if  $\tau_c \in L^{q/(q-1)}(\Omega)$, and as long as there is sufficient total basal resistance,$^\ast$ then the Coulomb friction SSA is well-posed problem for computing the velocity $\mathbf{U}\in W^{1,q}(\Omega)$ \hfill \scriptsize (Schoof, 2006)
-\end{block}
-
-\bigskip
-\begin{itemize}
-\item \emph{note}: because $\mathcal{J}_{\text{SSA}}$ is not differentiable, minimization on last slide is equivalent to a variational inequality but not to a PDE
-\end{itemize}
-
-\vfill
-\scriptsize $\ast$: To stop the ice sheet from sliding whole into the sea.  There is a precise inequality.
+FIXME
 \end{frame}
-
-\begin{frame}
-  \frametitle{marine ice sheets}
-
-\begin{itemize}
-\item marine ice sheets have all modes of flow
-\item full of free boundaries
-\item the Antarctic ice sheet is the marine ice sheet
-\end{itemize}
-
-\begin{center}
-\includegraphics[width=0.7\textwidth]{schoof-planform}
-
-\tiny cartoon from (Schoof, 2006)
-\end{center}
-\end{frame}
-
-
-
-
-
 
 
 \begin{frame}
-  \frametitle{a quality of the SIA variational inequality} 
+  \frametitle{variational inequalities for ice: a summary}
 
 \begin{itemize}
-\item every glaciologist believes this about steady climates:
-	$$\text{if } a > 0 \text{ on a sub-domain } R \text{ then } s > b \text{ on } R$$
-\item that is:
-\begin{center}
- if it snows more than it melts then you get a glacier there
-\end{center}
+\item of the three v.i.s:
+  \begin{itemize}
+  \item[$\circ$] 1 for the ice sheet surface is \emph{not} a minimization
+  \item[$\circ$] 2 for the ice stream sliding \emph{is} a minimization, but of a non-smooth functional
+  \item[$\circ$] 3 for the cold ice is \emph{not} a minimization
+  \end{itemize}
+\item<2-> v.i.s will be used a lot in the future for glacier and ice sheet problems because of all the free boundaries between different equations
+  \begin{itemize}
+  \item<2->[$\circ$] I've learned that when a glaciologist says ``this equation describes this \dots'' they mean ``this equation describes this \dots \emph{whereever the equation can be applied and I can't generally tell you where that is}''
+  \item<2->[$\circ$] this makes the job of building an ice sheet model hard
+  \end{itemize}
+\item<3-> \alert{and that's it on variational inequalities for today}
 \end{itemize}
-
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{itemize}
-\small
-\item uniformly-elliptic variational inequalities, e.g.~the classical obstacle problem,
-\begin{align*}
-\int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
-\end{align*}
-for all $v\ge \psi$, do \emph{not} have the analogous property
-\end{itemize}
-\end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{classicalobs}
-\end{column}
-\end{columns}
 \end{frame}
-
-
-
 
 \end{document}
