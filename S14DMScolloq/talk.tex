@@ -417,7 +417,7 @@ which is a \alert{variational inequality}
 Theorem.  There is $x\in K$ so that
    $$F(x) \cdot (y-x) \ge 0 \quad \text{ for all } x \in K.$$
 
-Proof. $x' \mapsto \Pi (x'-F(x'))$, as map on $K$, has a fixed point.
+Proof. $x' \mapsto \Pi (x'-F(x'))$, as map $K\to K$, has a fixed point.
 \begin{center}
 \includegraphics[width=0.5\textwidth]{Fx-map-on-K}
 \end{center}
@@ -431,7 +431,7 @@ Proof. $x' \mapsto \Pi (x'-F(x'))$, as map on $K$, has a fixed point.
   \frametitle{on convex $K$}
 
 if $K$ is convex and $u,v\in K$ and $0\le \varepsilon \le 1$ then
-    $$(1 - \eps) u + \eps v = u + \eps (v-u) \in \mathcal{K}$$
+    $$(1 - \eps) u + \eps v = u + \eps (v-u)$$
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -476,7 +476,7 @@ $$\mathcal{K} = \left\{v \in H_0^1(\Omega) \,:\, v \ge \psi\right\}$$
    0 &\le J[u + \eps(v-u)] - J[u] \\
      &= \eps \int_\Omega \grad u \cdot \grad(v-u) - f (v-u) + \eps^2 \int_\Omega |\grad(v-u)|^2
    \end{align*}
-\item thus as $\eps \to 0$, we know that $u\in\mathcal{K}$ satisfies
+\item thus as $\eps \to 0^+$, we know that $u\in\mathcal{K}$ satisfies
   $$\int_\Omega \grad u \cdot \grad(v-u) - f (v-u) \ge 0 \qquad \forall v\in\mathcal{K}$$
 which is the variational inequality formulation
 \item also written:
@@ -492,10 +492,10 @@ which is the variational inequality formulation
 \begin{itemize}
 \item where $u>\psi$, the variational inequality implies $-\grad^2 u = f$
    \begin{itemize}
-   \item[$\circ$] the standard PDE for an \emph{unobstructed} elastic membrane
-   \item[$\circ$] $-\grad^2 u = f$ is ``Poisson equation''
+   \item[$\circ$] $-\grad^2 u = f$ is ``Poisson equation'',
+   \item[$\circ$] the standard PDE for an (unobstructed) elastic membrane
    \end{itemize}
-\item an engineer would say
+\item one can say
 \begin{quote}
 the membrane $u(x,y)$ solves $-\grad^2 u = f$ except when it is in contact with the obstacle
 \end{quote}
@@ -761,13 +761,13 @@ for all $\mathbf{V}\in W^{1,q}(\Omega)$
 
 
 \begin{frame}
-  \frametitle{some glaciers have cold ice}
+  \frametitle{some glaciers have cold ice (!)}
 
 \begin{itemize}
 \item to a glaciologist, ice is ``cold'' or ``temperate''
   \begin{itemize}
   \item[$\circ$] cold ice has temperature below $0^\circ$C
-  \item[$\circ$] temperate ice is at $0^\circ$C, but with liquid water
+  \item[$\circ$] temperate ice is at $0^\circ$C, but with liquid between crystals
   \end{itemize}
 \item temperature $u$, flow velocity $\mathbf{V}$
 \item heat flux is $\mathbf{q} = - k \grad u + \rho c \mathbf{V} u$
