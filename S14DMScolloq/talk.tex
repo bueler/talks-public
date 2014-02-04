@@ -389,38 +389,29 @@ which is a \alert{variational inequality}
 \end{frame}
 
 
-\begin{comment}
-\begin{frame}
-  \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
-   $$\text{Theorem}.\quad \exists x\in K \text{ s.t.} \quad F(x) \cdot (y-x) \ge 0 \quad \text{ for all } y \in K$$
-\small
-\begin{itemize}
-\item pick $x \in K$; generally $F(x) \ne 0$
-\item let $z = x - F(x)$ and find $\Pi z \in K$
-\item continuous map takes $K$ to $K$:
-    $$x \mapsto \Pi (x - F(x))$$
-\item Brouwer fixed point thm: $\exists x\in K$ s.t.
-    $$x = \Pi (x - F(x)) = \Pi z$$
-\item by previous char.~of projection,
-    $$\left(\Pi z - z)\right) \cdot \left(y - \Pi z\right) \ge 0 \quad \text{ for all } y \in K$$
-\item using $x = \Pi (x - F(x))$, simplify to
-    $$F(x) \cdot \left(y - x\right) \ge 0 \quad \text{ for all } y \in K$$
-\end{itemize}
-\normalsize
-\end{frame}
-\end{comment}
-
-
 \begin{frame}
   \frametitle{solve $F(x)=0$ on compact, convex $K\subset \RR^n$}
 
-Theorem.  There is $x\in K$ so that
+\emph{Theorem}.  There is $x\in K$ so that
    $$F(x) \cdot (y-x) \ge 0 \quad \text{ for all } x \in K.$$
 
-Proof. $x' \mapsto \Pi (x'-F(x'))$, as map $K\to K$, has a fixed point.
-\begin{center}
-\includegraphics[width=0.5\textwidth]{Fx-map-on-K}
-\end{center}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\emph{Proof}. The map $x' \mapsto \Pi (x'-F(x'))$, as a map $K\to K$, has a fixed point $x$.  It solves
+  $$x=\Pi (x-F(x))=\Pi z.$$
+
+\medskip
+So $x=\Pi z$ is a projection!  But
+  $$\left(\Pi z - z\right) \cdot \left(y - \Pi z\right) \ge 0$$
+for all $y\in K$.
+
+\medskip
+This simplifies to $F(x) \cdot (y-x) \ge 0$.
+\end{column}
+\begin{column}{0.43\textwidth}
+\includegraphics[width=\textwidth]{Fx-map-on-K}
+\end{column}
+\end{columns}
 \end{frame}
 
 
