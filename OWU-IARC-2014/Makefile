@@ -2,8 +2,14 @@ all: talk.pdf
 
 TIKZFIGURES=
 
-talk.pdf: talk.tex ${TIKZFIGURES}
+# FigS8_Thwaites_anim.gif  is from supplementary material on Rignot et al 2014
+anim/thwaitesframes0.png: anim/FigS8_Thwaites_anim.gif
+	(cd anim/ && convert FigS8_Thwaites_anim.gif thwaitesframes%d.png)
+
+../commonfigs/animhalfar/halfar0.png: ../commonfigs/animhalfar.tar.gz
 	(cd ../commonfigs/ && rm -rf animhalfar/ && tar -xzvf animhalfar.tar.gz)
+
+talk.pdf: talk.tex ${TIKZFIGURES} anim/thwaitesframes0.png ../commonfigs/animhalfar/halfar0.png
 	pdflatex talk
 	pdflatex talk
 
