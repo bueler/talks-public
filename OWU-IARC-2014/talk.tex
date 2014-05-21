@@ -431,23 +431,48 @@ where $A>0$ is the ice ``softness''
 
 \begin{itemize}
 \small
-\item $a(t,x,y,z)=$ yearly-average mass balance
-\item $b(x,y)=$ bedrock elevation
-\item $s(t,x,y)=$ ice surface elevation
-\item $h(t,x,y)=$ ice thickness $ = s-b$
-\item ${\bf U}(t,x,y,z)=$ horizontal velocity field
+\item $s=$ ice surface elevation
+\item $b=$ bedrock elevation
+\item $h=$ ice thickness $ = s-b$
+\item ${\bf U}=$ horizontal velocity field
+\item $a=$ surface mass balance (accumulation)
 \end{itemize}
 
-\begin{alertblock}{key idea: ice surface $s$ is always above the bedrock $b$}
+\begin{alertblock}{obvious idea: ice surface $s$ is always above the bedrock $b$}
 \end{alertblock}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{ice sheets: a mathematical modeling analogy}
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+\item ice sheet surface \\ = \alert{membrane}
+\item bedrock = \alert{obstacle}
+\end{itemize}
+\vfill
+\begin{center}
+\includegraphics[width=1.1\textwidth]{classicalobs}
+\end{center}
+\end{column}
+\begin{column}{0.65\textwidth}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{polaris} \\
+\includegraphics[width=\textwidth]{capnonflatobs}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
 
 
 \begin{frame}
   \frametitle{shallow ice approximation (SIA)}
 
 \begin{itemize}
-\item SIA = lubrication approximation of Stokes model
+\item SIA = lubrication approximation of Glen-law Stokes model earlier
 \item good approximation when:
   \begin{itemize}
   \item[$\circ$] sliding is small or zero
@@ -458,6 +483,39 @@ where $A>0$ is the ice ``softness''
   \item[$\circ$] $[h]$ is a typical thickness scale
   \item[$\circ$] $[x]$ is a typical width scale
   \item[$\circ$] small parameter is $\eps = [h] / [x]$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{SIA: velocity}
+ 
+\begin{itemize}
+\item horizontal ice velocity is given by: 
+  $${\bf U}  =  - \frac{2 A}{4} (\rho g)^{3} \left[ (s-b)^4 - (s - z)^4  \right] 
+|\nabla s |^{2} \nabla s$$
+\item no PDE needs to be solved to compute velocity!
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{SIA: steady state}
+
+\begin{itemize}
+\item mass conservation in steady state: 
+  $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
+\item shallow ice approximation + (steady) mass conservation:
+  $$- \Div \left(\Gamma (s-b)^5 | \nabla s |^2 \nabla s  \right) =  a$$
+  \begin{itemize}
+  \vspace{-0.2in}
+  \item[$\circ$] this is the major SIA equation (\dots a PDE?)
+  \item[$\circ$] computes ice surface $s$
+  \item[$\circ$] constant $\Gamma > 0$ combines $\rho,g,A$
+  \item[$\circ$] coefficient $(s-b)^5 \to 0$ at margins
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -486,67 +544,6 @@ where $A>0$ is the ice ``softness''
 frames from $t=4$ months to $t = 10^6$ years,
 
 equal spaced in \emph{exponential} time
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SIA: velocity}
- 
-\begin{itemize}
-\item let $p=n+1>2$
-\item assume: no sliding and isothermal
-\item horizontal ice velocity is given by: 
-  $${\bf U}  =  - \frac{2 A}{p} (\rho g)^{p-1} \left[ (s-b)^p - (s - z)^p  \right] 
-|\nabla s |^{p-2} \nabla s$$
-\item no PDE needs to be solved to compute velocity!
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SIA: steady state}
-
-\begin{itemize}
-\item mass conservation in steady state: 
-  $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
-\item shallow ice approximation + (steady) mass conservation:
-  $$- \Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a$$
-  \begin{itemize}
-  \vspace{-0.2in}
-  \item[$\circ$] this is the major SIA equation (\dots a PDE?)
-  \item[$\circ$] computes ice surface $s$
-  \item[$\circ$] constant $\Gamma > 0$ combines $\rho,g,A,p$
-  \item[$\circ$] $p$-Laplacish \dots but coefficient $(s-b)^{p+1} \to 0$ at margins
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-
-
-
-
-\begin{frame}
-  \frametitle{SIA: an analogy}
-
-\begin{columns}
-\begin{column}{0.35\textwidth}
-\begin{itemize}
-\item ice sheet surface \\ = \alert{membrane}
-\item bedrock = \alert{obstacle}
-\end{itemize}
-\vfill
-\begin{center}
-\includegraphics[width=1.1\textwidth]{classicalobs}
-\end{center}
-\end{column}
-\begin{column}{0.65\textwidth}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{polaris} \\
-\includegraphics[width=\textwidth]{capnonflatobs}
 \end{center}
 \end{column}
 \end{columns}
