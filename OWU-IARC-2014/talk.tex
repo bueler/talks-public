@@ -136,7 +136,7 @@
 
 
 
-\title[math and ice sheets]{An applied mathematician lives with \\ flowing ice sheets}
+\title[ice sheets with a bit of math]{Flowing ice sheets \\ (with a bit of applied math)}
 
 \author[Bueler]{Ed Bueler}
 
@@ -219,29 +219,55 @@
 
 \bigskip\bigskip
 \begin{itemize}
-\item \dots at least: glaciers are viscous flows at larger scales
+\item \dots at least: glaciers are viscous flows at large scales
 \item \emph{usage}: ``ice sheets'' are big, shallow glaciers
 \end{itemize}
 \end{frame}
 
 
+
+\begin{frame}{what is a fluid?}
+
+\bigskip
+\begin{itemize}
+\item seriously
+\item<2-> is it just a collection of particles?
+\item<3-> a fluid is a mathematical abstraction!
+\item<4-> primary variables:
+  \begin{itemize}
+  \item<4->[$\circ$]   velocity $\mathbf{u}(\bx,t)$
+  \item<4->[$\circ$]   pressure $p(\bx,t)$
+  \item<4->[$\circ$]   density $p(\bx,t)$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
 \begin{frame}{ice in glaciers is a viscous fluid}
 
 \begin{itemize}
-\item primary variables: velocity $\mathbf{u}(\bx,t)$ and pressure $p(\bx,t)$
-\item also: $\rho$ is density, $\mathbf{g}$ is gravity, $\nu$ is viscosity
-\item if the glacier fluid were ``typical'' like the ocean we would model with Navier-Stokes equations:
+\item liquid water, motor oil, and glacier ice are all modeled as \alert{incompressible viscous fluids}
+\item if the glacier ice were a ``typical'' incompressible viscous fluids like the ocean we would model with Navier-Stokes equations:\footnote{these Navier-Stokes equations in 3D are hard \dots Clay prize}
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
 \rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{stress balance}}
 \end{align*}
-\item but ice is not typical!
-\item e.g.~not addressed in ice sheet flow models:
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{ice is a weird viscous fluid}
+
+\begin{itemize}
+\item \dots but ice is not typical!
+\item e.g.~not relevant in ice sheet flow:
   \begin{itemize}
   \item[$\circ$] turbulence
   \item[$\circ$] convection
   \item[$\circ$] coriolis force
-  \item[$\circ$] density-driven flow
+  \item[$\circ$] density-driven flow (weather)
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -252,11 +278,17 @@
 \begin{itemize}
 \item our glacier fluid is
   \begin{enumerate}
-  \item ``slow''\footnote{$Fr\approx 10^{-15}$.  Regarding coriolis: $Fr/Ro \approx 10^{-8}$.}:
+  \item ``slow'' is a technical term:\footnote{$Fr\approx 10^{-15}$.  Regarding coriolis: $Fr/Ro \approx 10^{-8}$.}
     $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
   \item non-Newtonian (shear-thinning):
     $$\text{viscosity $\nu$ is not constant}$$
   \end{enumerate}
+
+\medskip
+\item for ``shear-thinning'' there is a power law (``Glen law''):
+  $$(\text{strain rate}) = A (\text{shear stress})^n$$
+where $A>0$ is the ice ``softness''
+\item $1.8 < n < 4.0$ ?  \quad when in doubt: \alert{$n=3$}
 \end{itemize}
 \end{frame}
 
@@ -274,11 +306,8 @@
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow stress balance}} \\
-\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^{n-1} \tau_{ij} &&\text{\emph{Glen flow law}}
+\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
 \end{align*}
-\item $1.8 < n < 4.0$ ?  \quad \alert{when in doubt: $n=3$}
-\medskip
-\item $A>0$ is ``ice softness''
 \end{itemize}
 \end{frame}
 
@@ -310,7 +339,7 @@
 \normalsize
 
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{greentrans}
+    \includegraphics[width=0.75\textwidth]{greentrans}
   \end{center}
 \end{frame}
 
@@ -330,6 +359,28 @@
   \end{enumerate}
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{flow results from PISM}
+
+\begin{itemize}
+\item PISM = Parallel Ice Sheet Model (\texttt{pism-docs.org})
+\item below are 2 km grid results for Greenland; everything evolves; only showing surface velocities
+\item movement of ice can be measure from space (!)
+\end{itemize}
+
+\vspace{-0.1in}
+\begin{center}
+    %\includegraphics<1>[height=4.2cm]{csurf_insar_pism_all} \\
+    \includegraphics<1>[height=4.2cm]{speed_sar_pism_all} \\
+   \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
+
+\medskip
+\tiny (computations by Andy Aschwanden)
+\end{center}
+\end{frame}
+
 
 
 \begin{frame}
@@ -354,7 +405,7 @@
 \small
 \begin{itemize}
 \item ice sheet mass can be measured from space (!)
-\item below: curves are ice sheet model $+$ climate model results
+\item below: curves are (PISM) $+$ (climate model) results
 \item  Greenland ice sheet mass is $2.7 \times 10^9$ Gt \quad $(\approx \text{km}^3)$ % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
 \item  if \emph{all} Greenland ice melts: 7 m of sea level rise
 \item  if \emph{all} Antarctic ice melts: 61 m of sea level rise
@@ -363,26 +414,6 @@
 
 \begin{center}
     \includegraphics[width=0.7\textwidth]{ts_mass_2004-2010}
-\end{center}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{results from PISM}
-
-\begin{itemize}
-\item PISM = Parallel Ice Sheet Model (\texttt{pism-docs.org})
-\item below are 2 km grid results for Greenland; everything evolves; only showing surface velocities
-\end{itemize}
-
-\vspace{-0.1in}
-\begin{center}
-    %\includegraphics<1>[height=4.2cm]{csurf_insar_pism_all} \\
-    \includegraphics<1>[height=4.2cm]{speed_sar_pism_all} \\
-   \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
-
-\bigskip
-\tiny (computations by Andy Aschwanden)
 \end{center}
 \end{frame}
 
