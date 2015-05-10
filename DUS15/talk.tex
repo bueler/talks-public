@@ -1,36 +1,22 @@
-\documentclass{beamer}
-%\documentclass[handout]{beamer}
+\documentclass[hide notes,intlimits]{beamer}
 
 \mode<presentation>
 {
-  %\usetheme{CambridgeUS}
-  %\usetheme{Frankfurt}
   \usetheme{Singapore}
-  %\usecolortheme{crane}
   \usefonttheme{professionalfonts}
-  %\usefonttheme[onlymath]{serif}
-  
   \setbeamertemplate{blocks}[rounded][shadow=true]
+  \setbeamercovered{transparent}
 }
 
-\usepackage{pgfpages}
-
-\usepackage{alltt,verbatim,amsmath,times,empheq}
-\usepackage{bm}
+% load packages
 \usepackage[english]{babel}
-\usepackage[utf8]{inputenc}
-
-%\usepackage{times}
-%\usepackage[T1]{fontenc}
-% Or whatever. Note that the encoding and the font should match. If T1
-% does not look nice, try deleting the line with the fontenc.
-
-%\usepackage{hyperref}
-
-%\usepackage{pdfanim}
-%\usepackage{multimedia,xmpmulti}
-%\PDFAnimLoad[width=\textwidth,loop,interval=40]{exp3a}{exp3a/pic}{310}%
-
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[multidot]{grffile}
+\usepackage{verbatim,empheq}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,shadows}
 \usepackage{animate}
 
 \definecolor{dark red}{HTML}{E41A1C}
@@ -41,8 +27,6 @@
 \definecolor{light blue}{HTML}{377EB8}
 \definecolor{light red}{HTML}{FB9A99}
 \definecolor{light violet}{HTML}{CAB2D6}
-
-\setbeamercolor{boxed}{fg=black,bg=uaf yellow}
 
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\NN}{\mathbb{N}}
@@ -85,21 +69,16 @@
 \newcommand{\Wq}{W^{1,q}(\Omega)}
 \newcommand{\half}{\frac12}
 
-%\setbeamercolor{redtext}{fg=red!80!black}
-\setbeamercolor{redtext}{fg=red!94!black}
-%\setbeamercolor{greentext}{fg=green!80!black}
-\setbeamercolor{greentext}{fg=green!60!black}
-%\setbeamercolor{bluetext}{fg=blue!70!black}
-\setbeamercolor{bluetext}{fg=blue!90!black}
-\setbeamercolor{yellowtext}{fg=yellow!95!black}
-\setbeamercolor{orangetext}{fg=yellow!50!red}
-
-\newcommand{\green}{\usebeamercolor[fg]{greentext}}
-\newcommand{\blue}{\usebeamercolor[fg]{bluetext}}
-\newcommand{\red}{\usebeamercolor[fg]{redtext}}
 
 \renewcommand{\L}{\emph{Left}}
 \newcommand{\R}{\emph{Right}}
+
+
+\newenvironment{transbox}[1][]{%
+\begin{tikzpicture}
+\node[drop shadow,rounded corners,text width=\textwidth,fill=white, fill opacity=#1,text opacity=1] \bgroup
+}{
+\egroup;\end{tikzpicture}}
 
 
 \title[math tools and obstacles in ice sheet models]{Mathematical tools and obstacles \\ in models of ice sheets}
@@ -107,20 +86,19 @@
 \author[Bueler]{Ed Bueler}
 
 \institute[UAF]{
-  \tiny Dept of Mathematics and Statistics and Geophysical Institute \\
+  \scriptsize Dept of Mathematics and Statistics and Geophysical Institute \\
 
-  University of Alaska Fairbanks
+  University of Alaska Fairbanks \\
+  
+  \tiny $^{}$ \\
+  \tiny supported by NASA grant \# NNX13AM16G
 }
 
-\date{\tiny Denver University \\ 15 May, 2015}
-
+\titlegraphic{\includegraphics[width=\textwidth]{andycoast.png}}
 
 \setbeamerfont{date}{size=\scriptsize}
+\date{}
 
-\subject{ice sheet modelling, ice sheets, ice streams, numerical analysis, variational inequality}
-
-
-%\begin{comment}
 \AtBeginSection[]
 {
   \begin{frame}<beamer>
@@ -128,52 +106,22 @@
     \tableofcontents[currentsection,hideallsubsections]
   \end{frame}
 }
-%\end{comment}
 
 
 \begin{document}
+
 \graphicspath{{../commonfigs/}}
 
 \begin{frame}
+\vspace{10mm}
   \titlepage
   \begin{center}
-  \tiny supported by NASA grant 
+  \tiny Denver University \quad 15 May, 2015
   \end{center}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{weak, shallow, and fairly new}
-
-\begin{itemize}
-\small
-\item C.~Schoof (\textbf{2006}) \emph{A variational approach to ice stream flow}, J.~Fluid Mech.~556, 227--251
-\medskip
-\item E.~Bueler, J.~Brown (\textbf{2009}) \emph{Shallow shelf approximation as a “sliding law” in a thermodynamically coupled ice sheet model}, J.~Geophys.~Res.~114, F03008
-\medskip
-\item \alert{G.~Jouvet}, E.~Bueler (\textbf{2012}) \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math.~72 (4), 1292--1314
-\medskip
-\item \alert{G.~Jouvet}, E.~Bueler, C.~Gr\"aser, R.~Kornhuber (\textbf{to appear})  \emph{A nonsmooth Newton multigrid method for a hybrid, shallow model of marine ice sheets}, Proc.~8th ICSCA, AMS Cont.~Math.
-\end{itemize}
-
-\medskip
-\small
-\alert{G.~Jouvet} = Guillaume Jouvet, Free University of Berlin
-\end{frame}
-
-
-% NO OUTLINE BECAUSE ONE APPEARS AT START OF EACH SECTION:
-%\begin{comment}
-\begin{frame}
-  \frametitle{Outline}
-  \tableofcontents[hideallsubsections]
-  % You might wish to add the option [pausesections]
-\end{frame}
-%\end{comment}
-
-
 \section[intro]{ice sheet flow: an introduction for non-glaciologists}
-
 
 \begin{frame}{ice in glaciers is a viscous fluid}
 \begin{columns}
@@ -348,29 +296,6 @@
   %\tiny (figure from IceSAT brochure)
 \end{center}
 \end{frame}
-
-
-\begin{comment}
-\begin{frame}
-  \frametitle{big picture: ice sheet flow changes over time}
-
-\small
-\begin{itemize}
-\item boxes show estimates of mass loss rate from Greenland:
-\begin{center}
-    \includegraphics[width=0.55\textwidth]{greenlandboxes}
-\end{center}
-
-\vspace{-0.21in}
-\item context:\footnote{Gt = gigatonne $\approx \text{km}^3$}
-  \begin{itemize}
-  \item[$\circ$]  Greenland ice sheet mass is $2.7 \times 10^9$ Gt % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
-  \item[$\circ$]  if \emph{all} Greenland ice melts then we get 7 m of sea level rise
-  \item[$\circ$]  if \emph{all} Antarctic ice melts then we get 61 m
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\end{comment}
 
 
 \section[shallow ice approximation]{shallow ice approximation for grounded ice sheets}
@@ -634,275 +559,6 @@ FIXME
 \end{itemize}
 \end{frame}
 
-
-\section[ice streams]{a model for ice streaming}
-
-
-\begin{frame}
-  \frametitle{shallow shelf approximation (SSA): a ``definition''}
-
-\begin{columns}
-\begin{column}{0.52\textwidth}
-\begin{itemize}
-\small
-\item SSA = ``membrane'' or ``plug'' flow approximation of Stokes
-\item a good approximation when there is low basal resistance and minimal basal topography
-\item a very good approximation for ice shelves (next slide)
-\item derived by scaling with $\eps = [h]/[x]$ \emph{and} requirement that basal resistance is low (see Schoof (2006))
-\end{itemize}
-\end{column}
-
-\begin{column}{0.48\textwidth}
-\includegraphics[width=1.1\textwidth]{siassacartoon-lambert}
-
-\begin{center}
-\vspace{-0.18in}
-\tiny [Lambert glacier and Amery ice shelf, Antarctic]
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}{SSA works \emph{well} for ice shelves}
-
-\begin{itemize}
-\item Ross ice shelf (Antarctica) velocity below
-  \begin{itemize}
-  \item[$\circ$] observed versus computed by SSA model in PISM
-  \item[$\circ$] tuned: single, constant $A$
-  \end{itemize}
-\end{itemize}
-\vspace{-0.3in}
-
-\begin{center}
-  \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
-\end{center}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SSA for ice streams: an analogy}
-
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{itemize}
-\item ice shelves have zero basal resistance
-\item ice streams emerge where basal resistance is sufficiently low
-
-(\emph{top}: Siple coast ice streams)
-\item a basal resistance model:
-  \begin{itemize}
-  \item[$\circ$] ``plastic'' or Coulomb friction 
-  \item[$\circ$] distribution of yield stress $\tau_c$
-  \end{itemize}
-\item ice membrane connects to upstream and/or lateral high friction with viscous stresses (\emph{bottom}: Schoof's slider analogy)
-\end{itemize}
-\end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{siple}
-
-\vspace{0.3in}
-
-\includegraphics[width=1.1\textwidth]{schoof-sliders}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SSA weak formulation}
-
-\begin{itemize}
-\item let $q = 1+\frac{1}{n}$ and $B = A^{1-q}$
-\item suppose a basal yield stress distribution $\tau_c(x,y)$, zero on ice shelves
-\item $2\,\Tnorm{\mathbf{V}}^2 := \sum_{i,j} (\mathbf{D}V_{ij})^2 + \sum_{i} (\mathbf{D}V_{ii})^2$
-\item $\mathbf{F}$ denotes lateral force along calving front
-\end{itemize}
-
-\begin{block}{definition}
-the horizontal velocity $\mathbf{U}\in W^{1,q}(\Omega)$ solves the coulomb friction SSA if it minimizes
-\small
-\begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h \Tnorm{\mathbf{V}}^q + \rho g h \grad s \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F} \cdot \mathbf{V}
-\end{align*}
-\end{block}
-
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SSA weak formulation is well-posed}
-
-\bigskip
-\begin{block}{Theorem}
-if $h\in L^\infty(\Omega)$ with $h\ge h_0>0$, and if $h |\grad s| \in L^{q/(q-1)}(\Omega)$, and if  $\tau_c \in L^{q/(q-1)}(\Omega)$, and as long as there is sufficient total basal resistance,$^\ast$ then the Coulomb friction SSA is well-posed problem for computing the velocity $\mathbf{U}\in W^{1,q}(\Omega)$ \hfill \scriptsize (Schoof, 2006)
-\end{block}
-
-\bigskip
-\begin{itemize}
-\item \emph{note}: because $\mathcal{J}_{\text{SSA}}$ is not differentiable, minimization on last slide is equivalent to a variational inequality but not to a PDE
-\end{itemize}
-
-\vfill
-\scriptsize $\ast$: To stop the ice sheet from sliding whole into the sea.  There is a precise inequality.
-\end{frame}
-
-
-\section[marine ice sheets]{a model for marine ice sheet evolution}
-
-\begin{frame}
-  \frametitle{marine ice sheets}
-
-\begin{itemize}
-\item marine ice sheets have all modes of flow
-\item full of free boundaries
-\item the Antarctic ice sheet is the marine ice sheet
-\end{itemize}
-
-\begin{center}
-\includegraphics[width=0.7\textwidth]{schoof-planform}
-
-\tiny cartoon from (Schoof, 2006)
-\end{center}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{ice sheet geometry evolution: set-up}
-
-\begin{itemize}
-\item recall $n\approx 3$ (i.e.~$n>1$):
-  \begin{itemize}
-  \item[$\circ$] $p = n+1 > 2$ \quad  is for SIA weak formulation
-  \item[$\circ$] define $r = \frac{p-1}{2p}$; \quad SIA change of variables is $u=h^r$
-  \item[$\circ$] $q = 1 + \frac{1}{n} < 2$ \quad  is for SSA weak formulation
-  \end{itemize}
-\item time-discretization $t_k$ with spacing $\tau_k = t_{k+1}-t_k$
-
-\bigskip
-\item time-dependent mass conservation: 
-  $$\frac{\partial h}{\partial t} + \Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
-\item we hybridize: \hfill \scriptsize (Bueler \& Brown, 2009) \normalsize
-  $$\mathbf{U} = \mathbf{U}_{\text{SIA}} + \mathbf{U}_{\text{SSA}}$$
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{ice sheet geometry evolution: a new algorithm}
-
-\begin{enumerate}
-\small
-\item find velocity $\mathbf{U}_k \in \Wq$ that minimizes
-\begin{align*}
-\mathcal{J}_{\text{SSA}}(\mathbf{V}) &= \int_\Omega \frac{2 B}{q} h_k \Tnorm{\mathbf{V}}^q + \rho g h_k \grad s_k \cdot \mathbf{V} + \tau_c |\mathbf{V}| - \int_{\partial\Omega} \mathbf{F}_k \cdot \mathbf{V}
-\end{align*}
-\item find $h_{k+\frac12}$, the solution at $t_{k+1}$ of the advection problem:
-$$\begin{cases}
-  \frac{\partial h}{\partial t} + \Div \left(h\, \mathbf{U}_k\right) = 0, & t_k \le t \le t_{k+1}, \\
-  h(t_k) = h_k. &
-\end{cases}$$
-\item transform: $u_{k+\frac12} = (h_{k+\frac12})^{1/r}$
-\item find thickness $h_{k+1} = u^r$, i.e.~find $u\in\mathcal{K}$, that minimizes
-\begin{align*}
-\mathcal{J}_{\text{SIA}}(v) &= \int_{\Omega} \frac{1}{(r+1)\tau_k} v^{r+1} + \frac{\mu}{p} |\nabla v - \Phi(u_{k+\frac12})|^p - \left(\frac{1}{\tau_k} u_k^r + \alpha(u_{k+\frac12})\right) v
-\end{align*}
-\item repeat at {\color{dark blue} 1.} \hfill \scriptsize (Jouvet et al.~to appear)
-\end{enumerate}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{moving grounding line movie}
-
-\begin{center}
-GUILLAUME'S EXP3A MOVIE GOES HERE
-%\PDFAnimation{exp3a}
-\end{center}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{numerical solution of the weak formulations}
-
-\begin{itemize}
-\item the $W^{1,p}$ (SIA) and $W^{1,q}$ (SSA) solutions to these free boundary problems have low regularity
-  \begin{itemize}
-  \item[$\circ$] so we use $P_1$ finite elements
-  \item[$\circ$] $\|u-u_{\text{h}}\|_{W^{1,p}} \le C \text{h}^{2/p}$: convergence is slow
-  \end{itemize}
-
-\bigskip
-\item previous movie used:
-  \begin{itemize}
-  \item[$\circ$] Truncated Nonsmooth Newton MultiGrid (TNNMG) method for both $\mathcal{J}_{\text{SSA}}$ and $\mathcal{J}_{\text{SIA}}$ minimizations
-  \item[$\circ$] implemented in DUNE (\texttt{dune-project.org})
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{known concerns with algorithm}
-
-\begin{itemize}
-\item $\mathcal{J}_{\text{SSA}}$ needs regularization so that $h_k$ is lower bounded
-\item advection scheme should maintain $h\ge 0$
-  \begin{itemize}
-  \item[$\circ$] for now: first-order upwinding on advection problem
-  \end{itemize}
-\item first-order time-splitting 
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{results from PISM}
-
-\begin{itemize}
-\item PISM = Parallel Ice Sheet Model (\texttt{pism-docs.org})
-\item below are 2 km grid results for Greenland; everything evolves; only showing surface velocities
-\item PISM is ``old technology'':  implements SIA+SSA hybrid but in strong form with ad hoc treatment of free boundaries
-\end{itemize}
-
-\vspace{-0.1in}
-\begin{center}
-    %\includegraphics<1>[height=4.2cm]{csurf_insar_pism_all} \\
-    \includegraphics<1>[height=4.2cm]{speed_sar_pism_all} \\
-   \footnotesize{a) observed; b) constant-climate; c) paleo-climate; d) flux-corrected}
-
-\bigskip
-\tiny (computations by Andy Aschwanden)
-\end{center}
-\end{frame}
-
-
-\section*{conclusion}
-
-\begin{frame}
-  \frametitle{conclusion}
-  \framesubtitle{some new thinking which is weak and shallow}
-
-\begin{itemize}
-\item steady grounded ice sheets now have a (mostly) well-posed shallow, weak, obstacle-like formulation (SIA)
-\item sliding velocity computations are by a shallow weak formulation in which ice streams ``emerge naturally'' (SSA)
-\item both of above are generalizations of $p$-Laplace problems
-\item new marine ice sheet algorithm from time-splitting:
-  \begin{itemize}
-  \item[$\circ$]  solve SSA weak form
-  \item[$\circ$]  advection with SSA velocity
-  \item[$\circ$]  solve SIA+(mass conservation) obstacle problem
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-%%%%%%%%%%%%%%
-
-% TWO EXTRA SLIDES NOT SHOWN DURING TALK
-
-
 \begin{frame}
   \frametitle{a quality of the SIA variational inequality} 
 
@@ -933,26 +589,14 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{on TNNMG}
+\section*{conclusion}
 
-\small
-to minimize a constrained or non-differentiable functional $\mathcal{J}$:
+\begin{frame}
+  \frametitle{conclusion}
+  \framesubtitle{some new thinking which is weak and shallow}
+
 \begin{itemize}
-\item let $I$ be the entire node index set, $\mathcal{I}=\mathcal{I}(v)$ the active set where $v$ is away from the obstacle/non-differentiability
-\item let $\mathcal{F}:\RR^I \to \RR^I$ be a ``nonlinear Gauss-Seidel smoother'':
-  \begin{itemize}
-  \item[$\circ$]  gives correction that minimizes $\mathcal{J}$ at each node separately
-  \item[$\circ$]  can be inexact
-  \item[$\circ$]  the active set $\mathcal{I}$ can change
-  \end{itemize}
-\item let $\mathcal{D}$ be the domain of $\mathcal{J}$ and $\mathcal{P}_{\mathcal{D}}$ be a projection onto $\mathcal{D}$
-\item then TNNMG generates sequence $u^l$ by:
-\begin{align*}
-  u^{l+\frac13} &= u^l + \mathcal{F}(u^l), \\
-  u^{l+\frac23} &= u^{l+\frac13} - \left(\mathcal{J}''(u^{l+\frac13})_{\mathcal{I},\mathcal{I}}\right)^{-1} \mathcal{J}'(u^{l+\frac13})_{\mathcal{I}}, \\
-  u^{l+1}       &= \operatorname{argmin}_{w,\rho\in[0,1]} \left\{\mathcal{J}(w) \big| w= \rho u^{l+\frac13} + (1-\rho) \mathcal{P}_{\mathcal{D}}(u^{l+\frac23}) \right\}
-\end{align*}
+\item steady grounded ice sheets now have a (mostly) well-posed shallow, weak, obstacle-like formulation (SIA)
 \end{itemize}
 \end{frame}
 
