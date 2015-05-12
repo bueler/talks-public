@@ -10,5 +10,5 @@ talk.pdf: talk.tex ${TIKZFIGURES}
 .PHONY: clean
 
 clean:
-	@rm -f *.out *.aux *.log *.bbl *.blg *.snm *.toc *.nav *~
+	@rm -f *.out *.aux *.log *.bbl *.blg *.snm *.toc *.nav *.synctex.gz *~
 

@@ -103,7 +103,8 @@
 {
   \begin{frame}<beamer>
     \frametitle{Outline}
-    \tableofcontents[currentsection,hideallsubsections]
+    %\tableofcontents[currentsection,hideallsubsections]
+    \tableofcontents[currentsection]
   \end{frame}
 }
 
@@ -121,7 +122,8 @@
 \end{frame}
 
 
-\section[intro]{ice sheet flow: an introduction for non-glaciologists}
+\section[intro to ice sheets]{ice sheet flow: an introduction for non-glaciologists}
+%\subsection[]{}
 
 \begin{frame}{ice in glaciers is a viscous fluid}
 \begin{columns}
@@ -136,7 +138,8 @@
 \bigskip\bigskip
 \begin{itemize}
 \item \dots at least: glaciers are viscous flows at larger scales
-\item \emph{usage}: ``ice sheets'' are big, shallow glaciers
+\item glaciers are ``free-surface'' flows \dots but with no surface tension
+\item \emph{usage}: ``ice sheets'' $=$ big, continent-scale glaciers
 \end{itemize}
 \end{frame}
 
@@ -152,7 +155,7 @@
 \rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{stress balance}}
 \end{align*}
 \item but ice is not typical!
-\item e.g.~not addressed in ice sheet flow models:
+\item e.g.~not in ice sheet flow models:
   \begin{itemize}
   \item[$\circ$] turbulence
   \item[$\circ$] convection
@@ -166,20 +169,24 @@
 \begin{frame}{ice is a slow, shear-thinning viscous fluid}
 
 \begin{itemize}
-\item our glacier fluid is
+\item glacier ice is
   \begin{enumerate}
   \item ``slow''\footnote{$Fr\approx 10^{-15}$.  Regarding coriolis: $Fr/Ro \approx 10^{-8}$.}:
     $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
-  \item non-Newtonian (shear-thinning):
-    $$\text{viscosity $\nu$ is not constant}$$
+  \item non-Newtonian (shear-thinning)\footnote{blood is also shear-thinning; corn starch in water is shear-thickening}:
+    \begin{itemize}
+    \item viscosity $\nu$ is not constant
+    \item $\nu$ decreases as fluid is sheared
+    \end{itemize}
   \end{enumerate}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{ice is a slow, shear-thinning viscous fluid}
+\begin{frame}{the standard model}
 
 \begin{itemize}
+\item slow flows are called ``Stokes flows''
 \item notation:
   \begin{itemize}
   \item[$\circ$] $\tau_{ij}$ is deviatoric stress tensor
@@ -195,41 +202,18 @@
 \item $1.8 < n < 4.0$ ?  \quad \alert{when in doubt: $n=3$}
 \medskip
 \item $A>0$ is ``ice softness''
+   \begin{itemize}
+   \item $A$ varies strongly with temperature, but I'll ignore that
+   \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{comment}
-\begin{frame}{because ice is a slow fluid \dots}
+\begin{frame}{model design (because ice is a slow fluid)}
 
 \begin{itemize}
-\item  geometry, boundary stress, and viscosity determine velocity field and pressure instantaneously (i.e.~in the Stokes model)
-
-\bigskip
-\item \emph{thus}: a time-stepping ice sheet code recomputes the velocity field at every time step, without requiring previous velocity \footnote{to be a weatherman you've got to know which way the wind blows \dots but not to be a glaciologist}
-\end{itemize}
-\end{frame}
-\end{comment}
-
-
-\begin{frame}{but ice sheets are shallow}
-
-\begin{itemize}
-\item consider cross section of Greenland ice sheet at $71^\circ$ N
-\small
-  \begin{itemize}
-  \item[$\circ$] {\color{dark green}{green}} and {\color{dark blue}{blue}}: usual vertically-exaggerated version
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{greentrans}
-  \end{center}
-\normalsize
-\item in {\color{dark red}{red}}: a view without this vertical exaggeration
-\item \emph{thus}: 
-  \begin{itemize}
-  \item[$\circ$] most simulations use shallow limits of Stokes
-  \item[$\circ$] high aspect-ratio elements endanger Stokes solvers
-  \end{itemize}
+\item  in a Stokes flow, geometry, boundary stress, and viscosity determine velocity field and pressure instantaneously
+\item therefore a time-stepping ice sheet model recomputes the velocity field at every time step, without requiring previous velocity\footnote{to be a weatherman you've got to know which way the wind blows \dots but not to be a glaciologist}
 \end{itemize}
 \end{frame}
 
@@ -243,13 +227,9 @@
 \small
 \item non-sliding portions of ice sheets flow by shear deformation
 \item ice streams slide
-\item ``ice shelves'' are floating thick ice
-\item ice shelves flow by extension
-  \begin{itemize}
-  \scriptsize
-  \item[$\circ$] ``membrane'' or ``plug'' flow
-  \end{itemize}
-\item ``SIA'' and ``SSA'' will be explained later
+\item ``ice shelves'' are floating thick ice \dots slickest sliding
+\item ice shelves flow by extension not shear
+\item today: \alert{no more about sliding}
 \end{itemize}
 \end{column}
 
@@ -265,40 +245,66 @@
 \end{frame}
 
 
-\begin{frame}{summary so far}
+\begin{frame}{ice sheets are shallow}
 
 \begin{itemize}
-\item ice sheets have four outstanding properties \emph{as viscous flows}:
-  \begin{enumerate}
-  \item \alert{slow}
-  \item \alert{shear-thinning}
-  \item \alert{shallow}
-  \item \alert{contact slip}
-  \end{enumerate}
+\item cross-section of Greenland ice sheet at $71^\circ$ N
+\small
+  \begin{itemize}
+  \item[$\circ$] {\color{dark green}{green}} and {\color{dark blue}{blue}}: usual vertically-exaggerated version
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{newgreentrans}
+  \end{center}
+\normalsize
+\item in {\color{dark red}{red}}: a view without this vertical exaggeration
+\item \emph{thus}: 
+  \begin{itemize}
+  \item[$\circ$] most simulations use shallow limits of Stokes
+  \item[$\circ$] technical: high aspect-ratio elements bad in Stokes solvers
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{big picture: ice sheet flow affects sea level}
+  \frametitle{first big picture: ice sheets store past climates}
+Greenland layers movie from NASA, January 2015
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{second big picture: ice sheets affect sea level}
 \medskip
 \small
 \begin{itemize}
 \item \emph{mass and energy inputs}: (1) snow adds, (2) sun heats, (3) ocean heats, (4) earth heats
 \item \emph{mass outputs}: (1) surface meltwater, (2) basal meltwater, (3) ice discharge
 \end{itemize}
-
 \begin{center}
   %\includegraphics[width=0.7\textwidth]{ice-sheet-cartoon}
   \includegraphics[width=0.75\textwidth]{mass-bal-atmos}
-
   %\tiny (figure from IceSAT brochure)
 \end{center}
 \end{frame}
 
 
-\section[shallow ice approximation]{shallow ice approximation for grounded ice sheets}
+\begin{frame}{summary so far}
+\begin{itemize}
+\item ice sheets have five outstanding properties \emph{as viscous flows}:
+  \begin{enumerate}
+  \item \alert{free surface}
+  \item \alert{slow}
+  \item \alert{shear-thinning}
+  \item \alert{shallow}
+  \item \alert{sliding (``contact slip'')}
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\section[shallow ice well-posed?]{is shallow ice approximation well-posed and approximate-able?}
+%\subsection[]{}
 
 
 \begin{frame}
@@ -586,6 +592,16 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 \includegraphics[width=\textwidth]{classicalobs}
 \end{column}
 \end{columns}
+\end{frame}
+
+
+\section[conservation w free boundaries?]{can thin-layer free-boundary models be exact-discrete-conserving?}
+%\subsection[]{}
+
+\begin{frame}
+  \frametitle{FIXME} 
+
+FIXME
 \end{frame}
 
 
