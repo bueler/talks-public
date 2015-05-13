@@ -304,28 +304,6 @@ Greenland layers movie from NASA, January 2015
 
 
 \section[shallow ice well-posed?]{is the shallow ice problem well-posed and approximate-able?}
-%\subsection[]{}
-
-
-\begin{frame}
-  \frametitle{the main variables}
-
-\begin{center}
-\includegraphics[width=0.7\textwidth]{groundedscheme}
-\end{center}
-
-\begin{itemize}
-\small
-\item $a(t,x,y,z)=$ yearly-average mass balance
-\item $b(x,y)=$ bedrock elevation
-\item $s(t,x,y)=$ ice surface elevation
-\item $h(t,x,y)=$ ice thickness $ = s-b$
-\item ${\bf U}(t,x,y,z)=$ horizontal velocity field
-\end{itemize}
-
-\begin{alertblock}{key idea: ice surface $s$ is always above the bedrock $b$}
-\end{alertblock}
-\end{frame}
 
 
 \begin{frame}
@@ -348,15 +326,49 @@ Greenland layers movie from NASA, January 2015
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{SIA: velocity}
+ 
+\begin{itemize}
+\item $b(x,y)$ is bedrock elevation (data)
+\item $s(x,y,t)$ is ice surface elevation (unknown)
+\item let $p=n+1>2$
+\item assume: no sliding and isothermal
+\item horizontal ice velocity is given by: 
+  $${\bf U}  =  - \frac{p}{p+1} \Gamma \left[ (s-b)^p - (s - z)^p  \right] 
+|\nabla s |^{p-2} \nabla s$$
+where $\Gamma > 0$ combines gravity, ice density, ice softness
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{SIA plus mass conservation in steady state}
+
+\begin{itemize}
+\item $a(x,y)$ is snowfall or melt rate (``surface mass balance''; data)
+\item mass conservation in steady state: 
+  $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
+\item shallow ice approximation + (steady) mass conservation:
+  $$- \Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a$$
+  \begin{itemize}
+  \vspace{-0.2in}
+  \item[$\circ$] this is the SIA equation
+  \item[$\circ$] $p$-Laplace-ish \dots but coefficient $(s-b)^{p+1} \to 0$ at margins
+  \end{itemize}
+\item equation above is simplest model for turning data of problem ($b$ and $a$) into ice sheet geometry and velocity ($s$ and $U$)
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{movie of time-dependent SIA}
 
 \begin{columns}
 \begin{column}{0.4\textwidth}
 \small
 \begin{itemize}
-\item at right is the Halfar similarity solution
-\item an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
-\item compare Barenblatt solution of porous medium equation
+\item time-dependent SIA
+  $$\frac{\partial s}{\partial t} = a - \Div \left(  \int_b^s {\bf U}\, dz \right)$$
 \end{itemize}
 \end{column}
 
@@ -364,7 +376,7 @@ Greenland layers movie from NASA, January 2015
 \vspace{-0.25in}
 
 \begin{center}
-\animategraphics[autoplay,loop,height=4.7cm]{4}{../commonfigs/animhalfar/halfar}{0}{26}
+\animategraphics[autoplay,loop,height=5.2cm]{4}{../commonfigs/animhalfar/halfar}{0}{26}
 
 \bigskip
 \tiny
@@ -374,59 +386,16 @@ equal spaced in \emph{exponential} time
 \end{center}
 \end{column}
 \end{columns}
-\end{frame}
 
-\begin{frame}
-  \frametitle{SIA: velocity}
- 
-\begin{itemize}
-\item let $p=n+1>2$
-\item assume: no sliding and isothermal
-\item horizontal ice velocity is given by: 
-  $${\bf U}  =  - \frac{2 A}{p} (\rho g)^{p-1} \left[ (s-b)^p - (s - z)^p  \right] 
-|\nabla s |^{p-2} \nabla s$$
-\item no PDE needs to be solved to compute velocity!
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{SIA: steady state}
 
 \begin{itemize}
-\item mass conservation in steady state: 
-  $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
-\item shallow ice approximation + (steady) mass conservation:
-  $$- \Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a$$
+\scriptsize
+\item the Halfar (1983) similarity solution:
   \begin{itemize}
-  \vspace{-0.2in}
-  \item[$\circ$] this is the major SIA equation (\dots a PDE?)
-  \item[$\circ$] computes ice surface $s$
-  \item[$\circ$] constant $\Gamma > 0$ combines $\rho,g,A,p$
-  \item[$\circ$] $p$-Laplacish \dots but coefficient $(s-b)^{p+1} \to 0$ at margins
+  \scriptsize
+  \item[$\circ$] an exact $b=0,a=0$ solution with $t\to 0^+$ limit a delta function
+  \item[$\circ$] compare Barenblatt solution of porous medium equation
   \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{a change of variable}
- 
-\begin{itemize}
-\item using the change of variable  $u=h^{ \frac{2p}{p-1}}$, the steady SIA equation is:
-\begin{empheq}[]{equation*}
- -  \Div \left( \mu  | \nabla u - \Phi(u) |^{p-2}
-  ( \nabla u - \Phi(u) )  \right)  = \alpha(u)
-\end{empheq}
-
-where
-  \begin{itemize}
-  \item[$\circ$]  $\mu>0$ is constant (isothermal case)
-  \item[$\circ$]  $\Phi(u) = - C \, u^{\frac{p+1}{2p}} \nabla b$ is transformed bedrock topography
-  \item[$\circ$]  $\alpha(u) = a(x,y,z\!=\!u^{\frac{p-1}{2p}} )$ is transformed mass balance
-  \end{itemize}
-\item a generalized $p$-Laplace equation with added nonlinearities
-\item change of vars means uniform $p$-ellipticity recovered, but at cost of ``tilt'' ($\nabla u - \Phi(u)$)
 \end{itemize}
 \end{frame}
 
