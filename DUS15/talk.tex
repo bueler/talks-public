@@ -138,7 +138,7 @@
 \bigskip\bigskip
 \begin{itemize}
 \item \dots at least: glaciers are viscous flows at larger scales
-\item glaciers are ``free-surface'' flows \dots but with no surface tension
+\item glaciers are free-surface flows (with no surface tension)
 \item \emph{usage}: ``ice sheets'' $=$ big, continent-scale glaciers
 \end{itemize}
 \end{frame}
@@ -158,9 +158,9 @@
 \item e.g.~not in ice sheet flow models:
   \begin{itemize}
   \item[$\circ$] turbulence
-  \item[$\circ$] convection
   \item[$\circ$] coriolis force
-  \item[$\circ$] density-driven flow
+  \item[$\circ$] convection
+  %\item[$\circ$] density-driven flow
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -173,7 +173,7 @@
   \begin{enumerate}
   \item ``slow''\footnote{$Fr\approx 10^{-15}$.  Regarding coriolis: $Fr/Ro \approx 10^{-8}$.}:
     $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
-  \item non-Newtonian (shear-thinning)\footnote{blood is also shear-thinning; corn starch in water is shear-thickening}:
+  \item non-Newtonian shear-thinning\footnote{blood is also shear-thinning \\ \hspace{5mm} corn starch in water is shear-thickening}:
     \begin{itemize}
     \item viscosity $\nu$ is not constant
     \item $\nu$ decreases as fluid is sheared
@@ -193,7 +193,7 @@
   \item[$\circ$] $\mathbf{D}u_{ij}$ is strain rate tensor
   \end{itemize}
 \smallskip
-\item the standard ice flow model is Glen-law Stokes:
+\item the standard ice flow model is power-law Stokes:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow stress balance}} \\
@@ -203,7 +203,7 @@
 \medskip
 \item $A>0$ is ``ice softness''
    \begin{itemize}
-   \item $A$ varies strongly with temperature, but I'll ignore that
+   \item $A$ varies strongly with temperature, but I'll ignore that here
    \end{itemize}
 \end{itemize}
 \end{frame}
@@ -212,7 +212,8 @@
 \begin{frame}{model design (because ice is a slow fluid)}
 
 \begin{itemize}
-\item  in a Stokes flow, geometry, boundary stress, and viscosity determine velocity field and pressure instantaneously
+\item ice sheet modeling is a bit like atmosphere flow modeling or weather prediction, but \dots
+\item in a Stokes flow, the geometry, boundary stress, and viscosity determine velocity field and pressure, so \dots
 \item therefore a time-stepping ice sheet model recomputes the velocity field at every time step, without requiring previous velocity\footnote{to be a weatherman you've got to know which way the wind blows \dots but not to be a glaciologist}
 \end{itemize}
 \end{frame}
@@ -226,10 +227,10 @@
 \begin{itemize}
 \small
 \item non-sliding portions of ice sheets flow by shear deformation
-\item ice streams slide
-\item ``ice shelves'' are floating thick ice \dots slickest sliding
+\item ice streams slide too
+\item ``ice shelves'' are floating thick ice \dots all sliding
 \item ice shelves flow by extension not shear
-\item today: \alert{no more about sliding}
+\item but: sliding ignored for today
 \end{itemize}
 \end{column}
 
@@ -261,7 +262,7 @@
 \item \emph{thus}: 
   \begin{itemize}
   \item[$\circ$] most simulations use shallow limits of Stokes
-  \item[$\circ$] technical: high aspect-ratio elements bad in Stokes solvers
+  \item[$\circ$] \scriptsize technical: high aspect-ratio elements bad in non-shallow solvers
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -302,7 +303,7 @@ Greenland layers movie from NASA, January 2015
 \end{frame}
 
 
-\section[shallow ice well-posed?]{is shallow ice approximation well-posed and approximate-able?}
+\section[shallow ice well-posed?]{is the shallow ice problem well-posed and approximate-able?}
 %\subsection[]{}
 
 
