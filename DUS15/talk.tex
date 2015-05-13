@@ -447,6 +447,35 @@ for all $\eta \in \Kcal$
 \end{block}
 \end{frame}
 
+\begin{frame}
+  \frametitle{an interesting quality} 
+\begin{itemize}
+\item every glaciologist believes this about steady climates:
+\begin{center}
+ if $a>0$ on $R$ then $H>0$ on $R$
+\end{center}
+that is:
+\begin{center}
+ if it snows more than it melts then you get a glacier
+\end{center}
+\end{itemize}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\small
+\item uniformly-elliptic variational inequalities, e.g.~the classical obstacle problem,
+\begin{align*}
+\int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
+\end{align*}
+for all $v\ge \psi$, do \emph{not} have the analogous property
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\includegraphics[width=0.95\textwidth]{classicalobs}
+\end{column}
+\end{columns}
+\end{frame}
+
 
 \begin{frame}
   \frametitle{on well-posedness (Jouvet-Bueler 2012)} 
@@ -475,46 +504,25 @@ FIXME: v.i. $\iff$ n.c.p.
 
 
 \begin{frame}
-  \frametitle{an interesting quality} 
-
-\begin{itemize}
-\item every glaciologist believes this about steady climates:
-	$$\text{if } a > 0 \text{ on } R \text{ then } H > 0 \text{ on } R$$
-\item that is:
-\begin{center}
- if it snows more than it melts then you get a glacier
-\end{center}
-\end{itemize}
+  \frametitle{example computation: steady Greenland ice sheet}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
+\includegraphics[width=1.05\textwidth]{insetinset}
+
+\vfill
 \begin{itemize}
-\small
-\item uniformly-elliptic variational inequalities, e.g.~the classical obstacle problem,
-\begin{align*}
-\int_{\Omega}  \nabla u \cdot \nabla (v - u)  \ge  \int_{\Omega} f (v - u),
-\end{align*}
-for all $v\ge \psi$, do \emph{not} have the analogous property
+\item data is $b(x,y)$ and $a(x,y)$
+\item 900 m grid on $1500\times 2600$ km rectangle
+\item NCP solved on 192 processors by
+  \begin{itemize}
+  \item[$\circ$] reduced-space Newton solver from PETSc
+  \item[$\circ$] continuation in regularization and bed smoothing
+  \end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{classicalobs}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{example: steady Greenland ice sheet}
-
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{itemize}
-\item NCP solved by continuation scheme $+$ Newton iteration from PETSc on 900m grid using 192 processes
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
-FIXME updated image from siafve
+\includegraphics[height=0.9\textheight]{grnwinset}
 \end{column}
 \end{columns}
 
