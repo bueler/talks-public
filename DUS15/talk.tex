@@ -401,45 +401,27 @@ equal spaced in \emph{exponential} time
 
 
 \begin{frame}
-  \frametitle{SIA: weak formulation = variational inequality} 
-
-\begin{itemize}
-\item issue: SIA equation applies only on domain where $s>b \iff h > 0$
-\item the change $h \to u$ transforms  constraint $s \ge b$ into $u \ge 0$
-\item define convex constraint set
-  $$\Kcal := \{ v \in W^{1,p}_0 (\Omega), v \ge 0 \}$$
-\end{itemize}
-
-\begin{block}{definition} 
-$u \in \Kcal$ solves the \emph{steady shallow ice sheet problem} if
-\begin{align*}
-\int_{\Omega}    \left( \mu  | \nabla u - \Phi(u) |^{p-2} 
-( \nabla u - \Phi(u) )    \right)  \cdot \nabla ( v - u )  
-\ge \int_{\Omega} \alpha(u) (  v -  u ) 
-\end{align*}
-for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
-\end{block}
-\end{frame}
-
-
-\begin{frame}
   \frametitle{SIA: an analogy}
-
 \begin{columns}
-\begin{column}{0.35\textwidth}
+\begin{column}{0.4\textwidth}
 \begin{itemize}
-\item ice sheet surface \\ = \alert{membrane}
-\item bedrock = \alert{obstacle}
+\item ice sheet surface \\ $\sim$ \alert{membrane}
+\item bedrock $\sim$ \alert{obstacle}
 \end{itemize}
-\vfill
 \begin{center}
-\includegraphics[width=1.1\textwidth]{classicalobs}
+\vspace{-2mm}
+\includegraphics[width=\textwidth]{classicalobs}
+\begin{itemize}
+\item classical Laplacian obstacle problem:
+   $$\lap u = 0 \quad \& \quad u\ge \psi$$
+\end{itemize}
 \end{center}
 \end{column}
-\begin{column}{0.65\textwidth}
+\begin{column}{0.55\textwidth}
 \begin{center}
-\includegraphics[width=0.8\textwidth]{polaris} \\
-\includegraphics[width=\textwidth]{capnonflatobs}
+\includegraphics[width=0.95\textwidth]{polaris} \\
+\vspace{10mm}
+\includegraphics[width=1.05\textwidth]{capnonflatobs}
 \end{center}
 \end{column}
 \end{columns}
@@ -447,102 +429,60 @@ for all $v \in \Kcal$ \hfill \scriptsize (Jouvet-Bueler 2012)
 
 
 \begin{frame}
-  \frametitle{existence and uniqueness for a restricted problem} 
+  \frametitle{weak formulation = variational inequality} 
 
-\begin{block}{(easy) theorem}
-if $\alpha,\Phi$ were independent of $u$ then the variational inequality is equivalent to:
+\begin{itemize}
+\item $H=s-b$ is ice thickness
+\item SIA equations apply only where $s>b \iff H > 0$
+\item define convex admissible set
+  $$\Kcal := \{\eta : \eta^{2p/(p-1)} \in W^{1,p}_0 (\Omega) \,\text{and}\, \eta \ge 0\}$$
+over larger domain $\Omega \subset \RR^2$
+\end{itemize}
 
-\begin{equation*}
-u \text{ minimizes} \qquad J(v) = \frac{\mu}{p} \int_{\Omega} |\nabla v - \Phi |^p - \int_{\Omega}  \alpha v
-\end{equation*}
+\begin{block}{definition} 
+$H \in \Kcal$ solves the \emph{steady shallow ice sheet problem} if
+  $$\int_{\Omega}  \Gamma H^{p+1} |\grad s|^{p-2} \grad s \cdot \grad(\eta - H)  
+\ge \int_{\Omega} a (\eta - H)$$
+for all $\eta \in \Kcal$
+\end{block}
+\end{frame}
 
-over $v\in\mathcal{K}$; this admits a unique solution \hfill \scriptsize (Jouvet-Bueler 2012)
+
+\begin{frame}
+  \frametitle{on well-posedness (Jouvet-Bueler 2012)} 
+
+\begin{block}{theorem.}
+if $b=0$ then variational inequality is equivalent to minimizing
+  $$J[\eta] = \int_{\Omega} \frac{\Gamma}{p} |\grad u|^p - a u$$
+over $u^{(p-1)/(2p)} = \eta \in \Kcal$, and this problem is well-posed (existence, uniqueness, stability w.r.t.~data $a$)
 \end{block}
 
-\bigskip
-\begin{itemize}
-\item gives ice sheet existence and uniqueness only if
-  \begin{itemize}
-  \item[$\circ$]  bedrock is flat ($\Phi = 0$) and
-  \item[$\circ$]  mass balance is elevation-independent ($a=a(x,y)$)
-  \end{itemize}
-\item but otherwise: $\alpha,\Phi$ are not independent of $u$
-\end{itemize}
-\end{frame}
- 
-
-\begin{frame} 
-  \frametitle{ existence in the general case } 
-
-\begin{itemize}
-\item $p>2$ so $W^{1,p}_0 (\Omega) \hookrightarrow C(\overline{\Omega})$
-\item define map $\mathcal{A}:C(\overline{\Omega}) \rightarrow C(\overline{\Omega})$,
-which takes $w$ to the unique $u$ solving (over $v\in \mathcal{K}$)
-\begin{align*}
-\int_{\Omega}   \mu  \left( | \nabla u - \Phi(w) |^{p-2} 
-( \nabla u - \Phi(w) )    \right)  \cdot \nabla ( v - u )  
-\ge \int_{\Omega} \alpha(w) (  v -  u )
-\end{align*}
-\end{itemize}
-
-\begin{block}{result}
-the map $\mathcal{A}$ admits at least one fixed point \hfill \scriptsize (Jouvet-Bueler 2012)
+\begin{block}{theorem.}
+in general case ($b\ne 0$) there exists a solution
 \end{block}
 
-\vfill
-\scriptsize
-sketch of proof:
-\begin{itemize}
-\item $\mathcal{A}$ is continuous and compact
-\item the set $\{ w \in C(\overline{\Omega}), \exists \lambda \in [0,1]\, \text{so that} \,w = \lambda \mathcal{A}(w)\}$ is bounded 
-\item Schaefer's fixed point theorem
-\end{itemize}
+\begin{proof}[proof]
+fixed-point theorem, of course
+\end{proof}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{thus: fixed-point iteration on variational inequality} 
+  \frametitle{another weak form} 
 
-\begin{itemize}
-\item given bedrock topography $b(x,y)$
-\item given mass-balance $a(x,y)$ (steady climate)
-\item set $u_0 = 0$
-\item do fixed point iterations for $u_{k+1} \in \mathcal{K}$:
-\begin{align*}
-\int_{\Omega} &\left( \mu |\nabla u_{k+1} - \Phi(u_k)|^{p-2}
-(\nabla u_{k+1} - \Phi(u_k) ) \right) \cdot \nabla (v - u_{k+1}) \\
-&\qquad\qquad \ge \int_{\Omega} \alpha (v -  u_{k+1})
-\end{align*}
-
-\bigskip
-\item \emph{computes}: steady state ice sheet shape
-\end{itemize}
+FIXME: v.i. $\iff$ n.c.p.
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{example: steady ice sheet on Greenland bedrock}
-
-\begin{itemize}
-\item first iterations from zero ice:
-
-\begin{center}
-%\includegraphics[width=0.9\textwidth]{greenland-result.jpg}
-FIXME
-\end{center}
-\item as far as we can tell: this 2011 computation was the first of the steady state of a real ice sheet \emph{without} time-stepping
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{a quality of the SIA variational inequality} 
+  \frametitle{an interesting quality} 
 
 \begin{itemize}
 \item every glaciologist believes this about steady climates:
-	$$\text{if } a > 0 \text{ on a sub-domain } R \text{ then } s > b \text{ on } R$$
+	$$\text{if } a > 0 \text{ on } R \text{ then } H > 0 \text{ on } R$$
 \item that is:
 \begin{center}
- if it snows more than it melts then you get a glacier there
+ if it snows more than it melts then you get a glacier
 \end{center}
 \end{itemize}
 
@@ -564,6 +504,23 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{example: steady Greenland ice sheet}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item NCP solved by continuation scheme $+$ Newton iteration from PETSc on 900m grid using 192 processes
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+FIXME updated image from siafve
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
 \section[conservation w free boundaries?]{can thin-layer free-boundary models be exact-discrete-conserving?}
 %\subsection[]{}
 
@@ -578,10 +535,18 @@ FIXME
 
 \begin{frame}
   \frametitle{conclusion}
-  \framesubtitle{some new thinking which is weak and shallow}
 
 \begin{itemize}
-\item steady grounded ice sheets now have a (mostly) well-posed shallow, weak, obstacle-like formulation (SIA)
+\item is shallow ice problem
+  \begin{itemize}
+  \item[$\circ$] well-posed? \qquad \alert{probably}
+  \item[$\circ$] approximate-able? \qquad \alert{yes} (but how fast and reliably?)
+  \end{itemize}
+\item can thin-layer free-boundary problems
+  \begin{itemize}
+  \item[$\circ$] be solved by implicit time-stepping? \qquad \alert{yes}
+  \item[$\circ$] be exactly discrete conserving? \qquad \alert{no}
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
