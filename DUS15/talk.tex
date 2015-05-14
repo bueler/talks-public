@@ -522,9 +522,73 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 \section[conservation w free boundaries?]{III. can thin-layer free-boundary models exactly conserve?}
 
 \begin{frame}
-  \frametitle{FIXME} 
+  \frametitle{thin layers in a ``climate''}
+\begin{center}
+\includegraphics[width=0.7\textwidth,keepaspectratio=true]{cartoon-wclimate}
+\end{center}
+\vspace{-6mm}
+\begin{itemize}
+\item abstract problem (strong form)
+  \begin{equation}
+  h_t + \Div \bq = {\color{blue} f} \tag{$\ast$}
+  \end{equation}
+where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
+\item $h$ is layer thickness, $\bq$ is flux, and ${\color{blue} f}$ is source or ``climate''
+\item PDE ($\ast$) can be parabolic or hyperbolic \dots
+  \begin{itemize}
+  \item[$\circ$] but it only applies where $h>0$
+  \end{itemize}
+\item ``$h\ge 0$'' needs to be a constraint
+  \begin{itemize}
+  \item[$\circ$] generates free boundary where ${\color{blue} f} \ll 0$
+  \end{itemize}
+\end{itemize}
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{examples}
+\includegraphics[width=0.4\textwidth,keepaspectratio=true]{polaris}
+\hfill
+\includegraphics[width=0.45\textwidth,keepaspectratio=true]{supp4rignot-small}
+
+\small glaciers \hfill ice shelves \& sea ice
+\medskip
+
+\includegraphics[width=0.41\textwidth,keepaspectratio=true]{marsh-water}
+\hfill
+\includegraphics[width=0.42\textwidth,keepaspectratio=true]{tsunami-sendai}
+
+\small tidewater marsh \hfill tsunami inundation
+
+\scriptsize and surface hydrology, subglacial hydrology, \dots
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{discrete time}
+\begin{itemize}
+\item numerical models for this equation must discretize time
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.85\textwidth,keepaspectratio=true]{cartoon-sets-crop}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{weak form of an implicit time step}
 FIXME
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{solution sets}
+FIXME
+
+\begin{center}
+\includegraphics[width=0.85\textwidth,keepaspectratio=true]{cartoon-sets}
+\end{center}
 \end{frame}
 
 
@@ -537,12 +601,18 @@ FIXME
 \item is shallow ice problem
   \begin{itemize}
   \item[$\circ$] well-posed? \qquad \alert{probably}
-  \item[$\circ$] approximate-able? \qquad \alert{yes} (but how fast and reliably?)
+  \item[$\circ$] approximate-able? \qquad \alert{yes}
+     \begin{itemize}
+     \item[$\triangleright$] but how fast and reliably?
+     \end{itemize}
   \end{itemize}
 \item can thin-layer free-boundary problems
   \begin{itemize}
   \item[$\circ$] be solved by implicit time-stepping? \qquad \alert{yes}
   \item[$\circ$] be exactly discrete conserving? \qquad \alert{no}
+     \begin{itemize}
+     \item[$\triangleright$] but error can be quantified
+     \end{itemize}
   \end{itemize}
 \end{itemize}
 \end{frame}
