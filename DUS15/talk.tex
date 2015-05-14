@@ -70,7 +70,7 @@
 \newcommand{\bF}{\mathbf{F}}
 \newcommand{\bQ}{\mathbf{Q}}
 \newcommand{\bU}{\mathbf{U}}
-\newcommand{\bbU}{\bar{\bU}}
+\newcommand{\bX}{\mathbf{X}}
 
 \newcommand{\bq}{\mathbf{q}}
 \newcommand{\bu}{\mathbf{u}}
@@ -587,10 +587,7 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
   $$h_t + \Div \bq \stackrel{\ast}{=} {\color{blue} f}$$
 on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
 \item $h$ is layer thickness, $\bq$ is flux, and ${\color{blue} f}$ is source or ``climate''
-\item PDE $\ast$ can be parabolic or hyperbolic \dots
-  \begin{itemize}
-  \item[$\circ$] but it only applies where $h>0$
-  \end{itemize}
+\item PDE $\ast$ can be parabolic or hyperbolic \dots but it only applies where $h>0$
 \item ``$h\ge 0$'' needs to be a constraint
   \begin{itemize}
   \item[$\circ$] generates free boundary somewhere in region where ${\color{blue} f} < 0$
@@ -619,7 +616,7 @@ on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} 
 
 \begin{frame}{discrete time}
 \begin{itemize}
-\item numerical models for this equation must discretize time:
+\item numerical models for this problem must discretize time:
   $$h_t + \Div \bq = f \qquad \longrightarrow \qquad \frac{h_n - h_{n-1}}{\Delta t} + \Div \bQ_n = F_n$$
   \begin{itemize}
   \vspace{-3mm}
@@ -650,14 +647,18 @@ where $\ip{A_n(v)}{\phi} := \int_\Omega \left(v - \Delta t\, F_n - h_{n-1}\right
 
 
 \begin{frame}{questions}
-for the weak form model
+for the weak form (variational inequality)
   $$\ip{A_n(h_n)}{v-h_n} \ge 0 \quad \text{ for all } v \in \Kcal$$
 we have these questions:
 
 \begin{itemize}
 \item \emph{well-posedness}: are implicit time-steps well-posed?
     \begin{itemize}
-    \item[$\circ$] explicit time steps are well-posed, but give severe stability time-step restrictions
+    \item[$\circ$] explicit time steps are well-posed
+       \begin{itemize}
+       \item[$\triangleright$] just compute $h_n$ and truncate to impose $h_n\ge 0$
+       \item[$\triangleright$] but has severe stability time-step restrictions!
+       \end{itemize}
     \end{itemize}
 \item \emph{exact conservation}: can we exactly-balance the change in fluid mass over time step by computable integrals of $f$ or $F_n$?
     \begin{itemize}
@@ -668,16 +669,26 @@ we have these questions:
 
 
 \begin{frame}{well-posedness for each time step}
-FIXME
 
 \begin{block}{theorems (Bueler, in prep).}
 for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is well-posed
+
+\begin{itemize}
+\item $p$-Laplacian: $\bq=-k|\grad h|^{p-2}\grad h$
+\item porous medium and doubly-nonlinear: $\bq=-k h^r |\grad h|^{p-2}\grad h$
+    \begin{itemize}
+    \item[$\circ$] includes SIA in flat bed-rock case
+    \end{itemize}
+\item advecting layer: $\bq = \bX h$
+\item nonlocal and linear
+\end{itemize}
 \end{block}
 \end{frame}
 
 
-\begin{frame}{for conservation: subsets of $\Omega$}
+\begin{frame}{for conservation: solution-dependent subsets of $\Omega$}
 
+\vspace{3mm}
 \begin{columns}
 \begin{column}{0.65\textwidth}
 \begin{align*}
@@ -717,12 +728,22 @@ is the \alert{retreat loss} during time step $n$
 \end{frame}
 
 
-\begin{frame}{claim}
-FIXME
+\begin{frame}{bad news for exact discrete conservation}
 
-\begin{block}{claim.}
-you can't exactly conserve
+\begin{block}{claim (Bueler, in prep).}
+\begin{itemize}
+\item if the thin layer has a free boundary then you \alert{cannot exactly conserve}, in the sense that there is no computable integral $I_n$ of the source term $f$, over the time step, so that
+   $$M_n - M_{n-1} = I_n$$
+\item but you can balance if you add the retreat loss \emph{a posteriori}:
+   $$M_n - M_{n-1} = C_n - R_n$$
+(and $C_n$ is a computable integral of the source term)
+\end{itemize}
 \end{block}
+
+\vfill
+\begin{itemize}
+\item I wonder how to make this into an honest theorem \dots
+\end{itemize}
 \end{frame}
 
 
