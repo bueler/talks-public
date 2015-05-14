@@ -279,7 +279,7 @@ Greenland layers movie from NASA, January 2015
   \end{enumerate}
 \item remainder of my talk will address applied-mathematical questions for models which capture
   \begin{itemize}
-  \item[part II] properties 1, 2, 3, and 4 but not 5
+  \item[part II] properties 1, 2, 3, 4 but not 5
   \item[part III] \emph{any} time-dependent model which has properties 1 and 2
   \end{itemize}
 \end{itemize}
@@ -336,10 +336,11 @@ where $\Gamma > 0$ combines gravity, ice density, ice softness
 \item mass conservation in steady state: 
   $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
 \item shallow ice approximation + (steady) mass conservation:
-  $$-\Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s  \right) =  a$$
+  $$-\Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s\right) =  a$$
   \begin{itemize}
   \vspace{-0.2in}
-  \item[$\circ$] this is the SIA equation
+  \item[$\circ$] this is ``the SIA equation'' for ice sheet geometry
+  \item[$\circ$] like Poisson equation $-\Div (D \grad u) = f$
   \item[$\circ$] $p$-Laplace-ish \dots but coefficient $(s-b)^{p+1} \to 0$ at margins
   \end{itemize}
 \item equation above is simplest model for turning data of problem ($b$ and $a$) into ice sheet geometry and velocity ($s$ and $U$)
@@ -347,42 +348,32 @@ where $\Gamma > 0$ combines gravity, ice density, ice softness
 \end{frame}
 
 
-\begin{frame}{movie of time-dependent SIA}
+\begin{frame}{time-dependent SIA}
+
+\begin{itemize}
+\item time-dependent SIA equation
+  $$\frac{\partial s}{\partial t} + \Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s\right) = a$$
+\end{itemize}
 
 \begin{columns}
 \begin{column}{0.4\textwidth}
-\small
-\begin{itemize}
-\item time-dependent SIA
-  $$\frac{\partial s}{\partial t} + \Div \left(\int_b^s {\bf U}\, dz \right) = a$$
-\end{itemize}
-\end{column}
-
-\begin{column}{0.65\textwidth}
-\vspace{-0.25in}
-
-\begin{center}
-\animategraphics[autoplay,loop,height=5.2cm]{4}{../commonfigs/animhalfar/halfar}{0}{26}
-
-\bigskip
-\tiny
-frames from $t=4$ months to $t = 10^6$ years,
-
-equal spaced in \emph{exponential} time
-\end{center}
-\end{column}
-\end{columns}
-
-
-\begin{itemize}
 \scriptsize
-\item the Halfar (1983) similarity solution:
+the Halfar (1983) similarity solution:
   \begin{itemize}
   \scriptsize
   \item[$\circ$] an exact $b=0,a=0$ solution with $t\to 0^+$ limit a delta function
   \item[$\circ$] compare Barenblatt solution of porous medium equation
+  \item[$\circ$] movie frames from $t=4$ months to $t = 10^6$ years, equally-spaced in \emph{exponential} time
   \end{itemize}
-\end{itemize}
+\end{column}
+
+\begin{column}{0.65\textwidth}
+\vspace{-0.25in}
+\begin{center}
+\animategraphics[autoplay,loop,height=5.2cm]{4}{../commonfigs/animhalfar/halfar}{0}{26}
+\end{center}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -415,13 +406,24 @@ equal spaced in \emph{exponential} time
 
 
 \begin{frame}
-  \frametitle{variational inequality (weak formulation)} 
+  \frametitle{SIA equation is constrained} 
 \begin{itemize}
-\item $H=s-b$ is ice thickness \dots $H\ge 0$\,!
-\item flow equations apply only where $s>b \iff H > 0$
+\item $H=s-b$ is ice thickness
+\item thickness is a nonnegative quantity!
+\item steady state equation ``strong form''
+  $$-\Div \left(\Gamma H^{p+1} |\nabla s|^{p-2} \nabla s  \right) =  a$$
+applies only where
+  $$s>b \qquad \iff \qquad H > 0$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{weak formulation by variational inequality} 
+\begin{itemize}
 \item define convex admissible set
   $$\Kcal := \{\eta : \eta^{2p/(p-1)} \in W^{1,p}_0 (\Omega) \,\text{and}\, \eta \ge 0\}$$
 over larger domain $\Omega \subset \RR^2$
+\item multiply strong form by $\eta-H$ where $\eta\in \Kcal$, and integrate by parts thoughtfully
 \end{itemize}
 \begin{block}{definition} 
 $H \in \Kcal$ solves the \emph{steady shallow ice sheet problem} if
@@ -432,8 +434,36 @@ for all $\eta \in \Kcal$
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{an interesting quality} 
+\begin{frame}{ideas contained in weak formulation} 
+\begin{itemize}
+\item weak form
+  $$\int_{\Omega}  \Gamma H^{p+1} |\grad s|^{p-2} \grad s \cdot \grad(\eta - H)  
+\ge \int_{\Omega} a (\eta - H)$$
+implies strong form
+  $$-\Div \left(\Gamma H^{p+1} |\nabla s|^{p-2} \nabla s  \right) =  a$$
+where $H>0$
+\item where $H=0$, weak form implies $a \le 0$
+\item if $b=0$ the weak form is equivalent to a constrained minimization problem, but for general bed this is not so
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{on well-posedness (Jouvet-Bueler 2012)} 
+\begin{block}{theorem.}
+if $b=0$ then the variational inequality is equivalent to
+  $$\min \, J[u] = \int_{\Omega} \frac{\Gamma}{p} |\grad u|^p - a u$$
+over $\eta = u^{(p-1)/(2p)} \in \Kcal$, and this problem is well-posed (existence, uniqueness, stability w.r.t.~data $a$)
+\end{block}
+\begin{block}{theorem.}
+in general case ($b\ne 0$) there exists a solution
+\end{block}
+\begin{proof}[proof]
+fixed-point theorem, of course
+\end{proof}
+\end{frame}
+
+
+\begin{frame}{an interesting quality of this variational inequality} 
 \begin{itemize}
 \item every glaciologist believes this about steady climates:
 \begin{center}
@@ -462,26 +492,9 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{on well-posedness (Jouvet-Bueler 2012)} 
-\begin{block}{theorem.}
-if $b=0$ then the variational inequality is equivalent to
-  $$\min \, J[u] = \int_{\Omega} \frac{\Gamma}{p} |\grad u|^p - a u$$
-over $\eta = u^{(p-1)/(2p)} \in \Kcal$, and this problem is well-posed (existence, uniqueness, stability w.r.t.~data $a$)
-\end{block}
-\begin{block}{theorem.}
-in general case ($b\ne 0$) there exists a solution
-\end{block}
-\begin{proof}[proof]
-fixed-point theorem, of course
-\end{proof}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{another weak form} 
+\begin{frame}{another weak form} 
 \begin{itemize}
-\item the above variational inequality has abstract form
+\item the variational inequality has abstract form
   $$- \ip{\bq(H,\grad H)}{\grad(\eta - H)} \ge \ip{a}{\eta-H} \qquad \forall \eta \in \Kcal$$
 where $\bq=\int_b^s {\bf U}\, dz=-\Gamma H^{p+1} |\grad s|^{p-2} \grad s$ is the ``flux''
 \item a standard localization argument gives
@@ -496,26 +509,44 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{example computation: steady Greenland ice sheet}
+\begin{frame}{example computation: steady Greenland ice sheet}
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \includegraphics[width=1.05\textwidth]{insetinset}
 \vfill
 \begin{itemize}
+\small
 \item data is $b(x,y)$ and $a(x,y)$
-\item 900 m grid on $1500\times 2600$ km rectangle
-\item NCP solved on 192 processors by
+\item 900 m grid on $1500\times 2600$ km domain
+\item NCP solved on 192 processors
   \begin{itemize}
-  \item[$\circ$] reduced-space Newton solver from PETSc
-  \item[$\circ$] continuation in regularization and bed smoothing
+  \scriptsize
+  \item[$\circ$] reduced-space Newton solver (PETSc)
+  \item[$\circ$] double continuation by
+    \begin{itemize}
+    \scriptsize
+    \item[$\circ$] diffusivity regularization
+    \item[$\circ$] bed smoothing
+    \end{itemize}
   \end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
-\includegraphics[height=0.9\textheight]{grnwinset}
+\includegraphics[height=0.85\textheight]{grnwinset}
+
+\tiny Bueler (submitted)
 \end{column}
 \end{columns}
+\end{frame}
+
+
+\begin{frame}{Greenland velocity from a better model}
+\begin{center}
+\includegraphics[width=1.0\textwidth]{greenland-overview}
+\end{center}
+
+\vspace{-5mm}
+\tiny Aschwanden et al (submitted); model is the Parallel Ice Sheet Model (\texttt{pism-docs.org})
 \end{frame}
 
 
@@ -524,7 +555,7 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 \begin{frame}
   \frametitle{thin layers in a ``climate''}
 \begin{center}
-\includegraphics[width=0.7\textwidth,keepaspectratio=true]{cartoon-wclimate}
+\includegraphics[width=0.65\textwidth,keepaspectratio=true]{cartoon-wclimate}
 \end{center}
 \vspace{-6mm}
 \begin{itemize}
@@ -532,7 +563,7 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
   \begin{equation}
   h_t + \Div \bq = {\color{blue} f} \tag{$\ast$}
   \end{equation}
-where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
+on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
 \item $h$ is layer thickness, $\bq$ is flux, and ${\color{blue} f}$ is source or ``climate''
 \item PDE ($\ast$) can be parabolic or hyperbolic \dots
   \begin{itemize}
@@ -540,7 +571,7 @@ where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
   \end{itemize}
 \item ``$h\ge 0$'' needs to be a constraint
   \begin{itemize}
-  \item[$\circ$] generates free boundary where ${\color{blue} f} \ll 0$
+  \item[$\circ$] generates free boundary somewhere in region where ${\color{blue} f} < 0$
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -561,14 +592,28 @@ where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
 
 \small tidewater marsh \hfill tsunami inundation
 
-\scriptsize and surface hydrology, subglacial hydrology, \dots
+\scriptsize and sea-level rise, surface hydrology, subglacial hydrology, \dots
 \end{frame}
 
 
 \begin{frame}
   \frametitle{discrete time}
 \begin{itemize}
-\item numerical models for this equation must discretize time
+\item numerical models for this equation \emph{must} discretize time:
+  $$(\ast) \longrightarrow \frac{h_n - h_{n-1}}{\Delta t} + \Div \bQ_n = F_n$$
+  \begin{itemize}
+  \item[$\circ$] in minimal sense: semi-discretize ($\ast$) = ``$u_t + \Div \bq = f$'' in time
+  \end{itemize}
+\item this might be by backward Euler, trapezoid, RK, \dots
+\item but remember constraint: $h_n \ge 0$
+\item questions:
+  \begin{itemize}
+  \item[$\circ$] are implicit time-steps well-posed?
+    \begin{itemize}
+    \item[$\triangleright$] explicit time steps are always well-posed here, but cause severe stability time-step restrictions
+    \end{itemize}
+  \item[$\circ$] FIXME
+  \end{itemize}
 \end{itemize}
 \begin{center}
 \includegraphics[width=0.85\textwidth,keepaspectratio=true]{cartoon-sets-crop}
