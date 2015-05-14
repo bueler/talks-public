@@ -18,6 +18,37 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,shadows}
 \usepackage{animate}
+\usepackage{amsmath,verbatim}
+
+% see http://tex.stackexchange.com/questions/86188/labelling-with-arrows-in-an-automated-way
+
+\newif\ifclipme\clipmetrue
+\tikzset{labelstyle/.style={LabelStyle/.append style={#1}},linestyle/.style={LineStyle/.append style={#1}}}
+\tikzset{LabelStyle/.initial={},LineStyle/.initial={}}
+
+\newcommand{\mathWithDescription}[4][]{{%
+    \tikzset{#1}%
+    \tikz[baseline]{
+        \node[draw=red,rounded corners,anchor=base] (m#4) {$\displaystyle#2$};
+        \ifclipme\begin{pgfinterruptboundingbox}\fi
+            \node[above of=m#4,font=\strut, LabelStyle] (l#4) {#3};
+            \draw[-,red, LineStyle] (l#4) to (m#4);
+        \ifclipme\end{pgfinterruptboundingbox}\fi
+    }%
+}}
+
+\newcommand{\mathWithDescriptionStarred}[3][]{{%
+    \clipmefalse%
+    \mathWithDescription[#1]{#2}{#3}{\themathLabelNode}%
+}}
+
+\newcounter{mathLabelNode}
+
+\newcommand{\mathLabelBox}[3][]{%
+   \stepcounter{mathLabelNode}%
+   \mathWithDescription[#1]{#2}{#3}{\themathLabelNode}%
+   \vphantom{\mathWithDescriptionStarred[#1]{#2}{#3}{\themathLabelNode}}%
+}
 
 \definecolor{dark red}{HTML}{E41A1C}
 \definecolor{dark green}{HTML}{4DAF4A}
@@ -34,6 +65,7 @@
 \newcommand{\ZZ}{\mathbb{Z}}
 
 \newcommand{\Kcal}{\mathcal{K}}
+\newcommand{\Xcal}{\mathcal{X}}
 
 \newcommand{\bF}{\mathbf{F}}
 \newcommand{\bQ}{\mathbf{Q}}
@@ -551,13 +583,11 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 \end{center}
 \vspace{-6mm}
 \begin{itemize}
-\item abstract problem (strong form)
-  \begin{equation}
-  h_t + \Div \bq = {\color{blue} f} \tag{$\ast$}
-  \end{equation}
+\item abstract problem, of which ice sheets are one case:
+  $$h_t + \Div \bq \stackrel{\ast}{=} {\color{blue} f}$$
 on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} f}={\color{blue} f}(h,x,t)$
 \item $h$ is layer thickness, $\bq$ is flux, and ${\color{blue} f}$ is source or ``climate''
-\item PDE ($\ast$) can be parabolic or hyperbolic \dots
+\item PDE $\ast$ can be parabolic or hyperbolic \dots
   \begin{itemize}
   \item[$\circ$] but it only applies where $h>0$
   \end{itemize}
@@ -589,7 +619,7 @@ on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} 
 
 \begin{frame}{discrete time}
 \begin{itemize}
-\item numerical models for this equation \emph{must} discretize time:
+\item numerical models for this equation must discretize time:
   $$h_t + \Div \bq = f \qquad \longrightarrow \qquad \frac{h_n - h_{n-1}}{\Delta t} + \Div \bQ_n = F_n$$
   \begin{itemize}
   \vspace{-3mm}
@@ -597,23 +627,47 @@ on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} 
   \item[$\circ$] backward Euler, trapezoid, RK, \dots
   \item[$\circ$] but remember constraint: $h_n \ge 0$
   \end{itemize}
-\vspace{2mm}
-\item questions:
-  \begin{itemize}
-  \item[$\circ$] are implicit time-steps well-posed?
-    \begin{itemize}
-    \item[$\triangleright$] explicit time steps are well-posed, but give severe stability time-step restrictions
-    \end{itemize}
-  \item[$\circ$] can a time-stepping model exactly balance change in fluid volume over time step by computable integrals of $f$?
-  \end{itemize}
+\item cartoon:
 \end{itemize}
 \begin{center}
-\includegraphics[width=0.55\textwidth,keepaspectratio=true]{cartoon-sets-crop}
+\includegraphics[width=0.8\textwidth,keepaspectratio=true]{cartoon-sets-crop}
 \end{center}
 \end{frame}
 
 
-\begin{frame}{weak form of an implicit time step}
+\begin{frame}{a free-boundary problem for each time step}
+\begin{itemize}
+\item strong form for time step:
+  $$\frac{h_n - h_{n-1}}{\Delta t} + \Div \bQ_n = F_n, \qquad h_n \ge 0$$
+\item let $\Xcal$ be a Sobolev space for which the unconstrained ``Poisson'' problem on $\Omega$ is well-posed:
+  $$\Div \bQ_n(\grad v,v,x) = g$$
+\item let $\Kcal = \{v \in \Xcal\,\big|\, v\ge 0\}$
+\item weak form for time step: find $h_n \in \Kcal$ so that
+  $$\ip{A_n(h_n)}{v-h_n} \ge 0 \quad \text{ for all } v \in \Kcal$$
+where $\ip{A_n(v)}{\phi} := \int_\Omega \left(v - \Delta t\, F_n - h_{n-1}\right)\phi - \Delta t\, \bQ_n \cdot \grad\phi$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{questions}
+for the weak form model
+  $$\ip{A_n(h_n)}{v-h_n} \ge 0 \quad \text{ for all } v \in \Kcal$$
+we have these questions:
+
+\begin{itemize}
+\item \emph{well-posedness}: are implicit time-steps well-posed?
+    \begin{itemize}
+    \item[$\circ$] explicit time steps are well-posed, but give severe stability time-step restrictions
+    \end{itemize}
+\item \emph{exact conservation}: can we exactly-balance the change in fluid mass over time step by computable integrals of $f$ or $F_n$?
+    \begin{itemize}
+    \item[$\circ$] $M_n = \rho \int_\Omega h_n(x)\,dx$ is the fluid mass at time $t_n$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{well-posedness for each time step}
 FIXME
 
 \begin{block}{theorems (Bueler, in prep).}
@@ -622,13 +676,44 @@ for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is 
 \end{frame}
 
 
-\begin{frame}{solution sets}
-FIXME
+\begin{frame}{for conservation: subsets of $\Omega$}
+
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{align*}
+\Omega_n &= \left\{h_n(x)>0\right\} \\
+\Omega_n^r &= \left\{h_n(x)=0 \text{ and } h_{n-1}(x) > 0\right\} \\
+\Omega_n^0 &= \left\{h_n(x)=0 \text{ and } h_{n-1}(x) = 0\right\}
+\end{align*}
+so that
+   $$\Omega = \Omega_n \cup \Omega_n^r \cup \Omega_n^0$$
+\end{column}
+\begin{column}{0.35\textwidth}
+\includegraphics[width=1.0\textwidth,keepaspectratio=true]{domains-fig}
+\end{column}
+\end{columns}
 
 \begin{center}
-\includegraphics[width=0.6\textwidth,keepaspectratio=true]{cartoon-sets} \hfill \includegraphics[width=0.4\textwidth,keepaspectratio=true]{domains-fig}
+\includegraphics[width=0.7\textwidth,keepaspectratio=true]{cartoon-sets}
 \end{center}
+\end{frame}
 
+
+\begin{frame}{fixing discrete-time conservation}
+
+\begin{itemize}
+\item calculation:
+	\begin{align*}
+	M_n - M_{n-1} &= \int_{\Omega_n} \mathLabelBox[
+    labelstyle={xshift=1cm,yshift=2mm},
+    linestyle={out=270,in=90, -latex}
+    ]{h_n - h_{n-1}}{$\boxed{\Delta t\, (-\Div\bQ_n + F_n)}$} \,dx + \int_{\Omega_n^r} 0 - h_{n-1} \,dx \\
+	   &= \Delta t\, \left(0 + \int_{\Omega_n} F_n \,dx\right) - \int_{\Omega_n^r} h_{n-1} \,dx
+	\end{align*}
+\item define new term:
+     $$R_n = \int_{\Omega_n^r} h_{n-1} \,dx$$
+is the \alert{retreat loss} during time step $n$
+\end{itemize}
 \end{frame}
 
 
