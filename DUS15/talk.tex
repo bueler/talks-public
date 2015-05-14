@@ -246,14 +246,12 @@
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{first big picture: ice sheets store past climates}
+\begin{frame}{first big picture: ice sheets store past climates}
 Greenland layers movie from NASA, January 2015
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{second big picture: ice sheets affect sea level}
+\begin{frame}{second big picture: ice sheets affect sea level}
 \medskip
 \small
 \begin{itemize}
@@ -289,8 +287,7 @@ Greenland layers movie from NASA, January 2015
 \section[shallow ice well-posed?]{II. is the shallow ice problem well-posed and approximate-able?}
 
 
-\begin{frame}
-  \frametitle{shallow ice approximation (SIA)}
+\begin{frame}{shallow ice approximation (SIA)}
 
 \begin{itemize}
 \item SIA = ``lubrication'' approximation of Stokes model
@@ -309,8 +306,7 @@ Greenland layers movie from NASA, January 2015
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{SIA: velocity}
+\begin{frame}{SIA: velocity}
  
 \begin{itemize}
 \item $b(x,y)$ is bedrock elevation (data)
@@ -325,8 +321,7 @@ where $\Gamma > 0$ combines gravity, ice density, ice softness
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{SIA plus mass conservation in steady state}
+\begin{frame}{SIA plus mass conservation in steady state}
 
 \begin{itemize}
 \item $a(x,y)$ is snowfall minus melt rate (data)
@@ -377,8 +372,7 @@ the Halfar (1983) similarity solution:
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{SIA: an analogy}
+\begin{frame}{SIA: an analogy}
 \begin{columns}
 \begin{column}{0.4\textwidth}
 \begin{itemize}
@@ -405,8 +399,7 @@ the Halfar (1983) similarity solution:
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{SIA equation is constrained} 
+\begin{frame}{SIA equation is constrained} 
 \begin{itemize}
 \item $H=s-b$ is ice thickness
 \item thickness is a nonnegative quantity!
@@ -442,8 +435,8 @@ for all $\eta \in \Kcal$
 implies strong form
   $$-\Div \left(\Gamma H^{p+1} |\nabla s|^{p-2} \nabla s  \right) =  a$$
 where $H>0$
-\item where $H=0$, weak form implies $a \le 0$
-\item if $b=0$ the weak form is equivalent to a constrained minimization problem, but for general bed this is not so
+\item weak form also implies: if $H=0$ then $a \le 0$
+\item if $b=0$ the weak form is equivalent to a constrained minimization problem, but for general bed not so
 \end{itemize}
 \end{frame}
 
@@ -494,7 +487,7 @@ for all $v\ge \psi$, do \emph{not} have the analogous property
 
 \begin{frame}{another weak form} 
 \begin{itemize}
-\item the variational inequality has abstract form
+\item the variational inequality for shallow ice has abstract form
   $$- \ip{\bq(H,\grad H)}{\grad(\eta - H)} \ge \ip{a}{\eta-H} \qquad \forall \eta \in \Kcal$$
 where $\bq=\int_b^s {\bf U}\, dz=-\Gamma H^{p+1} |\grad s|^{p-2} \grad s$ is the ``flux''
 \item a standard localization argument gives
@@ -542,7 +535,7 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 
 \begin{frame}{Greenland velocity from a better model}
 \begin{center}
-\includegraphics[width=1.0\textwidth]{greenland-overview}
+\includegraphics[width=1.0\textwidth]{greenland-overview-relabel}
 \end{center}
 
 \vspace{-5mm}
@@ -552,8 +545,7 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 
 \section[conservation w free boundaries?]{III. can thin-layer free-boundary models exactly conserve?}
 
-\begin{frame}
-  \frametitle{thin layers in a ``climate''}
+\begin{frame}{thin layers in a ``climate''}
 \begin{center}
 \includegraphics[width=0.65\textwidth,keepaspectratio=true]{cartoon-wclimate}
 \end{center}
@@ -577,8 +569,7 @@ on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} 
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{examples}
+\begin{frame}{examples}
 \includegraphics[width=0.4\textwidth,keepaspectratio=true]{polaris}
 \hfill
 \includegraphics[width=0.45\textwidth,keepaspectratio=true]{supp4rignot-small}
@@ -596,52 +587,63 @@ on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} 
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{discrete time}
+\begin{frame}{discrete time}
 \begin{itemize}
 \item numerical models for this equation \emph{must} discretize time:
-  $$(\ast) \longrightarrow \frac{h_n - h_{n-1}}{\Delta t} + \Div \bQ_n = F_n$$
+  $$h_t + \Div \bq = f \qquad \longrightarrow \qquad \frac{h_n - h_{n-1}}{\Delta t} + \Div \bQ_n = F_n$$
   \begin{itemize}
-  \item[$\circ$] in minimal sense: semi-discretize ($\ast$) = ``$u_t + \Div \bq = f$'' in time
+  \vspace{-3mm}
+  \item[$\circ$] in minimal sense: semi-discretize in time
+  \item[$\circ$] backward Euler, trapezoid, RK, \dots
+  \item[$\circ$] but remember constraint: $h_n \ge 0$
   \end{itemize}
-\item this might be by backward Euler, trapezoid, RK, \dots
-\item but remember constraint: $h_n \ge 0$
+\vspace{2mm}
 \item questions:
   \begin{itemize}
   \item[$\circ$] are implicit time-steps well-posed?
     \begin{itemize}
-    \item[$\triangleright$] explicit time steps are always well-posed here, but cause severe stability time-step restrictions
+    \item[$\triangleright$] explicit time steps are well-posed, but give severe stability time-step restrictions
     \end{itemize}
-  \item[$\circ$] FIXME
+  \item[$\circ$] can a time-stepping model exactly balance change in fluid volume over time step by computable integrals of $f$?
   \end{itemize}
 \end{itemize}
 \begin{center}
-\includegraphics[width=0.85\textwidth,keepaspectratio=true]{cartoon-sets-crop}
+\includegraphics[width=0.55\textwidth,keepaspectratio=true]{cartoon-sets-crop}
 \end{center}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{weak form of an implicit time step}
+\begin{frame}{weak form of an implicit time step}
 FIXME
+
+\begin{block}{theorems (Bueler, in prep).}
+for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is well-posed
+\end{block}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{solution sets}
+\begin{frame}{solution sets}
 FIXME
 
 \begin{center}
-\includegraphics[width=0.85\textwidth,keepaspectratio=true]{cartoon-sets}
+\includegraphics[width=0.6\textwidth,keepaspectratio=true]{cartoon-sets} \hfill \includegraphics[width=0.4\textwidth,keepaspectratio=true]{domains-fig}
 \end{center}
+
+\end{frame}
+
+
+\begin{frame}{claim}
+FIXME
+
+\begin{block}{claim.}
+you can't exactly conserve
+\end{block}
 \end{frame}
 
 
 \section*{conclusion}
 
-\begin{frame}
-  \frametitle{conclusion}
-
+\begin{frame}{conclusion}
 \begin{itemize}
 \item is shallow ice problem
   \begin{itemize}
