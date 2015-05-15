@@ -477,17 +477,18 @@ where $H>0$
 
 
 \begin{frame}{on well-posedness (Jouvet-Bueler 2012)} 
-\begin{block}{theorem.}
+\begin{block}{theorem A.}
 if $b=0$ then the variational inequality is equivalent to
   $$\min \, J[u] = \int_{\Omega} \frac{\Gamma}{p} |\grad u|^p - a u$$
 over $\eta = u^{(p-1)/(2p)} \in \Kcal$, and this problem is well-posed (existence, uniqueness, stability w.r.t.~data $a$)
 \end{block}
-\begin{block}{theorem.}
+\begin{block}{theorem B.}
 in general case ($b\ne 0$) there exists a solution
 \end{block}
-\begin{proof}[proof]
-fixed-point theorem, of course
-\end{proof}
+\begin{itemize}
+\item proof of B by a fixed-point theorem, of course
+\item we really don't know about uniqueness (not just technical)
+\end{itemize}
 \end{frame}
 
 
@@ -528,11 +529,30 @@ where $\bq=\int_b^s {\bf U}\, dz=-\Gamma H^{p+1} |\grad s|^{p-2} \grad s$ is the
 \item a standard localization argument gives
   $$F \ge 0 \quad \text{ and } \quad H\,F = 0$$
 where $F = \Div \bq - a$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{finite-dimensional} 
+\begin{itemize}
+\item under (e.g.) finite element or volume discretization the shallow ice problem can be written:
+\begin{align*}
+&H\in \RR^m \qquad \text{and} \qquad F(H) \in \RR^m \\
+&H \ge 0 \qquad \text{and} \qquad F(H) \ge 0 \\
+&H \,F(H) = 0
+\end{align*}
+\item in unconstrained case we would just solve ``$F(H)=0$'', so we call $F$ the ``residual''
+
+\vspace{2mm}
 \begin{block}{definition.}
 for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear complementarity problem} (NCP) if
   $$x^* \ge 0  \quad \text{ and } \quad f(x^*)\ge 0 \quad \text{ and } \quad x^*\,f(x^*)=0$$
 \end{block}
+
+\vspace{2mm}
 \item scalable Newton solvers are available for NCPs
+  \begin{itemize}
+  \item[$\circ$] from PETSc
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -549,7 +569,7 @@ for $f:\RR^m \to \RR^m$, we say $x^* \in \RR^m$ solves the \emph{nonlinear compl
 \item NCP solved on 192 processors
   \begin{itemize}
   \scriptsize
-  \item[$\circ$] reduced-space Newton solver (PETSc)
+  \item[$\circ$] reduced-space Newton solver
   \item[$\circ$] double continuation by
     \begin{itemize}
     \scriptsize
@@ -611,7 +631,7 @@ on $\Omega \subset \RR^2$, where $\bq=\bq(\grad h, h, x, t)$ and ${\color{blue} 
 \hfill
 \includegraphics[width=0.42\textwidth,keepaspectratio=true]{tsunami-sendai}
 
-\small tidewater marsh \hfill tsunami inundation
+\small tidewater marsh \hfill tsunami inundation (?)
 
 \scriptsize and sea-level rise, surface hydrology, subglacial hydrology, \dots
 \end{frame}
@@ -672,7 +692,9 @@ we have these questions:
 
 
 \begin{frame}{well-posedness for each time step}
-
+\begin{itemize}
+\item the answer to the first question depends on the form of the flux $\bq$ \dots but it is ``usually'' yes
+\end{itemize}
 \begin{block}{theorem (Bueler, in prep).}
 for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is well-posed
 
@@ -694,6 +716,7 @@ for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is 
 \vspace{3mm}
 \begin{columns}
 \begin{column}{0.65\textwidth}
+for the second question we define sets:
 \begin{align*}
 \Omega_n &= \left\{h_n(x)>0\right\} \\
 \Omega_n^r &= \left\{h_n(x)=0 \text{ and } h_{n-1}(x) > 0\right\} \\
@@ -713,7 +736,7 @@ so that
 \end{frame}
 
 
-\begin{frame}{fixing discrete-time conservation}
+\begin{frame}{the discrete-time conservation issue}
 
 \begin{itemize}
 \item calculation:
@@ -737,7 +760,7 @@ is the \alert{retreat loss} during time step $n$
 \begin{itemize}
 \item if the thin layer has a free boundary then you \alert{cannot exactly conserve}, in the sense that there is no computable integral $I_n$ of the source term $f$, over the time step, so that
    $$M_n - M_{n-1} = I_n$$
-\item but you can balance if you add the retreat loss \emph{a posteriori}:
+\item restore balance by adding the retreat loss \emph{a posteriori}:
    $$M_n - M_{n-1} = C_n - R_n$$
 where $C_n=\Delta t\,\int_{\Omega_n} F_n \,dx$ is a computable integral of the source term and  $R_n = \int_{\Omega_n^r} h_{n-1} \,dx$ is computable from $h_n$
 \end{itemize}
