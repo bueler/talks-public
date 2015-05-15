@@ -445,7 +445,7 @@ applies only where
 
 \begin{frame}{weak formulation by variational inequality} 
 \begin{itemize}
-\item define convex admissible set
+\item define closed and convex admissible set
   $$\Kcal := \{\eta : \eta^{2p/(p-1)} \in W^{1,p}_0 (\Omega) \,\text{and}\, \eta \ge 0\}$$
 over larger domain $\Omega \subset \RR^2$
 \item multiply strong form by $\eta-H$ where $\eta\in \Kcal$, and integrate by parts thoughtfully
@@ -468,7 +468,10 @@ implies strong form
   $$-\Div \left(\Gamma H^{p+1} |\nabla s|^{p-2} \nabla s  \right) =  a$$
 where $H>0$
 \item weak form also implies: if $H=0$ then $a \le 0$
-\item if $b=0$ the weak form is equivalent to a constrained minimization problem, but for general bed not so
+\item if $b=0$ then the weak form is equivalent to a constrained minimization problem
+  \begin{itemize}
+  \item[$\circ$] for general bed $b$ this is not so
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -670,7 +673,7 @@ we have these questions:
 
 \begin{frame}{well-posedness for each time step}
 
-\begin{block}{theorems (Bueler, in prep).}
+\begin{block}{theorem (Bueler, in prep).}
 for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is well-posed
 
 \begin{itemize}
@@ -679,8 +682,8 @@ for a variety of flux forms $\bq(\grad h,h,x,t)$, a backward Euler time-step is 
     \begin{itemize}
     \item[$\circ$] includes SIA in flat bed-rock case
     \end{itemize}
-\item advecting layer: $\bq = \bX h$
-\item nonlocal and linear
+\item advecting layer: $\bq = \bX h$ where $\bX$ is a fixed velocity field
+\item certain nonlocal, but linear, forms
 \end{itemize}
 \end{block}
 \end{frame}
@@ -736,7 +739,7 @@ is the \alert{retreat loss} during time step $n$
    $$M_n - M_{n-1} = I_n$$
 \item but you can balance if you add the retreat loss \emph{a posteriori}:
    $$M_n - M_{n-1} = C_n - R_n$$
-(and $C_n$ is a computable integral of the source term)
+where $C_n=\Delta t\,\int_{\Omega_n} F_n \,dx$ is a computable integral of the source term and  $R_n = \int_{\Omega_n^r} h_{n-1} \,dx$ is computable from $h_n$
 \end{itemize}
 \end{block}
 
@@ -749,15 +752,12 @@ is the \alert{retreat loss} during time step $n$
 
 \section*{conclusion}
 
-\begin{frame}{conclusion}
+\begin{frame}{practical conclusions for ice sheet modeling}
 \begin{itemize}
-\item is shallow ice problem
+\item is steady shallow ice problem
   \begin{itemize}
   \item[$\circ$] well-posed? \qquad \alert{probably}
   \item[$\circ$] approximate-able? \qquad \alert{yes}
-     \begin{itemize}
-     \item[$\triangleright$] but how fast and reliably?
-     \end{itemize}
   \end{itemize}
 \item can thin-layer free-boundary problems
   \begin{itemize}
