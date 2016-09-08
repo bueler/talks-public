@@ -1,0 +1,5 @@
+title:  Implicit time-stepping for the cryosphere
+
+abstract:  Coupled mass and momentum conservation problems for glaciers, subglacial liquid water, and sea ice are all characterized by multiple time scales and free boundaries.  Numerical momentum solutions in these slow-fluid cases typically already require solving systems of equations.  However, current time-stepping schemes update geometry explicitly from the (velocity) results of the momentum solve.  The resulting short time steps are difficult to avoid because of the free-boundary nature of possible implicit geometry updates.  This talk will address some variational inequality theory supporting such implicit time-stepping and then address numerical solver aspects including preconditioning.
+
+
