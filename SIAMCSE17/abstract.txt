@@ -1,5 +1,6 @@
+speaker:  Ed Bueler
+
 title:  Implicit time-stepping for the cryosphere
 
-abstract:  Coupled mass and momentum conservation problems for glaciers, subglacial liquid water, and sea ice are all characterized by multiple time scales and free boundaries.  Numerical momentum solutions in these slow-fluid cases typically already require solving systems of equations.  However, current time-stepping schemes update geometry explicitly from the (velocity) results of the momentum solve.  The resulting short time steps are difficult to avoid because of the free-boundary nature of possible implicit geometry updates.  This talk will address some variational inequality theory supporting such implicit time-stepping and then address numerical solver aspects including preconditioning.
-
+abstract:  Coupled mass and momentum conservation problems for glaciers, subglacial liquid water, and sea ice are all characterized by multiple time scales and free boundaries.  In contrast to the fully-hyperbolic coupled evolution problems, which are typical of faster fluids, numerical momentum solutions in these slow-motion cases typically already require solving systems of equations, e.g. those representing Stokes flow.  However, current time-stepping schemes update geometry explicitly, using the (velocity) results of the momentum solve in the mass conservation equation.  Short time steps are then difficult to avoid, in part because of the free-boundary nature of the geometry updates.  This talk will explain this set of problems in thin-layer cases, and then address a variational inequality theory supporting such implicit time-stepping.  Numerical examples, including solver aspects and preconditioning, will be shown.
 
