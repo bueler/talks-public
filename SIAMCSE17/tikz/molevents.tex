@@ -2,38 +2,103 @@
   %\draw[->,very thin] (-0.2,0.0) -- (1.2,0.0) node[below] {$x$};
   %\draw[very thin] (0.0,1.0) -- (0.0,0.0) -- (1.0,0.0);
   \pgfmathsetmacro\third{1.0/3.0}
+  \pgfmathsetmacro\half{1.0/2.0}
+  \pgfmathsetmacro\eps{0.001}
 
-  \draw[xstep=\third,ystep=\third,black,thin,dashed] (0.0,0.0) grid (1.0,1.0);
-  \draw[black,thin,dashed] (0.0,0.0) -- (0.0,1.0);
+% time axis
+  \draw[->,black,thin] (-0.5,-0.5) -- (7.5,-0.5) node[below] {\footnotesize $t$};
+  \draw (0.0,-0.55) -- (0.0,-0.45) node[below] {\scriptsize $t_0$};
+  \draw (7.0,-0.55) -- (7.0,-0.45) node[below] {\scriptsize $t_f$};
+
+% events marked on time axis
+  \draw (1.0,-0.55) -- (1.0,-0.45);
+  \node[anchor=north, rotate=-90] at (1.25,-1.2) {\scriptsize event 1};
+  \draw (2.0,-0.55) -- (2.0,-0.45);
+  \node[anchor=north, rotate=-90] at (2.25,-1.2) {\scriptsize event 2};
+  \draw (4.1,-0.55) -- (4.1,-0.45);
+  \node[anchor=north, rotate=-90] at (4.35,-1.2) {\scriptsize event 3};
+  \draw (6.0,-0.55) -- (6.0,-0.45);
+  \node[anchor=north, rotate=-90] at (6.25,-1.2) {\scriptsize event 4};
+
+% time-lines: H
+  \foreach \y in {0,...,8} {
+      \draw (0.0,\y * 0.2) -- (7.0,\y * 0.2);
+  }
+  \draw[white,dotted,thick] (0.0,1 * 0.2) -- (2.0,1 * 0.2);     % 1
+  \draw[white,dotted,thick] (6.0,1 * 0.2) -- (7.0,1 * 0.2);     % 1
+  \draw[white,dotted,thick] (0.0,5 * 0.2) -- (7.0,5 * 0.2);     % 5
+  \draw[white,dotted,thick] (0.0,7 * 0.2) -- (1.0,7 * 0.2);     % 7
+  \draw[white,dotted,thick] (4.1,7 * 0.2) -- (7.0,7 * 0.2);     % 7
+  \draw [decorate,decoration={brace,amplitude=10pt,mirror}] (7.5,-0.1) -- (7.5,1.7) node [black,midway,right,xshift=0.3cm] {$H$};
+
+% time-lines: u
+  \pgfmathsetmacro\ushift{2.2}
+
+  \foreach \y in {2,...,4} {
+      \draw (0.0,\ushift + \y * 0.2) -- (7.0,\ushift + \y * 0.2);
+  }
+  \draw (0.0,\ushift + 0 * 0.2) -- (7.0,\ushift + 0 * 0.2);     % 0: full
+  \draw (2.0,\ushift + 1 * 0.2) -- (6.0,\ushift + 1 * 0.2);     % 1
+                                                                % 5: ice-free
+  \draw (0.0,\ushift + 6 * 0.2) -- (7.0,\ushift + 6 * 0.2);     % 6: full
+  \draw (1.0,\ushift + 7 * 0.2) -- (4.1,\ushift + 7 * 0.2);     % 7
+  \draw (0.0,\ushift + 8 * 0.2) -- (7.0,\ushift + 8 * 0.2);     % 8: full
+  \draw [decorate,decoration={brace,amplitude=10pt,mirror}] (7.5,\ushift+-0.1) -- (7.5,\ushift+1.7) node [black,midway,right,xshift=0.35cm] {$u,v$};
+
+% grids at events
+  \pgfmathsetmacro\gshift{5.0}
+
+  % t = 1.0, node 7 becomes icy
+  \draw[xstep=\third,ystep=\third,black,thin,dashed] (0.0-\eps,\gshift+0.0-\eps) grid (1.0,\gshift+1.0);
   \foreach \x in {0,...,2} {
     \foreach \y in {0,...,2} {
-        \filldraw (\x * \third,\y * \third) circle (1.0pt);
+        \filldraw (\x * \third,\gshift+\y * \third) circle (1.0pt);
     }
   }
-  \filldraw (\third,\third) circle (2.0pt);
+  \node[draw,star,star points=7,fill=black,inner sep=0pt,minimum size=6.0pt] at (\third,\gshift+2 * \third) {};
+  \fill[white] (\third,\gshift) circle (1.0pt);            % 1 ice-free
+  \draw        (\third,\gshift) circle (1.0pt);
+  \fill[white] (2 * \third,\gshift+\third) circle (1.0pt); % 5 ice-free
+  \draw[]      (2 * \third,\gshift+\third) circle (1.0pt);
+  \draw[->] (\half,\gshift-0.2) -- (1.0,\gshift-1.0);
 
-  \draw[xstep=\third,ystep=\third,black,thin,dashed] (2.0,0.0) grid (3.0,1.0);
-  \draw[black,thin,dashed] (2.0,0.0) -- (2.0,1.0);
+  % t = 2.0, node 1 becomes icy
+  \draw[xstep=\third,ystep=\third,black,thin,dashed] (2.0-\eps,\gshift+0.0-\eps) grid (3.0,\gshift+1.0);
   \foreach \x in {0,...,2} {
     \foreach \y in {0,...,2} {
-        \filldraw (2.0 + \x * \third,\y * \third) circle (1.0pt);
+        \filldraw (2.0 + \x * \third,\gshift+\y * \third) circle (1.0pt);
     }
   }
+  \node[draw,star,star points=7,fill=black,inner sep=0pt,minimum size=6.0pt] at (2.0 + \third,\gshift) {};
+  \fill[white] (2.0 + 2 * \third,\gshift+\third) circle (1.0pt); % 5 ice-free
+  \draw[]      (2.0 + 2 * \third,\gshift+\third) circle (1.0pt);
+  \draw[->] (2.0 + \half,\gshift-0.2) -- (2.0,\gshift-1.0);
 
-  \draw[xstep=\third,ystep=\third,black,thin,dashed] (4.0,0.0) grid (5.0,1.0);
-  \draw[black,thin,dashed] (4.0,0.0) -- (4.0,1.0);
+  % t = 4.1, node 7 becomes ice free
+  \draw[xstep=\third,ystep=\third,black,thin,dashed] (4.0-\eps,\gshift+0.0-\eps) grid (5.0,\gshift+1.0);
   \foreach \x in {0,...,2} {
     \foreach \y in {0,...,2} {
-        \filldraw (4.0 + \x * \third,\y * \third) circle (1.0pt);
+        \filldraw (4.0 + \x * \third,\gshift+\y * \third) circle (1.0pt);
     }
   }
+  \node[draw,star,star points=7,fill=white,inner sep=0pt,minimum size=6.0pt] at (4.0 + \third,\gshift+2 * \third) {};
+  \fill[white] (4.0 + 2 * \third,\gshift+\third) circle (1.0pt); % 5 ice-free
+  \draw[]      (4.0 + 2 * \third,\gshift+\third) circle (1.0pt);
+  \draw[->] (4.0 + \half,\gshift-0.2) -- (4.1,\gshift-1.0);
 
-  \draw[xstep=\third,ystep=\third,black,thin,dashed] (6.0,0.0) grid (7.0,1.0);
-  \draw[black,thin,dashed] (6.0,0.0) -- (6.0,1.0);
+  % t = 6.0, node 1 becomes ice free
+  \draw[xstep=\third,ystep=\third,black,thin,dashed] (6.0-\eps,\gshift+0.0-\eps) grid (7.0,\gshift+1.0);
   \foreach \x in {0,...,2} {
     \foreach \y in {0,...,2} {
-        \filldraw (6.0 + \x * \third,\y * \third) circle (1.0pt);
+        \filldraw (6.0 + \x * \third,\gshift+\y * \third) circle (1.0pt);
     }
   }
+  \node[draw,star,star points=7,fill=white,inner sep=0pt,minimum size=6.0pt] at (6.0 + \third,\gshift) {};
+  \fill[white] (6.0 + 2 * \third,\gshift+\third) circle (1.0pt); % 5 ice-free
+  \draw[]      (6.0 + 2 * \third,\gshift+\third) circle (1.0pt);
+  \fill[white] (6.0 + \third,\gshift+2*\third) circle (1.0pt); % 7 ice-free
+  \draw[]      (6.0 + \third,\gshift+2*\third) circle (1.0pt);
+  \draw[->] (6.0 + \half,\gshift-0.2) -- (6.0,\gshift-1.0);
+
 \end{tikzpicture}
 
