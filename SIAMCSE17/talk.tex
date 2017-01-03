@@ -139,6 +139,67 @@
 \end{frame}
 
 
+\begin{frame}{ice sheet modeling goal: long time-integrations}
+
+\begin{itemize}
+\item \emph{goal}: simulate e.g.~northern hemisphere ice sheets for ice age cycle ($10^5$ years) at resolution where dated moraine etc.~evidence can be used as validation
+\item ice geometry evolution problem is diffusive because ice flows downhill
+\item \emph{so} implicit time stepping is natural desire
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{numerical models}
+
+\begin{itemize}
+\item two models in mind:
+    \begin{itemize}
+    \item[$\circ$] shallow, thickness-based in $H,\mathbf{u}=(u,v)$
+        \begin{align*}
+        H_t + \Div (\mathbf{u} H) &= m(x,t) && \text{mass conservation} \\
+        \mathcal{L}(\mathbf{u},H) &= 0      && \text{slow, shallow momentum conservation}
+        \end{align*}
+    \item[$\circ$] Stokes, surface-based in $h,\mathbf{u}=(u,v,w)$
+        \begin{align*}
+        h_t + \mathbf{u}\big|_h \cdot (h_x,h_y,-1) &= m(x,t) && \text{surface kinematical} \\
+        \Div \mathbf{u} &= 0            && \text{incompressibility} \\
+        \mathcal{L}(\mathbf{u},h) &= 0  && \text{Stokes stress eqns with BCs}
+        \end{align*}
+    \end{itemize}
+\item assumed Eulerian
+\item conservation of energy dropped for convenience
+\end{itemize}
+\end{frame}
+
+\begin{frame}{approach: discretize in space}
+
+\begin{itemize}
+\item \emph{approach}: discretize in space and apply implicit time-stepping
+    \begin{itemize}
+    \item[$\circ$] \emph{i.e.} method of lines = MOL
+    \item[$\circ$] \emph{i.e.} can you hand the ice sheet evolution problem to an ODE solver?
+    \end{itemize}
+\item well-known: spatial-discretization gives DAE system 
+\begin{align*}
+\dot H &= f(H,\mathbf{u},t) && \text{mass conservation} \\
+     0 &= g(H,\mathbf{u})   && \text{momentum conservation}
+\end{align*}
+\vspace{-5mm}
+    \begin{itemize}
+    \item[$\circ$] implicit time-stepping required for DAEs anyway!
+    \end{itemize}
+\item velocity variables only exist at grid point $i$ if thickness is positive: \qquad $H\ge 0 \qquad \text{and} \qquad \mathbf{u}_i \text{ exists } \iff H_i > 0$
+
+\bigskip
+\item no problem! ODE solvers can handle \emph{events}:
+    \begin{itemize}
+    \item[$\circ$] $H_i>0 \quad \to \quad H_i=0$
+    \item[$\circ$] $H_i=0 \quad \to \quad H_i>0$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{approach: MOL + events}
 
 \begin{center}
@@ -147,75 +208,24 @@
 \end{frame}
 
 
-\begin{frame}{the standard model}
+\begin{frame}{scary events}
 
 \begin{itemize}
-\item velocity $\mathbf{u}(\bx,t)$, pressure $p(\bx,t)$; Newtonian Navier-Stokes:
-\begin{align*}
-\nabla \cdot \mathbf{u} &= 0 \\
-\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g}
-\end{align*}
-\item notation: $\tau_{ij}$ deviatoric stress, $\mathbf{D}u_{ij}$ strain rate tensor
-\item the standard ice flow model is power-law Stokes:
-\begin{align*}
-\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
-0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow stress balance}} \\
-\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^{n-1} \tau_{ij} &&\text{\emph{Glen flow law}}
-\end{align*}
-\item $1.8 < n < 4.0$ ?  \quad \alert{when in doubt: $n=3$}
-\medskip
-\item $A>0$ ``ice softness'' varies strongly with temperature
+\item \emph{at each event the ice velocity dimension changes}:
+    \begin{itemize}
+    \item[$\circ$] ``active set'' constructs (e.g.~masks) apply to \emph{both} thickness and velocity variables
+    \item[$\circ$] implicit time step solver must pay attention!
+    \end{itemize}
+\item \emph{events happen all the time on fine grids}:
+    \begin{itemize}
+    \item[$\circ$] margins of continental-scale ice sheets essentially fractal
+    \item[$\circ$] some major climate impacts on scale of a few years (or days)
+    \end{itemize}
+\item at least: needs sophisticated ODE event handling!
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{SIA: velocity}
- 
-\begin{itemize}
-\item $b(x,y)$ is bedrock elevation (data)
-\item $s(x,y,t)$ is ice surface elevation (unknown)
-\item let $p=n+1>2$
-\item assume: no sliding and isothermal
-\item horizontal ice velocity is given by: 
-  $${\bf U}  =  - \frac{p}{p+1} \Gamma \left[ (s-b)^p - (s - z)^p  \right] 
-|\nabla s |^{p-2} \nabla s$$
-where $\Gamma > 0$ combines gravity, ice density, ice softness
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{SIA plus mass conservation in steady state}
-
-\begin{itemize}
-\item $a(x,y)$ is snowfall minus melt rate (data)
-  \begin{itemize}
-  \item[$\circ$] a.k.a.~``surface mass balance''
-  \end{itemize}
-\item mass conservation in steady state: 
-  $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
-\item shallow ice approximation + (steady) mass conservation:
-  $$-\Div \left(\Gamma (s-b)^{p+1} | \nabla s |^{p-2} \nabla s\right) =  a$$
-  \begin{itemize}
-  \vspace{-0.2in}
-  \item[$\circ$] this is ``the SIA equation'' for ice sheet geometry
-  \item[$\circ$] like Poisson equation $-\Div (D \grad u) = f$
-  \item[$\circ$] $p$-Laplace-ish \dots but coefficient $(s-b)^{p+1} \to 0$ at margins
-  \end{itemize}
-\item equation above is simplest model for turning data of problem ($b$ and $a$) into ice sheet geometry and velocity ($s$ and $U$)
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{SIA equation is constrained} 
-\begin{itemize}
-\item $H=s-b$ is ice thickness
-\item thickness is a nonnegative quantity!
-\item steady state equation ``strong form''
-  $$-\Div \left(\Gamma H^{p+1} |\nabla s|^{p-2} \nabla s  \right) =  a$$
-applies only where
-  $$s>b \qquad \iff \qquad H > 0$$
-\end{itemize}
-\end{frame}
 
 
 \begin{frame}{weak formulation by variational inequality} 
