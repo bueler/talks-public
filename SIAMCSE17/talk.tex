@@ -136,54 +136,27 @@
 \end{frame}
 
 
-\begin{frame}{ice in glaciers is a viscous fluid}
+\begin{frame}{approach: MOL + events}
 
 \begin{itemize}
-\item primary variables: velocity $\mathbf{u}(\bx,t)$ and pressure $p(\bx,t)$
-\item also: $\rho$ is density, $\mathbf{g}$ is gravity, $\nu$ is viscosity
-\item if the glacier fluid were ``typical'' like the ocean we would model with Navier-Stokes equations:
-\begin{align*}
-\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
-\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\text{\emph{stress balance}}
-\end{align*}
-\item but ice is not typical!
-\item e.g.~not a worry in ice sheet flow models:
-  \begin{itemize}
-  \item[$\circ$] turbulence
-  \item[$\circ$] coriolis force
-  \item[$\circ$] convection
-  \end{itemize}
+\item FIXME
 \end{itemize}
-\end{frame}
 
-
-\begin{frame}{ice is a slow, shear-thinning viscous fluid}
-
-\begin{itemize}
-\item glacier ice is
-  \begin{enumerate}
-  \item ``slow''\footnote{$Fr\approx 10^{-15}$.  Regarding coriolis: $Fr/Ro \approx 10^{-8}$.}:
-    $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
-  \item non-Newtonian shear-thinning\footnote{blood is also shear-thinning \\ \hspace{5mm} corn starch in water is shear-thickening}:
-    \begin{itemize}
-    \item viscosity $\nu$ is not constant
-    \item $\nu$ decreases as fluid is sheared
-    \end{itemize}
-  \end{enumerate}
-\end{itemize}
+\begin{center}
+\input{tikz/molevents.tex}
+\end{center}
 \end{frame}
 
 
 \begin{frame}{the standard model}
 
 \begin{itemize}
-\item slow flows are called ``Stokes flows''
-\item notation:
-  \begin{itemize}
-  \item[$\circ$] $\tau_{ij}$ is deviatoric stress tensor
-  \item[$\circ$] $\mathbf{D}u_{ij}$ is strain rate tensor
-  \end{itemize}
-\smallskip
+\item velocity $\mathbf{u}(\bx,t)$, pressure $p(\bx,t)$; Newtonian Navier-Stokes:
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 \\
+\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g}
+\end{align*}
+\item notation: $\tau_{ij}$ deviatoric stress, $\mathbf{D}u_{ij}$ strain rate tensor
 \item the standard ice flow model is power-law Stokes:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
@@ -192,10 +165,7 @@
 \end{align*}
 \item $1.8 < n < 4.0$ ?  \quad \alert{when in doubt: $n=3$}
 \medskip
-\item $A>0$ is ``ice softness''
-   \begin{itemize}
-   \item $A$ varies strongly with temperature, but I'll ignore that here
-   \end{itemize}
+\item $A>0$ ``ice softness'' varies strongly with temperature
 \end{itemize}
 \end{frame}
 
