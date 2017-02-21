@@ -96,8 +96,7 @@
 \egroup;\end{tikzpicture}}
 
 
-%\title[Implicit time-stepping for the cryosphere]{Implicit time-stepping for the cryosphere}
-\title{Implicit time-stepping for the cryosphere}
+\title[Implicit time-stepping for ice sheets]{Implicit time-stepping for ice sheets}
 
 \author[Bueler]{Ed Bueler}
 
@@ -139,12 +138,23 @@
 \end{frame}
 
 
-\begin{frame}{ice sheet modeling goal: long time-integrations}
+\begin{frame}{ice sheet modeling goal: long time, high res runs}
 
 \begin{itemize}
-\item \emph{goal}: simulate e.g.~northern hemisphere ice sheets for ice age cycle ($10^5$ years) at resolution where dated moraine etc.~evidence can be used as validation
-\item ice geometry evolution problem is diffusive because ice flows downhill
-\item \emph{so} implicit time stepping is natural desire
+\item \emph{goal}:
+\begin{quote}
+simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution (\alert{$\sim 500$ m}) where outlet glaciers, ice streams, and grounding lines are resolved
+\end{quote}
+\item \emph{main issues}:
+    \begin{enumerate}
+    \item evolution of ice thickness is diffusive
+        \begin{itemize}
+        \item[$\circ$] because ice flows downhill
+        \end{itemize}
+    \item ice margins are steep
+    \item bedrock is steep
+    \end{enumerate}
+\item \emph{natural approach}: implicit time-stepping 
 \end{itemize}
 \end{frame}
 
