@@ -159,58 +159,61 @@ simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution 
 \end{frame}
 
 
-\begin{frame}{numerical models}
+\begin{frame}{ice sheet models}
 
 \begin{itemize}
-\item two models in mind:
+\item $H=$ thickness, $h=$ surface elevation, $\mathbf{u}=(u,v,w)=$ velocity
+\item two models in mind [state variables]:
     \begin{itemize}
-    \item[$\circ$] shallow, thickness-based in $H,\mathbf{u}=(u,v)$
+    \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill [$H,(u,v)$]
         \begin{align*}
-        H_t + \Div (\mathbf{u} H) &= m(x,t) && \text{mass conservation} \\
-        \mathcal{L}(\mathbf{u},H) &= 0      && \text{slow, shallow momentum conservation}
+        H_t + \Div (-D \grad H + \mathbf{u} H) &= m(x,t) && \text{mass conservation} \\
+        \mathcal{L}(\mathbf{u},H) &= 0      && \text{shallow stress balance}
         \end{align*}
-    \item[$\circ$] Stokes, surface-based in $h,\mathbf{u}=(u,v,w)$
+    \item[$\circ$] Stokes, surface-elevation-based \hfill [$h,(u,v,w)$]
         \begin{align*}
         h_t + \mathbf{u}\big|_h \cdot (h_x,h_y,-1) &= m(x,t) && \text{surface kinematical} \\
         \Div \mathbf{u} &= 0            && \text{incompressibility} \\
-        \mathcal{L}(\mathbf{u},h) &= 0  && \text{Stokes stress eqns with BCs}
+        \mathcal{L}(\mathbf{u},h) &= 0  && \text{Stokes stress balance}
         \end{align*}
     \end{itemize}
-\item assumed Eulerian
-\item conservation of energy dropped for convenience
+\item assumptions:
+    \begin{itemize}
+    \item[$\circ$] conservation of energy ignored
+    \item[$\circ$] Eulerian, fixed grid (structured or not)
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{approach: discretize in space}
+\begin{frame}{discretize in space}
 
 \begin{itemize}
-\item \emph{approach}: discretize in space and apply implicit time-stepping
+\item discretize in space and apply implicit time-stepping
     \begin{itemize}
-    \item[$\circ$] \emph{i.e.} method of lines = MOL
-    \item[$\circ$] \emph{i.e.} can you hand the ice sheet evolution problem to an ODE solver?
+    \item[$\circ$] method of lines = MOL
+    \item[$\circ$] (\emph{can you hand the ice sheet problem to an ODE solver?})
     \end{itemize}
-\item well-known: spatial-discretization gives DAE system 
+\item well-known: MOL for ice sheets is a DAE problem
 \begin{align*}
 \dot H &= f(H,\mathbf{u},t) && \text{mass conservation} \\
      0 &= g(H,\mathbf{u})   && \text{momentum conservation}
 \end{align*}
 \vspace{-5mm}
     \begin{itemize}
-    \item[$\circ$] implicit time-stepping required for DAEs anyway!
+    \item[$\circ$] (\emph{is implicit time-stepping required for DAEs anyway?})
     \end{itemize}
-\item velocity variables only exist at grid point $i$ if thickness is positive: \qquad $H\ge 0 \qquad \text{and} \qquad \mathbf{u}_i \text{ exists } \iff H_i > 0$
-
-\bigskip
-\item no problem! ODE solvers can handle \emph{events}:
+\item velocity variables exist at positive-thickness locations:
+    $$\mathbf{u}_i \text{ exists } \iff H_i > 0$$
+\item some ODE solvers can handle \emph{events}:
     \begin{itemize}
-    \item[$\circ$] $H_i>0 \quad \to \quad H_i=0$
-    \item[$\circ$] $H_i=0 \quad \to \quad H_i>0$
+    \item[$\circ$] ice disappears during time step:  $H_i(t)>0 \to H_i(t+\Delta t)=0$
+    \item[$\circ$] ice appears during time step:  $H_i(t)=0 \to H_i(t+\Delta t)>0$
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{approach: MOL + events}
+\begin{frame}{consider: MOL + events}
 
 \begin{center}
 \input{tikz/molevents.tex}
@@ -218,20 +221,19 @@ simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution 
 \end{frame}
 
 
-\begin{frame}{scary events}
+\begin{frame}{concerns: MOL + events}
 
 \begin{itemize}
 \item \emph{at each event the ice velocity dimension changes}:
     \begin{itemize}
-    \item[$\circ$] ``active set'' constructs (e.g.~masks) apply to \emph{both} thickness and velocity variables
-    \item[$\circ$] implicit time step solver must pay attention!
+    \item[$\circ$] ``active set'' indexing (e.g.~masks) for velocity variables
     \end{itemize}
 \item \emph{events happen all the time on fine grids}:
     \begin{itemize}
     \item[$\circ$] margins of continental-scale ice sheets essentially fractal
     \item[$\circ$] some major climate impacts on scale of a few years (or days)
+    \item[$\circ$] need sophisticated ODE event handling
     \end{itemize}
-\item at least: needs sophisticated ODE event handling!
 \end{itemize}
 \end{frame}
 
