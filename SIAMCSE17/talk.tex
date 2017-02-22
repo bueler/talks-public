@@ -1,4 +1,4 @@
-\documentclass[hide notes,intlimits]{beamer}
+\documentclass[hide notes,intlimits,usenames,dvipsnames]{beamer}
 
 \mode<presentation>
 {
@@ -22,6 +22,7 @@
 
 \usepackage{animate}
 \usepackage{amsmath,verbatim}
+%\usepackage[dvipsnames]{xcolor}
 
 % see http://tex.stackexchange.com/questions/86188/labelling-with-arrows-in-an-automated-way
 
@@ -138,23 +139,44 @@
 \end{frame}
 
 
-\begin{frame}{ice sheet modeling goal: long time, high res runs}
+\begin{frame}{ice sheets and their boundaries}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item<1> nearly-fractal free boundaries determined by topography and climate interaction
+\item<2> large fraction of the boundary: grounded margins
+\item<3> surface slope is discontinuous at grounded margins
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\only<1>{\includegraphics[height=0.78\textheight]{ice-mask-900m.png} \\ {\tiny \hfill PISM mask, by A.~Aschwanden}}
+\includegraphics<2>[height=0.8\textheight]{jako-crop-mask-900m.png}
+\only<3>{\includegraphics[width=1.02\textwidth]{truffertaku2016.jpg} \\ {\tiny \hfill Taku Glacier, Alaska, by M.~Truffer}}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{modeling goal: long-time, high-res runs}
 
 \begin{itemize}
-\item \emph{goal}:
+\item goal:
 \begin{quote}
-simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution (\alert{$\sim 500$ m}) where outlet glaciers, ice streams, and grounding lines are resolved
+simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ years}) at resolution where outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\sim 500$ m})
 \end{quote}
-\item \emph{main issues}:
+\item main concerns:
     \begin{enumerate}
-    \item evolution of ice thickness is diffusive
+    \item evolution of ice thickness $H(t,x,y)$ is largely diffusive
         \begin{itemize}
         \item[$\circ$] because ice flows downhill
+        \item[$\circ$] natural desire: implicit time-stepping
         \end{itemize}
     \item ice margins are steep
+        \begin{itemize}
+        \item[$\circ$] because of constraint ($H\ge 0$) and degeneracy (stresses $\to 0$ at margins \emph{and} ice is shear-thinning)
+        \end{itemize}
     \item bedrock is steep
     \end{enumerate}
-\item \emph{natural approach}: implicit time-stepping 
 \end{itemize}
 \end{frame}
 
@@ -162,15 +184,15 @@ simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution 
 \begin{frame}{ice sheet models}
 
 \begin{itemize}
-\item $H=$ thickness, $h=$ surface elevation, $\mathbf{u}=(u,v,w)=$ velocity
-\item two models in mind [state variables]:
+\item $H$ thickness, $h$ surface elevation, $\mathbf{u}$ velocity
+\item two models in mind:
     \begin{itemize}
-    \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill [$H,(u,v)$]
+    \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill {\scriptsize\color{Gray} $H,\, \mathbf{u}=(u,v)$}
         \begin{align*}
         H_t + \Div (-D \grad H + \mathbf{u} H) &= m(x,t) && \text{mass conservation} \\
         \mathcal{L}(\mathbf{u},H) &= 0      && \text{shallow stress balance}
         \end{align*}
-    \item[$\circ$] Stokes, surface-elevation-based \hfill [$h,(u,v,w)$]
+    \item[$\circ$] Stokes, surface-elevation-based \hfill {\scriptsize\color{Gray} $h,\, \mathbf{u}=(u,v,w)$}
         \begin{align*}
         h_t + \mathbf{u}\big|_h \cdot (h_x,h_y,-1) &= m(x,t) && \text{surface kinematical} \\
         \Div \mathbf{u} &= 0            && \text{incompressibility} \\
@@ -179,31 +201,31 @@ simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution 
     \end{itemize}
 \item assumptions:
     \begin{itemize}
-    \item[$\circ$] conservation of energy ignored
+    \item[$\circ$] conservation of energy ignored for simplicity
     \item[$\circ$] Eulerian, fixed grid (structured or not)
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{discretize in space}
+\begin{frame}{discretize in space?}
 
 \begin{itemize}
 \item discretize in space and apply implicit time-stepping
     \begin{itemize}
-    \item[$\circ$] method of lines = MOL
-    \item[$\circ$] (\emph{can you hand the ice sheet problem to an ODE solver?})
+    \item[$\circ$] method of lines (MOL)
+    \item[$\circ$] \emph{can you hand the ice sheet problem to an ODE solver?}
     \end{itemize}
-\item well-known: MOL for ice sheets is a DAE problem
+\item well-known: MOL for slow fluids is a DAE problem
 \begin{align*}
 \dot H &= f(H,\mathbf{u},t) && \text{mass conservation} \\
      0 &= g(H,\mathbf{u})   && \text{momentum conservation}
 \end{align*}
 \vspace{-5mm}
     \begin{itemize}
-    \item[$\circ$] (\emph{is implicit time-stepping required for DAEs anyway?})
+    \item[$\circ$] \emph{is implicit time-stepping required for DAEs anyway?}
     \end{itemize}
 \item velocity variables exist at positive-thickness locations:
-    $$\mathbf{u}_i \text{ exists } \iff H_i > 0$$
+    $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0 \iff h_i > b_i$$
 \item some ODE solvers can handle \emph{events}:
     \begin{itemize}
     \item[$\circ$] ice disappears during time step:  $H_i(t)>0 \to H_i(t+\Delta t)=0$
@@ -213,35 +235,23 @@ simulate ice sheets for ice age cycle (\alert{$\sim 10^5$ years}) at resolution 
 \end{frame}
 
 
-\begin{frame}{consider: MOL + events}
+\begin{frame}{MOL$+$events cannot scale}
 
 \begin{center}
 \input{tikz/molevents.tex}
 \end{center}
-\end{frame}
 
-
-\begin{frame}{concerns: MOL + events}
-
+\vspace{-6mm}
 \begin{itemize}
-\item \emph{at each event the ice velocity dimension changes}:
-    \begin{itemize}
-    \item[$\circ$] ``active set'' indexing (e.g.~masks) for velocity variables
-    \end{itemize}
-\item \emph{events happen all the time on fine grids}:
-    \begin{itemize}
-    \item[$\circ$] margins of continental-scale ice sheets essentially fractal
-    \item[$\circ$] some major climate impacts on scale of a few years (or days)
-    \item[$\circ$] need sophisticated ODE event handling
-    \end{itemize}
+\item at each event the ice velocity dimension changes
 \end{itemize}
 \end{frame}
 
 
-
-
-\begin{frame}{weak formulation by variational inequality} 
+\begin{frame}{consider a single time step} 
 \begin{itemize}
+\item semi-discretize time by backward Euler
+\item FIXME
 \item define closed and convex admissible set
   $$\Kcal := \{\eta : \eta^{2p/(p-1)} \in W^{1,p}_0 (\Omega) \,\text{and}\, \eta \ge 0\}$$
 over larger domain $\Omega \subset \RR^2$
