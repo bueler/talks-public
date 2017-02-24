@@ -157,10 +157,10 @@
 \end{frame}
 
 
-\begin{frame}{modeling goal: long-time, high-res runs}
+\begin{frame}{scientific-computing goal: long-time, high-res runs}
 
 \begin{itemize}
-\item goal:
+\item a wide-spread goal?:
 \begin{quote}
 simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ years}) at resolution where outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\sim 500$ m})
 \end{quote}
@@ -171,9 +171,10 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
         \item[$\circ$] because ice flows downhill
         \item[$\circ$] natural desire: implicit time-stepping
         \end{itemize}
-    \item ice margins are steep
+    \item ice margins are low-regularity for two reasons:
         \begin{itemize}
-        \item[$\circ$] because of constraint ($H\ge 0$) and degeneracy (stresses $\to 0$ at margins \emph{and} ice is shear-thinning)
+        \item[$\circ$] constraint $H\ge 0$
+        \item[$\circ$] degeneracy: stresses $\to 0$ at margins
         \end{itemize}
     \item bedrock is steep
     \end{enumerate}
@@ -184,7 +185,7 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
 \begin{frame}{ice sheet models}
 
 \begin{itemize}
-\item $H$ thickness, $h$ surface elevation, $\mathbf{u}$ velocity
+\item notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity
 \item two models in mind:
     \begin{itemize}
     \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill {\scriptsize\color{Gray} $H,\, \mathbf{u}=(u,v)$}
@@ -192,11 +193,11 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
         H_t + \Div (-D \grad H + \mathbf{u} H) &= m(x,t) && \text{mass conservation} \\
         \mathcal{L}(\mathbf{u},H) &= 0      && \text{shallow stress balance}
         \end{align*}
-    \item[$\circ$] Stokes, surface-elevation-based \hfill {\scriptsize\color{Gray} $h,\, \mathbf{u}=(u,v,w)$}
+    \item[$\circ$] Stokes, surface-elevation-based \hfill {\scriptsize\color{Gray} $s,\, \mathbf{u}=(u,v,w)$}
         \begin{align*}
-        h_t + \mathbf{u}\big|_h \cdot (h_x,h_y,-1) &= m(x,t) && \text{surface kinematical} \\
+        s_t + \mathbf{u}\big|_s \cdot (s_x,s_y,-1) &= m(x,t) && \text{surface kinematical} \\
         \Div \mathbf{u} &= 0            && \text{incompressibility} \\
-        \mathcal{L}(\mathbf{u},h) &= 0  && \text{Stokes stress balance}
+        \mathcal{L}(\mathbf{u},s) &= 0  && \text{Stokes stress balance}
         \end{align*}
     \end{itemize}
 \item assumptions:
@@ -207,10 +208,10 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
 \end{itemize}
 \end{frame}
 
-\begin{frame}{discretize in space?}
+\begin{frame}{semi-discretize in space?}
 
 \begin{itemize}
-\item discretize in space and apply implicit time-stepping
+\item discretize in space first
     \begin{itemize}
     \item[$\circ$] method of lines (MOL)
     \item[$\circ$] \emph{can you hand the ice sheet problem to an ODE solver?}
@@ -226,7 +227,7 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
     \end{itemize}
 \item velocity variables exist at positive-thickness locations:
     $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0 \iff h_i > b_i$$
-\item some ODE solvers can handle \emph{events}:
+\item some ODE solvers can handle \emph{events} like these:
     \begin{itemize}
     \item[$\circ$] ice disappears during time step:  $H_i(t)>0 \to H_i(t+\Delta t)=0$
     \item[$\circ$] ice appears during time step:  $H_i(t)=0 \to H_i(t+\Delta t)>0$
@@ -235,7 +236,7 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
 \end{frame}
 
 
-\begin{frame}{MOL$+$events cannot scale}
+\begin{frame}{MOL$+$events cannot scale?}
 
 \begin{center}
 \input{tikz/molevents.tex}
@@ -244,58 +245,40 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
 \vspace{-6mm}
 \begin{itemize}
 \item at each event the ice velocity dimension changes
+\item ice sheet margins nearly fractal, so \emph{a lot} of events to handle
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{consider a single time step} 
+\begin{frame}{semi-discretize in time?}
 \begin{itemize}
-\item semi-discretize time by backward Euler
-\item FIXME
-\item define closed and convex admissible set
-  $$\Kcal := \{\eta : \eta^{2p/(p-1)} \in W^{1,p}_0 (\Omega) \,\text{and}\, \eta \ge 0\}$$
-over larger domain $\Omega \subset \RR^2$
-\item multiply strong form by $\eta-H$ where $\eta\in \Kcal$, and integrate by parts thoughtfully
+\item let's focus on a single backward Euler time-step
+    \begin{itemize}
+    \item[$\circ$] better time-stepping later
+    \end{itemize}
+\item hybrid equations become:
+        \begin{align}
+        H - H_{\mathrm{old}} + \Delta t\, \Div (-D \grad H + \mathbf{u} H) &= \Delta t\, m \label{masssinglebeuler} \\
+        \mathcal{L}(\mathbf{u},H) &= 0
+        \end{align}
+\item solve this system for $H,\mathbf{u}$ but subject to $H \ge 0$
+\item first ``equation'' \eqref{masssinglebeuler} can be rigorous two ways:
+    \begin{itemize}
+    \item[$\circ$] variational inequality (VI) \scriptsize
+        $$\int_\Omega (H - H_{\mathrm{old}} -\Delta t\, m) (\eta - H) - \Delta t\, (-D \grad H + \mathbf{u} H) \cdot \grad(\eta - H) \ge 0, \quad \forall \eta \ge 0$$ \normalsize
+    \item[$\circ$] nonlinear complementarity problem (NCP) \scriptsize
+        $$F(H) = H - H_{\mathrm{old}} -\Delta t\, m + \Delta t\,\Div (-D \grad H + \mathbf{u} H) \ge 0, \quad H \ge 0, \quad H F(H) = 0$$
+    \end{itemize}
 \end{itemize}
-\begin{block}{definition} 
-$H \in \Kcal$ solves the \emph{steady shallow ice sheet problem} if
-  $$\int_{\Omega}  \Gamma H^{p+1} |\grad s|^{p-2} \grad s \cdot \grad(\eta - H)  
-\ge \int_{\Omega} a (\eta - H)$$
-for all $\eta \in \Kcal$
-\end{block}
 \end{frame}
 
 
-\begin{frame}{ideas contained in weak formulation} 
+\begin{frame}{FIXME}
 \begin{itemize}
-\item weak form
-  $$\int_{\Omega}  \Gamma H^{p+1} |\grad s|^{p-2} \grad s \cdot \grad(\eta - H)  
-\ge \int_{\Omega} a (\eta - H)$$
-implies strong form
-  $$-\Div \left(\Gamma H^{p+1} |\nabla s|^{p-2} \nabla s  \right) =  a$$
-where $H>0$
-\item weak form also implies: if $H=0$ then $a \le 0$
-\item if $b=0$ then the weak form is equivalent to a constrained minimization problem
-  \begin{itemize}
-  \item[$\circ$] for general bed $b$ this is not so
-  \end{itemize}
+\item 
+\item 
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{on well-posedness (Jouvet-Bueler 2012)} 
-\begin{block}{theorem A.}
-if $b=0$ then the variational inequality is equivalent to
-  $$\min \, J[u] = \int_{\Omega} \frac{\Gamma}{p} |\grad u|^p - a u$$
-over $\eta = u^{(p-1)/(2p)} \in \Kcal$, and this problem is well-posed (existence, uniqueness, stability w.r.t.~data $a$)
-\end{block}
-\begin{block}{theorem B.}
-in general case ($b\ne 0$) there exists a solution
-\end{block}
-\begin{itemize}
-\item proof of B by a fixed-point theorem, of course
-\item we really don't know about uniqueness (not just technical)
-\end{itemize}
-\end{frame}
 
 \end{document}
