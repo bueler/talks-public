@@ -141,11 +141,11 @@
 \end{frame}
 
 
-\begin{frame}{ice sheets and their boundaries}
+\begin{frame}{ice sheet flows and their boundaries}
 \begin{columns}
 \begin{column}{0.4\textwidth}
 \begin{itemize}
-\item<1> nearly-fractal free boundaries determined by topography and climate interaction
+\item<1> nearly-fractal free boundaries determined by topography and atmosphere/ocean inputs
 \item<2> large fraction of the boundary: grounded margins
 \item<3> surface slope is discontinuous at grounded margins
 \end{itemize}
@@ -164,11 +164,11 @@
 \begin{itemize}
 \item a wide-spread goal?:
 \begin{quote}
-simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ years}) at resolution where outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\sim 500$ m})
+routinely simulate ice sheets on their natural time scales (ice age cycles \alert{$\sim 10^5$ years}) at resolutions where outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\sim 500$ m})
 \end{quote}
 \item main concerns:
     \begin{enumerate}
-    \item evolution of ice thickness $H(t,x,y)$ is largely diffusive
+    \item evolution of ice thickness $H(t,x,y)$ is diffusive
         \begin{itemize}
         \item[$\circ$] because ice flows downhill
         \item[$\circ$] natural desire: implicit time-stepping
@@ -238,7 +238,7 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
 \end{frame}
 
 
-\begin{frame}{MOL$+$events cannot scale?}
+\begin{frame}{MOL$+$events cannot scale}
 
 \begin{center}
 \input{tikz/molevents.tex}
@@ -252,7 +252,7 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
 \end{frame}
 
 
-\begin{frame}{semi-discretize in time?}
+\begin{frame}{semi-discretize in time (for understanding)}
 \begin{itemize}
 \item let's focus on a single backward Euler time-step
     \begin{itemize}
@@ -263,14 +263,63 @@ simulate ice sheets for natural time scales (ice age cycles \alert{$\sim 10^5$ y
         H - H_{\mathrm{old}} + \Delta t\, \Div (-D \grad H + \mathbf{u} H) &= \Delta t\, m \label{masssinglebeuler} \\
         \mathcal{L}(\mathbf{u},H) &= 0
         \end{align}
-\item solve this system for $H,\mathbf{u}$ but subject to $H \ge 0$
-\item first ``equation'' \eqref{masssinglebeuler} can be rigorous two ways:
+\item solve this system for $H,\mathbf{u}$ \emph{but} subject to $H \ge 0$
+\item \eqref{masssinglebeuler} can be made rigorous two ways:
     \begin{itemize}
     \item[$\circ$] variational inequality (VI) \scriptsize
         $$\int_\Omega (H - H_{\mathrm{old}} -\Delta t\, m) (\eta - H) - \Delta t\, (-D \grad H + \mathbf{u} H) \cdot \grad(\eta - H) \ge 0, \quad \forall \eta \ge 0$$ \normalsize
     \item[$\circ$] nonlinear complementarity problem (NCP) \scriptsize
         $$F(H) = H - H_{\mathrm{old}} -\Delta t\, m + \Delta t\,\Div (-D \grad H + \mathbf{u} H) \ge 0, \quad H \ge 0, \quad H F(H) = 0$$
     \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{solving the equations}
+\begin{itemize}
+\item FVE  FIXME: stencil cartoon
+\item Newton + Krylov + preconditioning
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{margin advance experiment: Newton iterations}
+\begin{itemize}
+\item 10 year time step results FIXME
+\item Newton iteration sees Jacobian in inactive variables only (\texttt{-snes\_type vinewtonrsls})
+\item<2> so number of Newton steps becomes proportional to margin advance (975 m) divided by the number grid spaces
+\end{itemize}
+
+\begin{center}
+\includegraphics<1>[width=0.6\textwidth]{newtoniters.pdf}
+\includegraphics<2>[width=0.6\textwidth]{newtonitersFIT.pdf}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{margin advance experiment: preconditioners}
+\begin{itemize}
+\item method:
+
+\small
+\centerline{\texttt{-snes\_type vinewtonrsls -ksp\_type gmres -pc\_type PC}}
+\normalsize
+\item<1> preconditioner comparison: Krylov iterations per Newton step
+\item<2> preconditioner comparison: wall clock time per d.o.f.~per Newton step (refined grids only)
+\end{itemize}
+
+\begin{center}
+\includegraphics<1>[width=0.6\textwidth]{pcksppernewton.pdf}
+\includegraphics<2>[width=0.6\textwidth]{pctimeperdof.pdf}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{margin advance experiment:  weak scaling}
+\begin{itemize}
+\item FIXME
+\item 
 \end{itemize}
 \end{frame}
 
