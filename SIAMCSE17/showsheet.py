@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 
+import argparse
+
+parser = argparse.ArgumentParser(description='Generate figures from PETSc binary file written by p4pdes/c/ch11/ice.c using option -ice_dump.')
+parser.add_argument('-f', metavar='NAME.DAT', type=str, required=True,
+                    help='name of PETSc binary file')
+parser.add_argument('-mx', type=int, metavar='MX', required=True,
+                    help="number of grid points in x (and y) direction")
+parser.add_argument('-L', type=float, metavar='L', default=1800.0e3,
+                    help="length of x (and y) direction in meters [default=1800.0e3]")
+args = parser.parse_args()
+L = args.L
+mx = args.mx
+fname = args.f
+
 import sys
 def importfail(name):
     print "'import %s' failed" % name
@@ -19,11 +33,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import axes3d
-
-# FIXME argparse to get these values
-L = 1800.0e3
-mx = 96
-fname = 'ice_96_100.dat'
 
 mapshape = (mx,mx)
 dx = L / mx
