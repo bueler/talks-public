@@ -2,17 +2,24 @@
 
 import argparse
 
+# example:
+#   ./showsheet.py -mx 192 -i ice_192_0.py -o startsheet.png
+#   ./showsheet.py -mx 192 -i ice_192_50000.py -o endsheet.png
+
 parser = argparse.ArgumentParser(description='Generate figures from PETSc binary file written by p4pdes/c/ch11/ice.c using option -ice_dump.')
-parser.add_argument('-f', metavar='NAME.DAT', type=str, required=True,
-                    help='name of PETSc binary file')
+parser.add_argument('-i', metavar='IN.DAT', type=str, required=True,
+                    help='name of PETSc binary file to read')
 parser.add_argument('-mx', type=int, metavar='MX', required=True,
                     help="number of grid points in x (and y) direction")
 parser.add_argument('-L', type=float, metavar='L', default=1800.0e3,
                     help="length of x (and y) direction in meters [default=1800.0e3]")
+parser.add_argument('-o', metavar='OUT.PNG', type=str, default='',
+                    help='output image file, using matplotlib savefig()')
 args = parser.parse_args()
 L = args.L
 mx = args.mx
-fname = args.f
+fname = args.i
+outname = args.o
 
 import sys
 def importfail(name):
@@ -76,15 +83,16 @@ for yk in range(mx):
         else:
             colors[xk,yk] = 'g'   # FIXME 
 
-fig = plt.figure(figsize=(12,6))
+fig = plt.figure(figsize=(20,6))
 ax = fig.gca(projection='3d')
 xx, yy = np.meshgrid(x,y)
 hand = ax.plot_surface(xx/1000.0,yy/1000.0,H+b,rstride=1,cstride=1,facecolors=colors)
-
-#ax.set_zlim3d(0.0, max(b.flatten()))
-#fig.colorbar(h,shrink=0.8,aspect=8)
-
+ax.set_zlim(-1000.0,5000.0)
 ax.set_xlabel('x  (km)')
 ax.set_ylabel('y  (km)')
-plt.show()
+
+if len(outname) > 0:
+    plt.savefig(outname,bbox_inches='tight')
+else:
+    plt.show()
 

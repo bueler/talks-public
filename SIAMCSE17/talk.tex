@@ -162,21 +162,24 @@
 \begin{frame}{scientific-computing goal: long-time, high-res runs}
 
 \begin{itemize}
-\item a wide-spread goal?:
+\item my goal (I am not the only one \dots):
 \begin{quote}
 routinely simulate ice sheets on their natural time scales (ice age cycles \alert{$\sim 10^5$ years}) at resolutions where outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\sim 500$ m})
 \end{quote}
-\item main concerns:
+\item some concerns:
     \begin{enumerate}
+    \item stress-balance solves expensive
+        \begin{itemize}
+        \item[$\circ$] if time steps are short then enforcing momentum conservation (for velocity) is a lot of work!
+        \item[$\circ$] \dots energy conservation (for temperature and basal melt) too
+        \end{itemize}
     \item evolution of ice thickness $H(t,x,y)$ is diffusive
         \begin{itemize}
         \item[$\circ$] because ice flows downhill
-        \item[$\circ$] natural desire: implicit time-stepping
         \end{itemize}
-    \item ice margins are low-regularity for two reasons:
+    \item ice margins are low-regularity
         \begin{itemize}
-        \item[$\circ$] constraint $H\ge 0$
-        \item[$\circ$] degeneracy: stresses $\to 0$ at margins
+        \item[$\circ$] for two reasons: (\emph{i}) constraint $H\ge 0$ and (\emph{ii}) degeneracy: stresses $\to 0$ at margins
         \end{itemize}
     \item bedrock is steep
     \end{enumerate}
@@ -188,7 +191,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 
 \begin{itemize}
 \item notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity
-\item two models in mind:
+\item two models:
     \begin{itemize}
     \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill {\scriptsize\color{Gray} $H,\, \mathbf{u}=(u,v)$}
         \begin{align*}
@@ -216,7 +219,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \item discretize in space first
     \begin{itemize}
     \item[$\circ$] method of lines (MOL)
-    \item[$\circ$] \emph{can you hand the ice sheet problem to an ODE solver?}
+    \item[$\circ$] \emph{can you hand the resulting system to an ODE solver?}
     \end{itemize}
 \item well-known: MOL for slow fluids is a DAE problem
 \begin{align*}
@@ -227,7 +230,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
     \begin{itemize}
     \item[$\circ$] \emph{is implicit time-stepping required for DAEs anyway?}
     \end{itemize}
-\item velocity variables exist at positive-thickness locations:
+\item velocity variables exist at positive-thickness locations $i$:
     $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0 \iff h_i > b_i$$
 \item some ODE solvers can handle \emph{events} like these:
     \begin{itemize}
@@ -252,9 +255,10 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \end{frame}
 
 
-\begin{frame}{semi-discretize in time (for understanding)}
+\begin{frame}{semi-discretize in time \dots for understanding, if nothing else}
+
 \begin{itemize}
-\item let's focus on a single backward Euler time-step
+\item a single backward Euler time-step
     \begin{itemize}
     \item[$\circ$] better time-stepping later
     \end{itemize}
@@ -263,7 +267,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         H - H_{\mathrm{old}} + \Delta t\, \Div (-D \grad H + \mathbf{u} H) &= \Delta t\, m \label{masssinglebeuler} \\
         \mathcal{L}(\mathbf{u},H) &= 0
         \end{align}
-\item solve this system for $H,\mathbf{u}$ \emph{but} subject to $H \ge 0$
+\item solve this system for \,$H,\mathbf{u}$\, \emph{but} subject to $H \ge 0$
 \item \eqref{masssinglebeuler} can be made rigorous two ways:
     \begin{itemize}
     \item[$\circ$] variational inequality (VI) \scriptsize
@@ -286,8 +290,8 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \begin{frame}{margin advance experiment: Newton iterations}
 \begin{itemize}
 \item 10 year time step results FIXME
-\item Newton iteration sees Jacobian in inactive variables only (\texttt{-snes\_type vinewtonrsls})
-\item<2> so number of Newton steps becomes proportional to margin advance (975 m) divided by the number grid spaces
+\item Newton iteration sees Jacobian in inactive variables only (PETSc: \texttt{-snes\_type vinewtonrsls})
+\item<2> number of Newton iterations is proportional to margin advance (975 m) divided by the number grid spaces
 \end{itemize}
 
 \begin{center}
@@ -305,8 +309,12 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \small
 \centerline{\texttt{-snes\_type vinewtonrsls -ksp\_type gmres -pc\_type PC}}
 \normalsize
-\item<1> preconditioner comparison: Krylov iterations per Newton step
-\item<2> preconditioner comparison: wall clock time per d.o.f.~per Newton step (refined grids only)
+\item preconditioner comparison:
+\small
+    \begin{itemize}
+    \item<1>[$\circ$] Krylov iterations per Newton step
+    \item<2>[$\circ$] wall clock time per d.o.f.~per Newton step
+    \end{itemize}
 \end{itemize}
 
 \begin{center}
@@ -324,9 +332,51 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \end{frame}
 
 
+
+
+\begin{frame}{50ka run with sliding}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item FIXME hybrid method with $V$
+\item steady climate with elevation-dependent accumulation/ablation
+\item initial state (upper) is just snow piled up; shows ela
+\item FIXME ARKIMEX + $3$ or more NCP solves at each time step
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\includegraphics[width=\textwidth]{startsheet.png}
+
+\includegraphics[width=\textwidth]{endsheet.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{50ka run with sliding: performance}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+FIXME  show $\Delta t$ vs dtD and dtCFL, under grid refinement
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Greenland steady}
+\begin{itemize}
+\item show map-plane figures
+\item show: convergence depends on roughness
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{FIXME}
 \begin{itemize}
-\item 
+\item FIXME recommended ``new PISM'' run
 \item 
 \end{itemize}
 \end{frame}
