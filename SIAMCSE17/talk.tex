@@ -6,6 +6,7 @@
   \usefonttheme{professionalfonts}
   \setbeamertemplate{blocks}[rounded][shadow=true]
   \setbeamercovered{transparent}
+  \setbeamertemplate{footline}[frame number]
 }
 
 % load packages
@@ -22,7 +23,6 @@
 
 \usepackage{animate}
 \usepackage{amsmath,verbatim}
-%\usepackage[dvipsnames]{xcolor}
 
 % see http://tex.stackexchange.com/questions/86188/labelling-with-arrows-in-an-automated-way
 
@@ -104,27 +104,25 @@
 \institute[UAF]{
   \scriptsize Dept of Mathematics and Statistics and Geophysical Institute \\
 
-  University of Alaska Fairbanks \\
-  
-  \tiny $^{}$ \\
-  \tiny supported by NASA grant \# NNX13AM16G
+  University of Alaska Fairbanks
 }
 
 \titlegraphic{\includegraphics[width=\textwidth]{andycoast.png}}
 
-\beamertemplatenavigationsymbolsempty
+\beamertemplatenavigationsymbolsempty   % remove faint and silly navigation symbols at bottom
+\renewcommand{\insertnavigation}[1]{}   % remove section headings from top of each slide
 
 \setbeamerfont{date}{size=\scriptsize}
 \date{}
 
-\AtBeginSection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Outline}
-    %\tableofcontents[currentsection,hideallsubsections]
-    \tableofcontents[currentsection]
-  \end{frame}
-}
+%\AtBeginSection[]
+%{
+%  \begin{frame}<beamer>
+%    \frametitle{Outline}
+%    %\tableofcontents[currentsection,hideallsubsections]
+%    \tableofcontents[currentsection]
+%  \end{frame}
+%}
 
 
 \begin{document}
@@ -136,41 +134,52 @@
 \vspace{10mm}
   \titlepage
   \begin{center}
-  \tiny SIAM CSE \quad 2 March, 2017
+  \tiny SIAM CSE \quad 2 March, 2017 \hfill  supported by NASA grant \# NNX13AM16G
   \end{center}
 \end{frame}
 
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents
+  \end{frame}
+
+\section{problem, goals, and models}
 
 \begin{frame}{ice sheet flows and their boundaries}
 \begin{columns}
-\begin{column}{0.4\textwidth}
+\begin{column}{0.45\textwidth}
 \begin{itemize}
-\item<1> nearly-fractal free boundaries determined by topography and atmosphere/ocean inputs
+\item<1> nearly-fractal free boundaries
+    \begin{itemize}
+    \scriptsize
+    \item[$\circ$] location determined by flow, topography, and atmosphere/ocean inputs
+    \normalsize
+    \end{itemize}
 \item<2> large fraction of the boundary: grounded margins
 \item<3> surface slope is discontinuous at grounded margins
 \end{itemize}
 \end{column}
-\begin{column}{0.6\textwidth}
-\only<1>{\includegraphics[height=0.78\textheight]{ice-mask-900m.png} \\ {\tiny \hfill PISM mask, by A.~Aschwanden}}
-\includegraphics<2>[height=0.8\textheight]{jako-crop-mask-900m.png}
-\only<3>{\includegraphics[width=1.02\textwidth]{truffertaku2016.jpg} \\ {\tiny \hfill Taku Glacier, Alaska, by M.~Truffer}}
+\begin{column}{0.55\textwidth}
+\only<1>{\includegraphics[height=0.8\textheight]{ice-mask-900m.png} \\ {\tiny \hfill PISM mask, by A.~Aschwanden}}
+\includegraphics<2>[height=0.85\textheight]{jako-crop-mask-900m.png}
+\only<3>{\includegraphics[width=1.05\textwidth]{truffertaku2016.jpg} \\ {\tiny \hfill Taku Glacier, Alaska, by M.~Truffer}}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{scientific-computing goal: long-time, high-res runs}
+\begin{frame}{computational goal: long-time, high-res runs}
 
 \begin{itemize}
-\item my goal (I am not the only one \dots):
+\item my goal (I am not the only one?!):
 \begin{quote}
-routinely simulate ice sheets on their natural time scales (ice age cycles \alert{$\sim 10^5$ years}) at resolutions where outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\sim 500$ m})
+routinely simulate ice sheets on their natural time scales (ice age cycles \alert{$\gtrsim 10^5$ years}) at resolutions where bedrock bumps, outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\lesssim 500$ m})
 \end{quote}
 \item some concerns:
     \begin{enumerate}
     \item stress-balance solves expensive
         \begin{itemize}
-        \item[$\circ$] if time steps are short then enforcing momentum conservation (for velocity) is a lot of work!
+        \item[$\circ$] if time steps are short then momentum conservation becomes a lot of work
         \item[$\circ$] \dots energy conservation (for temperature and basal melt) too
         \end{itemize}
     \item evolution of ice thickness $H(t,x,y)$ is diffusive
@@ -183,6 +192,10 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \end{itemize}
     \item bedrock is steep
     \end{enumerate}
+
+\medskip
+\scriptsize
+\item PISM (Parallel Ice Sheet Model) not there yet \dots either long-time \emph{OR} high-res
 \end{itemize}
 \end{frame}
 
@@ -190,12 +203,11 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \begin{frame}{ice sheet models}
 
 \begin{itemize}
-\item notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity
-\item two models:
+\item covering at least two models:
     \begin{itemize}
     \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill {\scriptsize\color{Gray} $H,\, \mathbf{u}=(u,v)$}
         \begin{align*}
-        H_t + \Div (-D \grad H + \mathbf{u} H) &= m(x,t) && \text{mass conservation} \\
+        H_t + \Div (-D \grad H + \bar{\mathbf{u}} H) &= m(x,t) && \text{mass conservation} \\
         \mathcal{L}(\mathbf{u},H) &= 0      && \text{shallow stress balance}
         \end{align*}
     \item[$\circ$] Stokes, surface-elevation-based \hfill {\scriptsize\color{Gray} $s,\, \mathbf{u}=(u,v,w)$}
@@ -205,13 +217,21 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \mathcal{L}(\mathbf{u},s) &= 0  && \text{Stokes stress balance}
         \end{align*}
     \end{itemize}
+\item (notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity)
 \item assumptions:
     \begin{itemize}
     \item[$\circ$] conservation of energy ignored for simplicity
+    \item[$\circ$] fixed computational domain $\Omega$ where $b,m$ given
+        \begin{itemize}
+        \item $\Omega$ is only partly covered by ice
+        \end{itemize}
     \item[$\circ$] Eulerian, fixed grid (structured or not)
     \end{itemize}
 \end{itemize}
 \end{frame}
+
+
+\section{semi-discretizations}
 
 \begin{frame}{semi-discretize in space?}
 
@@ -255,29 +275,55 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \end{frame}
 
 
-\begin{frame}{semi-discretize in time \dots for understanding, if nothing else}
+\begin{frame}{semi-discretize in time}
 
 \begin{itemize}
-\item a single backward Euler time-step
+\item semi-discretize in time \emph{for understanding}, if nothing else
+\item consider a single backward Euler time-step
     \begin{itemize}
     \item[$\circ$] better time-stepping later
     \end{itemize}
 \item hybrid equations become:
-        \begin{align}
-        H - H_{\mathrm{old}} + \Delta t\, \Div (-D \grad H + \mathbf{u} H) &= \Delta t\, m \label{masssinglebeuler} \\
+        \begin{align*}
+        H - H_{\mathrm{old}} + \Delta t\, \Div (-D \grad H + \mathbf{u} H) &= \Delta t\, m \\
         \mathcal{L}(\mathbf{u},H) &= 0
-        \end{align}
+        \end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{single time-step problem for mass conservation}
+
+\small
+
+\begin{itemize}
+\item supposing $\mathbf{u}$ given, to solve:
+        \begin{equation}
+        H - H_{\mathrm{old}} + \Delta t\, \Div \mathbf{q} = \Delta t\, m \tag{$\ast$}
+        \end{equation}
+   \begin{itemize}
+
+\vspace{-5mm}
+   \item[$\circ$] where $\mathbf{q} = -D \grad H + \mathbf{u} H$
+   \item[$\circ$] note: $D=D(H,|\grad s|) \to 0$ at margins
+   \end{itemize}
 \item solve this system for \,$H,\mathbf{u}$\, \emph{but} subject to $H \ge 0$
-\item \eqref{masssinglebeuler} can be made rigorous two ways:
+\item ($\ast$) can be made rigorous two ways:
     \begin{itemize}
-    \item[$\circ$] variational inequality (VI) \scriptsize
-        $$\int_\Omega (H - H_{\mathrm{old}} -\Delta t\, m) (\eta - H) - \Delta t\, (-D \grad H + \mathbf{u} H) \cdot \grad(\eta - H) \ge 0, \quad \forall \eta \ge 0$$ \normalsize
-    \item[$\circ$] nonlinear complementarity problem (NCP) \scriptsize
-        $$F(H) = H - H_{\mathrm{old}} -\Delta t\, m + \Delta t\,\Div (-D \grad H + \mathbf{u} H) \ge 0, \quad H \ge 0, \quad H F(H) = 0$$
+    \item[$\circ$] variational inequality (VI)
+    $$\int_\Omega (H - H_{\mathrm{old}} -\Delta t\, m) (\eta - H) - \Delta t\, \mathbf{q} \cdot \grad(\eta - H) \ge 0, \quad \forall \eta \ge 0$$
+    \item[$\circ$] nonlinear complementarity problem (NCP)
+\begin{align*}
+F(H)   &= H - H_{\mathrm{old}} -\Delta t\, m + \Delta t\,\Div \mathbf{q} \ge 0 \\
+H      &\ge 0 \\
+H F(H) &= 0
+\end{align*}
     \end{itemize}
 \end{itemize}
 \end{frame}
 
+
+\section{solving the equations for one time step}
 
 \begin{frame}{solving the equations}
 \begin{itemize}
@@ -332,7 +378,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \end{frame}
 
 
-
+\section{some early results}
 
 \begin{frame}{50ka run with sliding}
 \begin{columns}
