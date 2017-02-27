@@ -376,13 +376,15 @@ H F(H) &= 0
 \begin{itemize}
 \item 10 year time step results
     \begin{itemize}
-    \item[$\circ$] margin advance of 975 m
+    \item[$\circ$] margin advance 975 m
     \end{itemize}
 \item<1> Newton iteration sees Jacobian in inactive variables only
 \item<2> \dots thus on fine grids ($\lesssim 1 km$) number of Newton iterations is proportional to margin advance divided by grid spacing
 \end{itemize}\end{column}
-\begin{column}{0.45\textwidth}
- FIXME  Halfarish cartoon
+\begin{column}{0.55\textwidth}
+
+\bigskip
+\hfill \includegraphics[width=0.7\textwidth]{halfarcartoon.pdf}
 
 \bigskip
 \includegraphics<1>[width=\textwidth]{newtoniters.pdf}
