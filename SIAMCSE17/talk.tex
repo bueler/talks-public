@@ -171,10 +171,17 @@
 \begin{frame}{computational goal: long-time, high-res runs}
 
 \begin{itemize}
-\item my goal (I am not the only one?!):
+\item my goal:
 \begin{quote}
 routinely simulate ice sheets on their natural time scales (ice age cycles \alert{$\gtrsim 10^5$ years}) at resolutions where bedrock bumps, outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\lesssim 500$ m})
 \end{quote}
+
+\medskip
+\scriptsize
+\item PISM (Parallel Ice Sheet Model) not there yet \dots either long-time \emph{OR} high-res
+
+\medskip
+\normalsize
 \item some concerns:
     \begin{enumerate}
     \item stress-balance solves expensive
@@ -192,10 +199,6 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \end{itemize}
     \item bedrock is steep
     \end{enumerate}
-
-\medskip
-\scriptsize
-\item PISM (Parallel Ice Sheet Model) not there yet \dots either long-time \emph{OR} high-res
 \end{itemize}
 \end{frame}
 
@@ -233,12 +236,11 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 
 \section{semi-discretizations}
 
-\begin{frame}{semi-discretize in space?}
+\begin{frame}{semi-discretize in space}
 
 \begin{itemize}
-\item discretize in space first
+\item method of lines (MOL)
     \begin{itemize}
-    \item[$\circ$] method of lines (MOL)
     \item[$\circ$] \emph{can you hand the resulting system to an ODE solver?}
     \end{itemize}
 \item well-known: MOL for slow fluids is a DAE problem
@@ -252,7 +254,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
     \end{itemize}
 \item velocity variables exist at positive-thickness locations $i$:
     $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0 \iff h_i > b_i$$
-\item some ODE solvers can handle \emph{events} like these:
+\item ODE solvers should handle \emph{events} like these!:
     \begin{itemize}
     \item[$\circ$] ice disappears during time step:  $H_i(t)>0 \to H_i(t+\Delta t)=0$
     \item[$\circ$] ice appears during time step:  $H_i(t)=0 \to H_i(t+\Delta t)>0$
@@ -271,6 +273,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \begin{itemize}
 \item at each event the ice velocity dimension changes
 \item ice sheet margins nearly fractal, so \emph{a lot} of events to handle
+\item re-meshing before every velocity solve \dots has the same scalability problem
 \end{itemize}
 \end{frame}
 
@@ -283,7 +286,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
     \begin{itemize}
     \item[$\circ$] better time-stepping later
     \end{itemize}
-\item hybrid equations become:
+\item hybrid equations become (notation: $H=H_{\mathrm{new}}, \mathbf{u}=\mathbf{u}_{\mathrm{new}}$):
         \begin{align*}
         H - H_{\mathrm{old}} + \Delta t\, \Div (-D \grad H + \mathbf{u} H) &= \Delta t\, m \\
         \mathcal{L}(\mathbf{u},H) &= 0
@@ -292,23 +295,23 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \end{frame}
 
 
-\begin{frame}{single time-step problem for mass conservation}
+\begin{frame}{single time-step problem for mass conservation alone}
 
 \small
 
 \begin{itemize}
-\item supposing $\mathbf{u}$ given, to solve:
-        \begin{equation}
-        H - H_{\mathrm{old}} + \Delta t\, \Div \mathbf{q} = \Delta t\, m \tag{$\ast$}
-        \end{equation}
+\item to solve:
+        \begin{equation*}
+        H - H_{\mathrm{old}} + \Delta t\, \Div \mathbf{q} = \Delta t\, m
+        \end{equation*}
    \begin{itemize}
 
 \vspace{-5mm}
    \item[$\circ$] where $\mathbf{q} = -D \grad H + \mathbf{u} H$
    \item[$\circ$] note: $D=D(H,|\grad s|) \to 0$ at margins
    \end{itemize}
-\item solve this system for \,$H,\mathbf{u}$\, \emph{but} subject to $H \ge 0$
-\item ($\ast$) can be made rigorous two ways:
+\item solve this for \,$H$\, \emph{but} subject to $H \ge 0$
+\item make rigorous two ways:
     \begin{itemize}
     \item[$\circ$] variational inequality (VI)
     $$\int_\Omega (H - H_{\mathrm{old}} -\Delta t\, m) (\eta - H) - \Delta t\, \mathbf{q} \cdot \grad(\eta - H) \ge 0, \quad \forall \eta \ge 0$$
@@ -327,22 +330,26 @@ H F(H) &= 0
 
 \begin{frame}{solving the equations}
 \begin{itemize}
-\item FVE  FIXME: stencil cartoon
-\item Newton + Krylov + preconditioning
+\item now also discretize in space
+    \begin{itemize}
+    \item[$\circ$] recommended is FVE framework  FIXME: stencil cartoon
+    \end{itemize}
+\item FIXME: wrote a little code \texttt{ice.c}, already online, actually MOL
+\item FIXME: NCP-reduced-space + Newton-line-search + Krylov + preconditioning
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{margin advance experiment: Newton iterations}
 \begin{itemize}
-\item 10 year time step results FIXME
+\item 10 year time step results FIXME  Halfarish cartoon
 \item Newton iteration sees Jacobian in inactive variables only (PETSc: \texttt{-snes\_type vinewtonrsls})
 \item<2> number of Newton iterations is proportional to margin advance (975 m) divided by the number grid spaces
 \end{itemize}
 
 \begin{center}
-\includegraphics<1>[width=0.6\textwidth]{newtoniters.pdf}
-\includegraphics<2>[width=0.6\textwidth]{newtonitersFIT.pdf}
+\includegraphics<1>[width=0.5\textwidth]{newtoniters.pdf}
+\includegraphics<2>[width=0.5\textwidth]{newtonitersFIT.pdf}
 \end{center}
 \end{frame}
 
