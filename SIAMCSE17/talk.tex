@@ -329,28 +329,66 @@ H F(H) &= 0
 \section{solving the equations for one time step}
 
 \begin{frame}{solving the equations}
+\begin{columns}
+\begin{column}{0.55\textwidth}
 \begin{itemize}
 \item now also discretize in space
     \begin{itemize}
-    \item[$\circ$] recommended is FVE framework  FIXME: stencil cartoon
+    \item[$\circ$] e.g.~finite volume element $M^\star$ method (Bueler, 2016) uses $Q^1$ elements and $\int_V$ weak form
     \end{itemize}
-\item FIXME: wrote a little code \texttt{ice.c}, already online, actually MOL
-\item FIXME: NCP-reduced-space + Newton-line-search + Krylov + preconditioning
+\end{itemize}
+\end{column}
+\begin{column}{0.45\textwidth}
+\bigskip
+
+\includegraphics[width=\textwidth]{mstarstencil.png} 
+\end{column}
+\end{columns}
+
+\medskip
+\begin{itemize}
+\item wrote small PETSc code for mass conservation problem:
+    \begin{itemize}
+    \item[$\circ$] MOL using $M^\star$
+    \item[$\circ$] tell PETSc \texttt{TS} which part is stiff: $F(H_t,H) = G(t,H)$
+        \begin{itemize}
+        \item  $F=H_t + \Div \mathbf{q}$ and $G=m$
+        \end{itemize}
+    \end{itemize}
+\item equations at each time step are solved with
+    \begin{itemize}
+    \item[$\circ$] any implicit or IMEX (BEuler, $\theta$, BDF, ARKIMEX, \dots)
+    \item[$\circ$] NCP-adapted (``reduced-space'' or ``semi-smooth'') Newton
+        \begin{itemize}
+        \item Benson \& Munson (2006)
+        \end{itemize}
+    \item[$\circ$] + Krylov + preconditioning
+    \item[$\circ$] \dots all run-time choices
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{margin advance experiment: Newton iterations}
-\begin{itemize}
-\item 10 year time step results FIXME  Halfarish cartoon
-\item Newton iteration sees Jacobian in inactive variables only (PETSc: \texttt{-snes\_type vinewtonrsls})
-\item<2> number of Newton iterations is proportional to margin advance (975 m) divided by the number grid spaces
-\end{itemize}
 
-\begin{center}
-\includegraphics<1>[width=0.5\textwidth]{newtoniters.pdf}
-\includegraphics<2>[width=0.5\textwidth]{newtonitersFIT.pdf}
-\end{center}
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+\item 10 year time step results
+    \begin{itemize}
+    \item[$\circ$] margin advance of 975 m
+    \end{itemize}
+\item<1> Newton iteration sees Jacobian in inactive variables only
+\item<2> \dots thus on fine grids ($\lesssim 1 km$) number of Newton iterations is proportional to margin advance divided by grid spacing
+\end{itemize}\end{column}
+\begin{column}{0.45\textwidth}
+ FIXME  Halfarish cartoon
+
+\bigskip
+\includegraphics<1>[width=\textwidth]{newtoniters.pdf}
+\includegraphics<2>[width=\textwidth]{newtonitersFIT.pdf}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -420,10 +458,19 @@ FIXME  show $\Delta t$ vs dtD and dtCFL, under grid refinement
 
 
 \begin{frame}{Greenland steady}
+\begin{columns}
+\begin{column}{0.4\textwidth}
 \begin{itemize}
-\item show map-plane figures
-\item show: convergence depends on roughness
+\item<1> FIXME map-plane figure
+\item<2> FIXME convergence depends on roughness
 \end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\hfill\includegraphics<1>[height=0.9\textheight]{grnwinset.pdf}
+
+\includegraphics<2>[width=\textwidth]{rseps.pdf}
+\end{column}
+\end{columns}
 \end{frame}
 
 
