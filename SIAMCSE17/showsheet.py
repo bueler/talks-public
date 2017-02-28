@@ -47,6 +47,7 @@ dy = dx
 x = np.linspace(0.0,L-dx,mx)
 y = x
 
+print 'opening PETSc binary file %s for reading ...' % fname
 try:
     fh = open(fname)
 except:
@@ -83,7 +84,7 @@ for yk in range(mx):
         else:
             colors[xk,yk] = 'g'   # FIXME 
 
-fig = plt.figure(figsize=(20,6))
+fig = plt.figure(figsize=(25,5))
 ax = fig.gca(projection='3d')
 xx, yy = np.meshgrid(x,y)
 hand = ax.plot_surface(xx/1000.0,yy/1000.0,H+b,rstride=1,cstride=1,facecolors=colors)
@@ -92,6 +93,7 @@ ax.set_xlabel('x  (km)')
 ax.set_ylabel('y  (km)')
 
 if len(outname) > 0:
+    print 'writing output image file %s ...' % outname
     plt.savefig(outname,bbox_inches='tight')
 else:
     plt.show()

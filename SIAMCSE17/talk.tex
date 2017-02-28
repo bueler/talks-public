@@ -440,28 +440,30 @@ H F(H) &= 0
 
 \begin{frame}{50ka run with topography, sliding, mass balance}
 \begin{center}
-\includegraphics[width=0.7\textwidth]{startsheet.png}
+% use  mogrify -trim *.png
+\includegraphics[height=0.25\textheight]{startsheet.png}
 
-\includegraphics[width=0.7\textwidth]{endsheet.png}
+\includegraphics[height=0.25\textheight]{endsheet.png}
 \end{center}
 
 \begin{itemize}
-\item solves: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + VH$ and $m=m(s)$
+\item initial state (upper) is just snow piled up
+\item solves: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + VH$
     \begin{itemize}
-    \item[$\circ$] imposed $V(x,y)$
-    \item[$\circ$] elevation-dependent accumulation/ablation
+    \item[$\circ$] imposed ``sliding'' $V(x,y)$
+    \item[$\circ$] elevation-dependent accumulation/ablation $m=m(s)$
     \end{itemize}
-\item initial state (upper) is just snow piled up (shows ela)
-\item method: ARKIMEX + $3$ or more NCP solves at each time step
+\item \texttt{arkimex}$+$\texttt{vinewtonrsls}$+$\texttt{gmres}$+$\texttt{mg}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{50ka run with sliding: performance}
+\begin{frame}{50ka run with sliding: time-stepping performance}
 \begin{columns}
 \begin{column}{0.4\textwidth}
 \begin{itemize}
 \item FIXME
+\item $384\times 384$ grid $\Delta x = 5$ km at refine 7 (laptop, 4 cores, 2 hours)
 \end{itemize}
 \end{column}
 \begin{column}{0.6\textwidth}
