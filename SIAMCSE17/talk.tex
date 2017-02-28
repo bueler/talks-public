@@ -220,9 +220,10 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \mathcal{L}(\mathbf{u},s) &= 0  && \text{Stokes stress balance}
         \end{align*}
     \end{itemize}
-\item (notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity)
+\item notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity
 \item assumptions:
     \begin{itemize}
+    \item[$\circ$] $D=D(H,|\grad s|)$ is SIA diffusivity (nonlinear \& degenerate)
     \item[$\circ$] conservation of energy ignored for simplicity
     \item[$\circ$] fixed computational domain $\Omega$ where $b,m$ given
         \begin{itemize}
@@ -383,8 +384,11 @@ H F(H) &= 0
     \item[$\circ$] margin advance 975 m
     \item[$\circ$] do a single BEuler 10 year time step
     \end{itemize}
-\item<1> reduced-space Newton step has Jacobian in inactive variables only
-\item<2> \dots thus on fine grids ($\lesssim 1$ km) the number of Newton iterations is proportional to margin advance divided by grid spacing
+\item reduced-space Newton step has Jacobian in inactive variables only
+    \begin{itemize}
+    \item[$\circ$] states are admissible
+    \end{itemize}
+\item<2> on fine grids ($\lesssim 1$ km) number of Newton iterations is proportional to advance divided by $\Delta x$
 \end{itemize}\end{column}
 \begin{column}{0.55\textwidth}
 
@@ -448,9 +452,9 @@ H F(H) &= 0
 
 \begin{itemize}
 \item initial state (upper) is just snow piled up
-\item solves: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + VH$
+\item solves: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + \mathbf{u} H$
     \begin{itemize}
-    \item[$\circ$] imposed ``sliding'' $V(x,y)$
+    \item[$\circ$] imposed ``sliding'' $\mathbf{u}(x,y)$
     \item[$\circ$] elevation-dependent accumulation/ablation $m=m(s)$
     \end{itemize}
 \item \texttt{arkimex}$+$\texttt{vinewtonrsls}$+$\texttt{gmres}$+$\texttt{mg}
@@ -473,16 +477,27 @@ FIXME  show $\Delta t$ vs dtD and dtCFL, under grid refinement
 \end{frame}
 
 
-\begin{frame}{Greenland steady}
+\begin{frame}{example: Greenland ice sheet $\Delta t=\infty$}
+
 \begin{columns}
-\begin{column}{0.4\textwidth}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item<1> FIXME map-plane figure
-\item<2> FIXME convergence depends on roughness
+\item on this slide: steady geometry $H(x,y)$ of the Greenland ice sheet
+  \begin{itemize}
+  \item[$\circ$] given $m(x,y)$ and $b(x,y)$
+  \end{itemize}
+\item<1-2> Bueler 2016, J.~Glaciol.
+\item<1> one $\Delta t=\infty$ step
+  \begin{itemize}
+  \item[$\circ$] 900 m structured grid
+  \item[$\circ$] $7\times 10^6$ d.o.f.
+  \end{itemize}
+\item<2> \emph{but} Newton convergence suffers from bed roughness
+\item<3> \emph{but} adaptive time-stepping seems to not have this problem
 \end{itemize}
 \end{column}
-\begin{column}{0.6\textwidth}
-\hfill\includegraphics<1>[height=0.9\textheight]{grnwinset.pdf}
+\begin{column}{0.5\textwidth}
+\includegraphics<1>[height=0.8\textheight]{grnwinset.pdf}
 
 \includegraphics<2>[width=\textwidth]{rseps.pdf}
 \end{column}
@@ -490,10 +505,33 @@ FIXME  show $\Delta t$ vs dtD and dtCFL, under grid refinement
 \end{frame}
 
 
-\begin{frame}{FIXME}
+
+
+\begin{frame}[fragile]
+\frametitle{summary}
 \begin{itemize}
-\item FIXME recommended ``new PISM'' run
-\item 
+\item implicit time-stepping of hybrid-type mass conservation:
+  \begin{itemize}
+  \item[$\circ$] enforce $H\ge 0$ as NCP or VI
+  \item[$\circ$] reduced-space type solver has admissible states for stress balance solution
+  \item[$\circ$] with multigrid, evidence of weak-scaling per Newton step
+  \item[$\circ$] $>10^5$ times $\Delta t_{\text{forward Euler}}$ achievable
+  \end{itemize}
+\item some limitations:
+  \begin{itemize}
+  \item[$\circ$] because of $H\ge 0$ constraint, extra Newton steps needed to advance margins multiple grid spaces
+  \item[$\circ$] bed roughness eventually limits Newton solver convergence
+  \item[$\circ$] calving not addressed in this framework \dots yet
+  \end{itemize}
+
+\bigskip
+\item nonetheless I assert these principles basically apply to all thickness-based ice sheet models
+\item if I were to start over with PISM:
+\scriptsize
+\begin{verbatim}
+mpiexec -n N newpism -da_refine M \
+   -ts_type arkimex -snes_type vinewtonrsls -pc_type mg
+\end{verbatim}
 \end{itemize}
 \end{frame}
 
