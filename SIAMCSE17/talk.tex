@@ -334,7 +334,7 @@ H F(H) &= 0
 \begin{itemize}
 \item now also discretize in space
     \begin{itemize}
-    \item[$\circ$] e.g.~finite volume element $M^\star$ method (Bueler, 2016) uses $Q^1$ elements and $\int_V$ weak form
+    \item[$\circ$] e.g.~finite volume element $M^\star$ method uses $Q^1$ elements and $\int_V$ weak form \hfill \tiny  Bueler 2016
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -357,13 +357,16 @@ H F(H) &= 0
     \end{itemize}
 \item equations at each time step are solved with
     \begin{itemize}
-    \item[$\circ$] any implicit or IMEX (BEuler, $\theta$, BDF, ARKIMEX, \dots)
+    \item[$\circ$] any implicit or IMEX
+        \begin{itemize}
+        \item[$\ast$] BEuler, $\theta$, BDF, ARKIMEX, \dots
+        \end{itemize}
     \item[$\circ$] NCP-adapted (``reduced-space'' or ``semi-smooth'') Newton
         \begin{itemize}
-        \item Benson \& Munson (2006)
+        \item[$\ast$] \texttt{-snes\_type vinewton\{rs|ss\}ls} \hfill \tiny Benson \& Munson 2006 \normalsize
         \end{itemize}
-    \item[$\circ$] + Krylov + preconditioning
-    \item[$\circ$] \dots all run-time choices
+    \item[$\circ$] + Krylov solver + preconditioning
+    \item[$\circ$] \dots all of which are run-time choices
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -374,12 +377,14 @@ H F(H) &= 0
 \begin{columns}
 \begin{column}{0.45\textwidth}
 \begin{itemize}
-\item 10 year time step results
+\item Greenland-sized radial ice sheet
     \begin{itemize}
+    \item[$\circ$] flat bed, $m=0$
     \item[$\circ$] margin advance 975 m
+    \item[$\circ$] do a single BEuler 10 year time step
     \end{itemize}
-\item<1> Newton iteration sees Jacobian in inactive variables only
-\item<2> \dots thus on fine grids ($\lesssim 1 km$) number of Newton iterations is proportional to margin advance divided by grid spacing
+\item<1> reduced-space Newton step has Jacobian in inactive variables only
+\item<2> \dots thus on fine grids ($\lesssim 1$ km) the number of Newton iterations is proportional to margin advance divided by grid spacing
 \end{itemize}\end{column}
 \begin{column}{0.55\textwidth}
 
@@ -397,53 +402,60 @@ H F(H) &= 0
 \begin{frame}[fragile]
 \frametitle{margin advance experiment: preconditioners}
 \begin{itemize}
-\item method:
+\item compare preconditioners \texttt{X} with fixed rank=64:
 
 \small
-\centerline{\texttt{-snes\_type vinewtonrsls -ksp\_type gmres -pc\_type PC}}
+\centerline{\texttt{-snes\_type vinewtonrsls -ksp\_type gmres -pc\_type X}}
 \normalsize
-\item preconditioner comparison:
-\small
-    \begin{itemize}
-    \item<1>[$\circ$] Krylov iterations per Newton step
-    \item<2>[$\circ$] wall clock time per d.o.f.~per Newton step
-    \end{itemize}
+\item<1> Krylov iterations per Newton step
+\item<2> wall clock time per d.o.f.~per Newton step
 \end{itemize}
 
 \begin{center}
-\includegraphics<1>[width=0.6\textwidth]{pcksppernewton.pdf}
-\includegraphics<2>[width=0.6\textwidth]{pctimeperdof.pdf}
+\includegraphics<1>[width=0.7\textwidth]{pcksppernewton.pdf}
+\includegraphics<2>[width=0.7\textwidth]{pctimeperdof.pdf}
 \end{center}
 \end{frame}
 
 
-\begin{frame}{margin advance experiment:  weak scaling}
+\begin{frame}{margin advance experiment:  weak scaling?}
 \begin{itemize}
-\item FIXME
-\item 
+\item very preliminary weak-scaling evidence
+    \begin{itemize}
+    \item[$\circ$] ranks $1,4,16,64$
+    \item[$\circ$] fixed d.o.f.~per process: $2.4 \times 10^6$
+    \item[$\circ$] \texttt{-pc\_type mg}
+    \end{itemize}
+\item \emph{should be flat!}
 \end{itemize}
+
+\begin{center}
+\includegraphics<1>[width=0.65\textwidth]{timepernewtonweak.pdf}
+\includegraphics<2>[width=0.65\textwidth]{withdtratioweak.pdf}
+\end{center}
 \end{frame}
 
 
 \section{some early results}
 
-\begin{frame}{50ka run with sliding}
-\begin{columns}
-\begin{column}{0.4\textwidth}
-\begin{itemize}
-\item FIXME hybrid method with $V$
-\item steady climate with elevation-dependent accumulation/ablation
-\item initial state (upper) is just snow piled up; shows ela
-\item FIXME ARKIMEX + $3$ or more NCP solves at each time step
-\end{itemize}
-\end{column}
-\begin{column}{0.6\textwidth}
-\includegraphics[width=\textwidth]{startsheet.png}
+\begin{frame}{50ka run with topography, sliding, mass balance}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{startsheet.png}
 
-\includegraphics[width=\textwidth]{endsheet.png}
-\end{column}
-\end{columns}
+\includegraphics[width=0.7\textwidth]{endsheet.png}
+\end{center}
+
+\begin{itemize}
+\item solves: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + VH$ and $m=m(s)$
+    \begin{itemize}
+    \item[$\circ$] imposed $V(x,y)$
+    \item[$\circ$] elevation-dependent accumulation/ablation
+    \end{itemize}
+\item initial state (upper) is just snow piled up (shows ela)
+\item method: ARKIMEX + $3$ or more NCP solves at each time step
+\end{itemize}
 \end{frame}
+
 
 \begin{frame}{50ka run with sliding: performance}
 \begin{columns}
