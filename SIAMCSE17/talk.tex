@@ -186,8 +186,8 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
     \begin{enumerate}
     \item stress-balance solves expensive
         \begin{itemize}
-        \item[$\circ$] if time steps are short then momentum conservation becomes a lot of work
-        \item[$\circ$] \dots energy conservation (for temperature and basal melt) too
+        \item[$\circ$] if time steps are short then stress balance is a lot of work
+        \item[$\circ$] \dots energy conservation (temperature and basal melt) too!
         \end{itemize}
     \item evolution of ice thickness $H(t,x,y)$ is diffusive
         \begin{itemize}
@@ -195,7 +195,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \end{itemize}
     \item ice margins are low-regularity
         \begin{itemize}
-        \item[$\circ$] for two reasons: (\emph{i}) constraint $H\ge 0$ and (\emph{ii}) degeneracy: stresses $\to 0$ at margins
+        \item[$\circ$] 2 reasons: (\emph{i}) constraint $H\ge 0$ and (\emph{ii}) degeneracy
         \end{itemize}
     \item bedrock is steep
     \end{enumerate}
@@ -225,11 +225,40 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
     \begin{itemize}
     \item[$\circ$] $D=D(H,|\grad s|)$ is SIA diffusivity (nonlinear \& degenerate)
     \item[$\circ$] conservation of energy ignored for simplicity
-    \item[$\circ$] fixed computational domain $\Omega$ where $b,m$ given
+    \item[$\circ$] fixed computational domain $\Omega\subset \RR^2$ where $b,m$ given
         \begin{itemize}
         \item $\Omega$ is only partly covered by ice
         \end{itemize}
     \item[$\circ$] Eulerian, fixed grid (structured or not)
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{a performance model}
+
+\begin{itemize}
+\item grid spacing $h=\Delta x = \Delta y$ in 2D
+\item $N=$ (degrees of freedom) $=O(h^{-2})$ 
+\item time step limited by stability or accuracy:
+    $$\Delta t \le O(h^q)$$
+
+\vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] $q=2$ for conditionally-stable explicit schemes on diffusions
+    \item[$\circ$] accuracy alone suggests $0<q<1$ ? \dots a scientific question?
+    \end{itemize}
+\item solution at one time step: $N(h)$ Newton iterations, $K(h)$ (preconditioned) Krylov steps per Newton
+\item cost of computation on $\Omega \times [0,T]$:
+\footnotesize
+\begin{align*}
+C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{cost of 1 residual}) \\
+  &= O(h^{-q}) \cdot N(h) \cdot K(h) \cdot O(h^{-2})
+\end{align*}
+\normalsize
+\item for explicit: $C(h) = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-2}) = O(h^{-4})$
+    \begin{itemize}
+    \item[$\circ$] must beat this!
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -242,7 +271,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \begin{itemize}
 \item method of lines (MOL)
     \begin{itemize}
-    \item[$\circ$] \emph{can you hand the resulting system to an ODE solver?}
+    \item[$\circ$] \emph{can you hand the thing to an ODE solver?}
     \end{itemize}
 \item well-known: MOL for slow fluids is a DAE problem
 \begin{align*}
@@ -251,11 +280,11 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \end{align*}
 \vspace{-5mm}
     \begin{itemize}
-    \item[$\circ$] \emph{is implicit time-stepping required for DAEs anyway?}
+    \item[$\circ$] \emph{isn't implicit time-stepping required for DAEs anyway?}
     \end{itemize}
 \item velocity variables exist at positive-thickness locations $i$:
     $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0 \iff h_i > b_i$$
-\item ODE solvers should handle \emph{events} like these!:
+\item ODE solvers should handle \emph{events} like these?!:
     \begin{itemize}
     \item[$\circ$] ice disappears during time step:  $H_i(t)>0 \to H_i(t+\Delta t)=0$
     \item[$\circ$] ice appears during time step:  $H_i(t)=0 \to H_i(t+\Delta t)>0$
@@ -274,7 +303,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
 \begin{itemize}
 \item at each event the ice velocity dimension changes
 \item ice sheet margins nearly fractal, so \emph{a lot} of events to handle
-\item re-meshing before every velocity solve \dots has the same scalability problem
+\item re-meshing or re-masking at every event \\ \dots has a scalability problem
 \end{itemize}
 \end{frame}
 
@@ -382,13 +411,13 @@ H F(H) &= 0
     \begin{itemize}
     \item[$\circ$] flat bed, $m=0$
     \item[$\circ$] margin advance 975 m
-    \item[$\circ$] do a single BEuler 10 year time step
+    \item[$\circ$] do a single 10-year \texttt{beuler} time step
     \end{itemize}
 \item reduced-space Newton step has Jacobian in inactive variables only
     \begin{itemize}
     \item[$\circ$] states are admissible
     \end{itemize}
-\item<2> on fine grids ($\lesssim 1$ km) number of Newton iterations is proportional to advance divided by $\Delta x$
+\item<2> on fine grids ($\lesssim 1$ km) the number of Newton iterations is proportional to margin motion divided by $\Delta x$
 \end{itemize}\end{column}
 \begin{column}{0.55\textwidth}
 
@@ -411,13 +440,11 @@ H F(H) &= 0
 \small
 \centerline{\texttt{-snes\_type vinewtonrsls -ksp\_type gmres -pc\_type X}}
 \normalsize
-\item<1> Krylov iterations per Newton step
-\item<2> wall clock time per d.o.f.~per Newton step
+\item Krylov iterations per Newton step:
 \end{itemize}
 
 \begin{center}
-\includegraphics<1>[width=0.7\textwidth]{pcksppernewton.pdf}
-\includegraphics<2>[width=0.7\textwidth]{pctimeperdof.pdf}
+\includegraphics[width=0.75\textwidth]{pcksppernewton.pdf}
 \end{center}
 \end{frame}
 
@@ -430,7 +457,7 @@ H F(H) &= 0
     \item[$\circ$] fixed d.o.f.~per process: $2.4 \times 10^6$
     \item[$\circ$] \texttt{-pc\_type mg}
     \end{itemize}
-\item \emph{should be flat!}
+\item time per Newton step: \hfill \dots \emph{should be flat!}
 \end{itemize}
 
 \begin{center}
@@ -462,7 +489,7 @@ H F(H) &= 0
 \end{frame}
 
 
-\begin{frame}{50ka run with sliding: time-stepping performance}
+\begin{frame}{50ka run: time-stepping performance}
 \begin{columns}
 \begin{column}{0.4\textwidth}
 \begin{itemize}
@@ -513,20 +540,20 @@ FIXME  show $\Delta t$ vs dtD and dtCFL, under grid refinement
 \item implicit time-stepping of hybrid-type mass conservation:
   \begin{itemize}
   \item[$\circ$] enforce $H\ge 0$ as NCP or VI
-  \item[$\circ$] reduced-space type solver has admissible states for stress balance solution
-  \item[$\circ$] with multigrid, evidence of weak-scaling per Newton step
-  \item[$\circ$] $>10^5$ times $\Delta t_{\text{forward Euler}}$ achievable
+  \item[$\circ$] reduced-space solver has admissible states for stress balance solution
+  \item[$\circ$] geometric multigrid: evidence of weak-scaling per Newton step
+  \item[$\circ$] $>10^5$ times $\Delta t_{\text{\texttt{euler}}}$ achievable
   \end{itemize}
 \item some limitations:
   \begin{itemize}
-  \item[$\circ$] because of $H\ge 0$ constraint, extra Newton steps needed to advance margins multiple grid spaces
+  \item[$\circ$] extra Newton steps needed to move margins $x$ grid spaces
   \item[$\circ$] bed roughness eventually limits Newton solver convergence
   \item[$\circ$] calving not addressed in this framework \dots yet
   \end{itemize}
 
 \bigskip
 \item nonetheless I assert these principles basically apply to all thickness-based ice sheet models
-\item if I were to start over with PISM:
+\item wiser now? \dots if I were to start over with PISM:
 \scriptsize
 \begin{verbatim}
 mpiexec -n N newpism -da_refine M \
