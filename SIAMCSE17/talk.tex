@@ -173,7 +173,7 @@
 \begin{itemize}
 \item my goal:
 \begin{quote}
-routinely simulate ice sheets on their natural time scales (ice age cycles \alert{$\gtrsim 10^5$ years}) at resolutions where bedrock bumps, outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\lesssim 500$ m})
+\alert{routinely} simulate ice sheets on their natural time scales (ice age cycles \alert{$\gtrsim 10^5$ years}) at resolutions where bedrock bumps, outlet glaciers, ice streams, and grounding lines are resolved (\alert{$\lesssim 500$ m})
 \end{quote}
 
 \medskip
@@ -189,7 +189,7 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \item[$\circ$] if time steps are short then stress balance is a lot of work
         \item[$\circ$] \dots energy conservation (temperature and basal melt) too!
         \end{itemize}
-    \item evolution of ice thickness $H(t,x,y)$ is diffusive
+    \item evolution of ice thickness $H(t,x,y)$ is diffusive \dots thus stiff
         \begin{itemize}
         \item[$\circ$] because ice flows downhill
         \end{itemize}
@@ -199,6 +199,39 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \end{itemize}
     \item bedrock is steep
     \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{a performance model}
+
+\begin{itemize}
+\item grid spacing $h=\Delta x = \Delta y$ in 2D
+\item (degrees of freedom) $=O(h^{-2})$ 
+\item time step limited by stability or accuracy:
+    $$\Delta t \le O(h^q)$$
+
+\vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] $q=2$ for conditionally-stable explicit schemes on diffusions
+    \item[$\circ$] accuracy alone suggests $0<q<1$ ? \dots a scientific question?
+    \end{itemize}
+\item solution at one time step:
+    \begin{itemize}
+    \item[$\circ$] $N(h)$ Newton iterations
+    \item[$\circ$] $K(h)$ (preconditioned) Krylov steps per Newton
+    \end{itemize}
+\item cost of computation on $\Omega \times [0,T]$:
+\footnotesize
+\begin{align*}
+C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{cost of 1 residual}) \\
+  &= O(h^{-q}) \cdot N(h) \cdot K(h) \cdot O(h^{-2})
+\end{align*}
+\normalsize
+\item for explicit: $C(h) = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-2}) = O(h^{-4})$
+    \begin{itemize}
+    \item[$\circ$] must beat this!
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -230,35 +263,6 @@ routinely simulate ice sheets on their natural time scales (ice age cycles \aler
         \item $\Omega$ is only partly covered by ice
         \end{itemize}
     \item[$\circ$] Eulerian, fixed grid (structured or not)
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{a performance model}
-
-\begin{itemize}
-\item grid spacing $h=\Delta x = \Delta y$ in 2D
-\item $N=$ (degrees of freedom) $=O(h^{-2})$ 
-\item time step limited by stability or accuracy:
-    $$\Delta t \le O(h^q)$$
-
-\vspace{-3mm}
-    \begin{itemize}
-    \item[$\circ$] $q=2$ for conditionally-stable explicit schemes on diffusions
-    \item[$\circ$] accuracy alone suggests $0<q<1$ ? \dots a scientific question?
-    \end{itemize}
-\item solution at one time step: $N(h)$ Newton iterations, $K(h)$ (preconditioned) Krylov steps per Newton
-\item cost of computation on $\Omega \times [0,T]$:
-\footnotesize
-\begin{align*}
-C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{cost of 1 residual}) \\
-  &= O(h^{-q}) \cdot N(h) \cdot K(h) \cdot O(h^{-2})
-\end{align*}
-\normalsize
-\item for explicit: $C(h) = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-2}) = O(h^{-4})$
-    \begin{itemize}
-    \item[$\circ$] must beat this!
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -472,35 +476,30 @@ H F(H) &= 0
 \begin{frame}{50ka run with topography, sliding, mass balance}
 \begin{center}
 % use  mogrify -trim *.png
-\includegraphics[height=0.25\textheight]{startsheet.png}
+\mbox{$t=0$ a \includegraphics[height=0.25\textheight]{startsheet.png}}
 
-\includegraphics[height=0.25\textheight]{endsheet.png}
+\mbox{$t=50$ ka \includegraphics[height=0.25\textheight]{endsheet.png}}
 \end{center}
 
 \begin{itemize}
-\item initial state (upper) is just snow piled up
-\item solves: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + \mathbf{u} H$
+\item solve: $H_t + \Div \mathbf{q} = m$ where $\mathbf{q} = -D\grad H + \mathbf{u} H$
     \begin{itemize}
     \item[$\circ$] imposed ``sliding'' $\mathbf{u}(x,y)$
     \item[$\circ$] elevation-dependent accumulation/ablation $m=m(s)$
     \end{itemize}
-\item \texttt{arkimex}$+$\texttt{vinewtonrsls}$+$\texttt{gmres}$+$\texttt{mg}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{50ka run: time-stepping performance}
-\begin{columns}
-\begin{column}{0.4\textwidth}
 \begin{itemize}
-\item FIXME
-\item $384\times 384$ grid $\Delta x = 5$ km at refine 7 (laptop, 4 cores, 2 hours)
+\item ARKIMEX(3): adaptive Runge-Kutta implicit/explicit 3rd-order time-stepping
+\item at least three nonlinear solves per time step
+\item solver: \texttt{vinewtonrsls}$+$\texttt{gmres}$+$\texttt{mg}
 \end{itemize}
-\end{column}
-\begin{column}{0.6\textwidth}
-FIXME  show $\Delta t$ vs dtD and dtCFL, under grid refinement
-\end{column}
-\end{columns}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{dtfiftyka.pdf}
+\end{center}
 \end{frame}
 
 
