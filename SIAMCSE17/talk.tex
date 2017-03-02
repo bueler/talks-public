@@ -307,7 +307,7 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
 \begin{itemize}
 \item at each event the ice velocity dimension changes
 \item ice sheet margins nearly fractal, so \emph{a lot} of events to handle
-\item re-meshing or re-masking at every event \\ \dots has a scalability problem
+\item re-meshing at \emph{every} event probably won't scale?!
 \end{itemize}
 \end{frame}
 
@@ -368,7 +368,7 @@ H F(H) &= 0
 \begin{itemize}
 \item now also discretize in space
     \begin{itemize}
-    \item[$\circ$] e.g.~finite volume element $M^\star$ method uses $Q^1$ elements and $\int_V$ weak form \hfill \tiny  Bueler 2016
+    \item[$\circ$] e.g.~$M^\star=$ (finite volume element method with $Q^1$ elements and $\int_V$ weak form) \hfill \tiny  Bueler 2016
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -384,23 +384,19 @@ H F(H) &= 0
 \item wrote small PETSc code for mass conservation problem:
     \begin{itemize}
     \item[$\circ$] MOL using $M^\star$
-    \item[$\circ$] tell PETSc \texttt{TS} which part is stiff: $F(H_t,H) = G(t,H)$
+    \item[$\circ$] tells \texttt{TS} object which part is stiff: $F(H_t,H) = G(t,H)$
         \begin{itemize}
         \item  $F=H_t + \Div \mathbf{q}$ and $G=m$
         \end{itemize}
+    \item[$\circ$] allows any implicit or IMEX time-stepping
     \end{itemize}
 \item equations at each time step are solved with
     \begin{itemize}
-    \item[$\circ$] any implicit or IMEX
-        \begin{itemize}
-        \item[$\ast$] BEuler, $\theta$, BDF, ARKIMEX, \dots
-        \end{itemize}
     \item[$\circ$] NCP-adapted (``reduced-space'' or ``semi-smooth'') Newton
         \begin{itemize}
         \item[$\ast$] \texttt{-snes\_type vinewton\{rs|ss\}ls} \hfill \tiny Benson \& Munson 2006 \normalsize
         \end{itemize}
     \item[$\circ$] + Krylov solver + preconditioning
-    \item[$\circ$] \dots all of which are run-time choices
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -411,13 +407,13 @@ H F(H) &= 0
 \begin{columns}
 \begin{column}{0.45\textwidth}
 \begin{itemize}
-\item Greenland-sized radial ice sheet
+\item consider a single 10-year \texttt{beuler} time step
+\item of a Greenland-sized radial ice sheet
     \begin{itemize}
     \item[$\circ$] flat bed, $m=0$
     \item[$\circ$] margin advance 975 m
-    \item[$\circ$] do a single 10-year \texttt{beuler} time step
     \end{itemize}
-\item reduced-space Newton step has Jacobian in inactive variables only
+\item reduced-space Newton solver sees Jacobian in inactive variables only
     \begin{itemize}
     \item[$\circ$] states are admissible
     \end{itemize}
@@ -473,7 +469,7 @@ H F(H) &= 0
 
 \section{some early results}
 
-\begin{frame}{50ka run with topography, sliding, mass balance}
+\begin{frame}{example: 50ka run with topography and sliding}
 \begin{center}
 % use  mogrify -trim *.png
 \mbox{$t=0$ a \includegraphics[height=0.25\textheight]{startsheet.png}}
@@ -487,18 +483,18 @@ H F(H) &= 0
     \item[$\circ$] imposed ``sliding'' $\mathbf{u}(x,y)$
     \item[$\circ$] elevation-dependent accumulation/ablation $m=m(s)$
     \end{itemize}
+\item hand this problem to an adaptive time-stepping method
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{50ka run: time-stepping performance}
 \begin{itemize}
-\item ARKIMEX(3): adaptive Runge-Kutta implicit/explicit 3rd-order time-stepping
+\item ARKIMEX(3): adaptive Runge-Kutta implicit/explicit 3rd-order (3 stage) time-stepping
 \item at least three nonlinear solves per time step
-\item solver: \texttt{vinewtonrsls}$+$\texttt{gmres}$+$\texttt{mg}
 \end{itemize}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{dtfiftyka.pdf}
+\includegraphics[width=0.75\textwidth]{dtfiftyka.pdf}
 \end{center}
 \end{frame}
 
@@ -508,7 +504,7 @@ H F(H) &= 0
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item on this slide: steady geometry $H(x,y)$ of the Greenland ice sheet
+\item steady geometry $H(x,y)$ of the Greenland ice sheet
   \begin{itemize}
   \item[$\circ$] given $m(x,y)$ and $b(x,y)$
   \end{itemize}
@@ -518,8 +514,9 @@ H F(H) &= 0
   \item[$\circ$] 900 m structured grid
   \item[$\circ$] $7\times 10^6$ d.o.f.
   \end{itemize}
+
+\bigskip
 \item<2> \emph{but} Newton convergence suffers from bed roughness
-\item<3> \emph{but} adaptive time-stepping seems to not have this problem
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -536,12 +533,12 @@ H F(H) &= 0
 \begin{frame}[fragile]
 \frametitle{summary}
 \begin{itemize}
-\item implicit time-stepping of hybrid-type mass conservation:
+\item recommendations for implicit time-stepping of hybrid-type mass conservation:
   \begin{itemize}
   \item[$\circ$] enforce $H\ge 0$ as NCP or VI
-  \item[$\circ$] reduced-space solver has admissible states for stress balance solution
-  \item[$\circ$] geometric multigrid: evidence of weak-scaling per Newton step
-  \item[$\circ$] $>10^5 \,\Delta t_{\text{FE}}$ achievable
+  \item[$\circ$] use reduced-space solver which has admissible states for stress balance solution
+  \item[$\circ$] use geometric multigrid
+  \item[$\circ$] result: $>10^5 \,\Delta t_{\text{FE}}$ achievable
   \end{itemize}
 \item some limitations:
   \begin{itemize}
@@ -551,7 +548,7 @@ H F(H) &= 0
   \end{itemize}
 
 \bigskip
-\item nonetheless I assert these principles basically apply to all thickness-based ice sheet models
+\item assertion: these principles apply to all thickness-based ice sheet models
 \item wiser now? \dots if I were to start over with PISM:
 \scriptsize
 \begin{verbatim}
