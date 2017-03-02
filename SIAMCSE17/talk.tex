@@ -207,7 +207,9 @@
 
 \begin{itemize}
 \item grid spacing $h=\Delta x = \Delta y$ in 2D
-\item (degrees of freedom) $=O(h^{-2})$ 
+    \begin{itemize}
+    \item[$\circ$] (degrees of freedom) $=O(h^{-2})$
+    \end{itemize}
 \item time step limited by stability or accuracy:
     $$\Delta t \le O(h^q)$$
 
@@ -221,6 +223,8 @@
     \item[$\circ$] $N(h)$ Newton iterations
     \item[$\circ$] $K(h)$ (preconditioned) Krylov steps per Newton
     \end{itemize}
+
+\medskip
 \item cost of computation on $\Omega \times [0,T]$:
 \footnotesize
 \begin{align*}
@@ -228,9 +232,10 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
   &= O(h^{-q}) \cdot N(h) \cdot K(h) \cdot O(h^{-2})
 \end{align*}
 \normalsize
-\item for explicit: $C(h) = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-2}) = O(h^{-4})$
+
+\vspace{-2mm}
     \begin{itemize}
-    \item[$\circ$] must beat this!
+    \item[$\circ$] explicit: $C(h) = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-2}) = O(h^{-4})$ \hfill \alert{$\leftarrow$ beat this!}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -239,29 +244,26 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
 \begin{frame}{ice sheet models}
 
 \begin{itemize}
-\item covering at least two models:
+\item fixed computational domain $\Omega\subset \RR^2$ where inputs $b=$ (bed elevation) and $m=$ (mass balance) are given
     \begin{itemize}
-    \item[$\circ$] shallow, possibly-hybrid, thickness-based \hfill {\scriptsize\color{Gray} $H,\, \mathbf{u}=(u,v)$}
+    \item[$\circ$] \alert{$\Omega$ is only partly-covered by ice}
+    \end{itemize}
+\item shallow, possibly-hybrid, thickness-based \hfill {\scriptsize\color{Gray} $H,\, \mathbf{u}=(u,v)$}
         \begin{align*}
         H_t + \Div (-D \grad H + \bar{\mathbf{u}} H) &= m(x,t) && \text{mass conservation} \\
         \mathcal{L}(\mathbf{u},H) &= 0      && \text{shallow stress balance}
         \end{align*}
-    \item[$\circ$] Stokes, surface-elevation-based \hfill {\scriptsize\color{Gray} $s,\, \mathbf{u}=(u,v,w)$}
+\item \emph{also}: Stokes, surface-elevation-based \hfill {\scriptsize\color{Gray} $s,\, \mathbf{u}=(u,v,w)$}
         \begin{align*}
         s_t + \mathbf{u}\big|_s \cdot (s_x,s_y,-1) &= m(x,t) && \text{surface kinematical} \\
         \Div \mathbf{u} &= 0            && \text{incompressibility} \\
         \mathcal{L}(\mathbf{u},s) &= 0  && \text{Stokes stress balance}
         \end{align*}
-    \end{itemize}
-\item notation: $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity
-\item assumptions:
+\item notation \& assumptions:
     \begin{itemize}
+    \item[$\circ$] $H$ thickness, $s$ surface elevation, $\mathbf{u}$ velocity
     \item[$\circ$] $D=D(H,|\grad s|)$ is SIA diffusivity (nonlinear \& degenerate)
     \item[$\circ$] conservation of energy ignored for simplicity
-    \item[$\circ$] fixed computational domain $\Omega\subset \RR^2$ where $b,m$ given
-        \begin{itemize}
-        \item $\Omega$ is only partly covered by ice
-        \end{itemize}
     \item[$\circ$] Eulerian, fixed grid (structured or not)
     \end{itemize}
 \end{itemize}
@@ -286,9 +288,9 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
     \begin{itemize}
     \item[$\circ$] \emph{isn't implicit time-stepping required for DAEs anyway?}
     \end{itemize}
-\item velocity variables exist at positive-thickness locations $i$:
-    $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0 \iff h_i > b_i$$
-\item ODE solvers should handle \emph{events} like these?!:
+\item velocity variables only exist at positive-thickness locations $i$:
+    $$\mathbf{u}_i \text{ exists } \quad \Longleftarrow \quad H_i > 0$$
+\item thus ODE solver must handle \emph{events} like these?:
     \begin{itemize}
     \item[$\circ$] ice disappears during time step:  $H_i(t)>0 \to H_i(t+\Delta t)=0$
     \item[$\circ$] ice appears during time step:  $H_i(t)=0 \to H_i(t+\Delta t)>0$
@@ -307,7 +309,7 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
 \begin{itemize}
 \item at each event the ice velocity dimension changes
 \item ice sheet margins nearly fractal, so \emph{a lot} of events to handle
-\item re-meshing at \emph{every} event probably won't scale?!
+\item re-meshing at \emph{every} event probably won't scale
 \end{itemize}
 \end{frame}
 
@@ -315,7 +317,7 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
 \begin{frame}{semi-discretize in time}
 
 \begin{itemize}
-\item semi-discretize in time \emph{for understanding}, if nothing else
+\item semi-discretize in time \emph{for understanding}
 \item consider a single backward Euler time-step
     \begin{itemize}
     \item[$\circ$] better time-stepping later
@@ -329,12 +331,12 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
 \end{frame}
 
 
-\begin{frame}{single time-step problem for mass conservation alone}
+\begin{frame}{single time-step problem for mass conservation}
 
 \small
 
 \begin{itemize}
-\item to solve:
+\item solve for $H$ \alert{subject to $H \ge 0$}:
         \begin{equation*}
         H - H_{\mathrm{old}} + \Delta t\, \Div \mathbf{q} = \Delta t\, m
         \end{equation*}
@@ -344,14 +346,13 @@ C(h) &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text
    \item[$\circ$] where $\mathbf{q} = -D \grad H + \mathbf{u} H$
    \item[$\circ$] note: $D=D(H,|\grad s|) \to 0$ at margins
    \end{itemize}
-\item solve this for \,$H$\, \emph{but} subject to $H \ge 0$
 \item make rigorous two ways:
     \begin{itemize}
     \item[$\circ$] variational inequality (VI)
     $$\int_\Omega (H - H_{\mathrm{old}} -\Delta t\, m) (\eta - H) - \Delta t\, \mathbf{q} \cdot \grad(\eta - H) \ge 0, \quad \forall \eta \ge 0$$
     \item[$\circ$] nonlinear complementarity problem (NCP)
 \begin{align*}
-F(H)   &= H - H_{\mathrm{old}} -\Delta t\, m + \Delta t\,\Div \mathbf{q} \ge 0 \\
+F(H)   &= H - H_{\mathrm{old}} + \Delta t\,\Div \mathbf{q} - \Delta t\, m  \ge 0 \\
 H      &\ge 0 \\
 H F(H) &= 0
 \end{align*}
@@ -366,9 +367,9 @@ H F(H) &= 0
 \begin{columns}
 \begin{column}{0.55\textwidth}
 \begin{itemize}
-\item now also discretize in space
+\item discretize in space:
     \begin{itemize}
-    \item[$\circ$] e.g.~$M^\star=$ (finite volume element method with $Q^1$ elements and $\int_V$ weak form) \hfill \tiny  Bueler 2016
+    \item[$\circ$] e.g.~$M^\star=$ ($Q^1$ elements and \emph{finite volume} weak form ``$\int_V$'') Bueler 2016
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -416,6 +417,7 @@ H F(H) &= 0
 \item reduced-space Newton solver sees Jacobian in inactive variables only
     \begin{itemize}
     \item[$\circ$] states are admissible
+    \item[$\circ$] dimension changes at each Newton step
     \end{itemize}
 \item<2> on fine grids ($\lesssim 1$ km) the number of Newton iterations is proportional to margin motion divided by $\Delta x$
 \end{itemize}\end{column}
@@ -435,7 +437,8 @@ H F(H) &= 0
 \begin{frame}[fragile]
 \frametitle{margin advance experiment: preconditioners}
 \begin{itemize}
-\item compare preconditioners \texttt{X} with fixed rank=64:
+\item fixed MPI rank = 64
+\item compare preconditioners:
 
 \small
 \centerline{\texttt{-snes\_type vinewtonrsls -ksp\_type gmres -pc\_type X}}
@@ -458,12 +461,13 @@ H F(H) &= 0
     \item[$\circ$] \texttt{-pc\_type mg}
     \end{itemize}
 \item time per Newton step: \hfill \dots \emph{should be flat!}
-\end{itemize}
 
 \begin{center}
-\includegraphics<1>[width=0.65\textwidth]{timepernewtonweak.pdf}
-\includegraphics<2>[width=0.65\textwidth]{withdtratioweak.pdf}
+\includegraphics[width=0.5\textwidth]{timepernewtonweak.pdf}
 \end{center}
+
+\item<2> the good news: $\Delta t/\Delta t_{FE} = 9 \times 10^4$ on finest grid
+\end{itemize}
 \end{frame}
 
 
@@ -483,7 +487,6 @@ H F(H) &= 0
     \item[$\circ$] imposed ``sliding'' $\mathbf{u}(x,y)$
     \item[$\circ$] elevation-dependent accumulation/ablation $m=m(s)$
     \end{itemize}
-\item hand this problem to an adaptive time-stepping method
 \end{itemize}
 \end{frame}
 
@@ -520,7 +523,7 @@ H F(H) &= 0
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
-\includegraphics<1>[height=0.8\textheight]{grnwinset.pdf}
+\only<1>{\hfill \includegraphics[height=0.8\textheight]{grnwinset.pdf}}
 
 \includegraphics<2>[width=\textwidth]{rseps.pdf}
 \end{column}
@@ -533,22 +536,21 @@ H F(H) &= 0
 \begin{frame}[fragile]
 \frametitle{summary}
 \begin{itemize}
-\item recommendations for implicit time-stepping of hybrid-type mass conservation:
+\item recommendations for implicit time-stepping of thickness-based mass conservation:
   \begin{itemize}
   \item[$\circ$] enforce $H\ge 0$ as NCP or VI
   \item[$\circ$] use reduced-space solver which has admissible states for stress balance solution
-  \item[$\circ$] use geometric multigrid
+  \item[$\circ$] use geometric multigrid (?)
   \item[$\circ$] result: $>10^5 \,\Delta t_{\text{FE}}$ achievable
   \end{itemize}
 \item some limitations:
   \begin{itemize}
   \item[$\circ$] extra Newton steps needed to move margins $x$ grid spaces
   \item[$\circ$] bed roughness eventually limits Newton solver convergence
-  \item[$\circ$] calving not addressed in this framework \dots yet
+  \item[$\circ$] calving and front-melting not addressed in this framework \dots yet
   \end{itemize}
 
 \bigskip
-\item assertion: these principles apply to all thickness-based ice sheet models
 \item wiser now? \dots if I were to start over with PISM:
 \scriptsize
 \begin{verbatim}
