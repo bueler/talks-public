@@ -1,0 +1,173 @@
+\documentclass[hide notes,intlimits,usenames,dvipsnames]{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Singapore}
+  \usefonttheme{professionalfonts}
+  \setbeamertemplate{blocks}[rounded][shadow=true]
+  \setbeamercovered{transparent}
+  \setbeamertemplate{footline}[frame number]
+}
+
+% load packages
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[multidot]{grffile}
+\usepackage{verbatim,empheq}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,shadows}
+\usetikzlibrary{decorations.pathreplacing}
+
+\usepackage{animate}
+\usepackage{amsmath,verbatim}
+
+% see http://tex.stackexchange.com/questions/86188/labelling-with-arrows-in-an-automated-way
+
+\newif\ifclipme\clipmetrue
+\tikzset{labelstyle/.style={LabelStyle/.append style={#1}},linestyle/.style={LineStyle/.append style={#1}}}
+\tikzset{LabelStyle/.initial={},LineStyle/.initial={}}
+
+\newcommand{\mathWithDescription}[4][]{{%
+    \tikzset{#1}%
+    \tikz[baseline]{
+        \node[draw=red,rounded corners,anchor=base] (m#4) {$\displaystyle#2$};
+        \ifclipme\begin{pgfinterruptboundingbox}\fi
+            \node[above of=m#4,font=\strut, LabelStyle] (l#4) {#3};
+            \draw[-,red, LineStyle] (l#4) to (m#4);
+        \ifclipme\end{pgfinterruptboundingbox}\fi
+    }%
+}}
+
+\newcommand{\mathWithDescriptionStarred}[3][]{{%
+    \clipmefalse%
+    \mathWithDescription[#1]{#2}{#3}{\themathLabelNode}%
+}}
+
+\newcounter{mathLabelNode}
+
+\newcommand{\mathLabelBox}[3][]{%
+   \stepcounter{mathLabelNode}%
+   \mathWithDescription[#1]{#2}{#3}{\themathLabelNode}%
+   \vphantom{\mathWithDescriptionStarred[#1]{#2}{#3}{\themathLabelNode}}%
+}
+
+\definecolor{dark red}{HTML}{E41A1C}
+\definecolor{dark green}{HTML}{4DAF4A}
+\definecolor{dark violet}{HTML}{984EA3}
+\definecolor{dark blue}{HTML}{084594}
+\definecolor{dark orange}{HTML}{FF7F00}
+\definecolor{light blue}{HTML}{377EB8}
+\definecolor{light red}{HTML}{FB9A99}
+\definecolor{light violet}{HTML}{CAB2D6}
+
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
+\newcommand{\Kcal}{\mathcal{K}}
+\newcommand{\Xcal}{\mathcal{X}}
+
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bQ}{\mathbf{Q}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bX}{\mathbf{X}}
+
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bx}{\mathbf{x}}
+
+\newcommand{\Div}{\nabla\cdot}
+\newcommand{\eps}{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\lap}{\triangle}
+\renewcommand{\bar}{\overline}
+
+\newcommand{\ip}[2]{\ensuremath{\left<#1,#2\right>}}
+
+
+\newenvironment{transbox}[1][]{%
+\begin{tikzpicture}
+\node[drop shadow,rounded corners,text width=\textwidth,fill=white, fill opacity=#1,text opacity=1] \bgroup
+}{
+\egroup;\end{tikzpicture}}
+
+
+\title{Optimal solvers for partial differential equations}
+
+\author[Bueler]{Ed Bueler}
+
+\institute[UAF]{
+  \scriptsize Dept of Mathematics and Statistics and Geophysical Institute \\
+
+  University of Alaska Fairbanks
+}
+
+%\titlegraphic{\includegraphics[width=\textwidth]{andycoast.png}}
+
+\beamertemplatenavigationsymbolsempty   % remove faint and silly navigation symbols at bottom
+\renewcommand{\insertnavigation}[1]{}   % remove section headings from top of each slide
+
+\setbeamerfont{date}{size=\scriptsize}
+\date{}
+
+%\AtBeginSection[]
+%{
+%  \begin{frame}<beamer>
+%    \frametitle{Outline}
+%    %\tableofcontents[currentsection,hideallsubsections]
+%    \tableofcontents[currentsection]
+%  \end{frame}
+%}
+
+
+\begin{document}
+
+%\graphicspath{{../../old/commonfigs/}}
+
+\begin{frame}
+\vspace{10mm}
+  \titlepage
+  \begin{center}
+  \tiny DMS Colloquium \quad 28 November, 2017
+  \end{center}
+\end{frame}
+
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents
+  \end{frame}
+
+\section{problem, goals, and models}
+
+\begin{frame}{ice sheet flows and their boundaries}
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+\item surface slope is discontinuous at grounded margins
+\end{itemize}
+\end{column}
+\begin{column}{0.55\textwidth}
+FIXME
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{computational goal: long-time, high-res runs}
+
+\begin{itemize}
+\item FIXME
+\begin{quote}
+\alert{routinely} FIXME
+\end{quote}
+\end{itemize}
+\end{frame}
+
+
+
+\end{document}
