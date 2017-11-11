@@ -7,5 +7,5 @@ talk.pdf: talk.tex
 .PHONY: clean
 
 clean:
-	@rm -f *.out *.aux *.log *.bbl *.blg *.snm *.toc *.nav *.synctex.gz *~
+	@rm -f *.out *.aux *.log *.bbl *.blg *.snm *.toc *.nav *.synctex.gz *.vrb *~
 
