@@ -142,32 +142,126 @@
     \tableofcontents
   \end{frame}
 
-\section{problem, goals, and models}
 
-\begin{frame}{ice sheet flows and their boundaries}
-\begin{columns}
-\begin{column}{0.45\textwidth}
+\section{defining ``optimal solver''}
+
+%\begin{frame}{ice sheet flows and their boundaries}
+%\begin{columns}
+%\begin{column}{0.45\textwidth}
+%\begin{itemize}
+%\item surface slope is discontinuous at grounded margins
+%\end{itemize}
+%\end{column}
+%\begin{column}{0.55\textwidth}
+%FIXME
+%\end{column}
+%\end{columns}
+%\end{frame}
+
+
+\begin{frame}{examples: Poisson equation and minimal surface equation}
+
 \begin{itemize}
-\item surface slope is discontinuous at grounded margins
+\item for most of this talk I'll use just two examples:
+	\begin{itemize}
+
+    \bigskip
+	\item[$\circ$] \emph{Poisson equation} with Dirichlet boundary conditions:
+	    $$- \grad^2 u = f \text{ on } \Omega = [0,1]^3 \text{ with } u\big|_{\partial \Omega} = g,$$
+	    \vspace{-5mm}
+		\begin{itemize}
+		\item 3D and linear
+		\end{itemize}
+
+    \bigskip
+	\item[$\circ$] \emph{minimal surface equation (MSE)} with Dirichlet b.c.s:
+	    $$- \grad\cdot \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0  \text{ on } \Omega = [0,1]^2 \text{ with } u\big|_{\partial \Omega} = g.$$
+	    \vspace{-2mm}
+		\begin{itemize}
+		\item 2D and nonlinear
+		\end{itemize}
+	\end{itemize}
+
+\medskip
+\item these are well-posed elliptic PDE problems
+	\begin{itemize}
+	\item[$\circ$] derived from variational principles
+	\end{itemize}
 \end{itemize}
-\end{column}
-\begin{column}{0.55\textwidth}
-FIXME
-\end{column}
-\end{columns}
 \end{frame}
 
 
-\begin{frame}{computational goal: long-time, high-res runs}
+\begin{frame}{structured grids}
+\begin{itemize}
+\item and for all of this talk I'll stick to \emph{structured grids} on $\Omega$
+\item they will have various resolutions
+	\begin{itemize}
+	\item[$\circ$] denoted $\Omega^{(k)}$ where $k$ is the \emph{level}
+    \item[$\circ$] the coarsest one under consideration is always $\Omega^{(0)}$
+	\end{itemize}
 
+\bigskip
+\begin{tikzpicture}[scale=1.7]
+  \pgfmathsetmacro\half{1.0/2.0}
+  \draw[xstep=\half,ystep=\half,black,thin] (0.0,0.0) grid (1.0,1.0);
+  \node at (0.5,-0.4) {$\Omega^{(0)}$};
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}[scale=1.7]
+  \pgfmathsetmacro\fourth{1.0/4.0}
+  \draw[xstep=\fourth,ystep=\fourth,black,thin] (0.0,0.0) grid (1.0,1.0);
+  \node at (0.5,-0.4) {$\Omega^{(1)}$};
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}[scale=1.7]
+  \pgfmathsetmacro\eigth{1.0/8.0}
+  \draw[xstep=\eigth,ystep=\eigth,black,thin] (0.0,0.0) grid (1.0,1.0);
+  \node at (0.5,-0.4) {$\Omega^{(2)}$};
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}[scale=1.7]
+  \pgfmathsetmacro\sixteenth{1.0/16.0}
+  \draw[xstep=\sixteenth,ystep=\sixteenth,black,thin] (0.0,0.0) grid (1.0,1.0);
+  \node at (0.5,-0.4) {$\Omega^{(3)}$};
+\end{tikzpicture}
+\end{itemize}
+\end{frame}
+
+
+\section{solving linear PDEs on a grid}
+
+\begin{frame}{FIXME}
 \begin{itemize}
 \item FIXME
-\begin{quote}
-\alert{routinely} FIXME
-\end{quote}
 \end{itemize}
 \end{frame}
 
+
+\section{solving nonlinear PDEs}
+
+\begin{frame}{FIXME}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{multigrid}
+
+\begin{frame}{FIXME}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{demonstrating optimality, and barriers}
+
+\begin{frame}{FIXME}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
 
 
 \end{document}
