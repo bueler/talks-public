@@ -1,0 +1,6 @@
+TITLE:  Optimal solvers for partial differential equations
+
+SPEAKER:  Ed Bueler
+
+ABSTRACT:  Boundary value problems for partial differential equations (PDEs) are systems of equations in infinite dimensions.  For well-posed problems, any approximation scheme converts such a PDE into a system of N equations in N unknowns.  An "optimal" solver for such a system takes O(N) time.  It is easy to find optimal solvers for 1D problems (which are actually ordinary differential equations).  For 2D and 3D problems, where N is commonly 10^6 or larger, the multigrid methods provide the only general hope for optimality.  On modern computer hardware, optimality has extraordinary practical importance for scientific and engineering computation, including nonlinear and initial/boundary problems.  This talk is not about new research, but it will expose this central thread of applied mathematics.
+
