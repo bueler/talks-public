@@ -143,7 +143,7 @@
   \end{frame}
 
 
-\section{defining ``optimal solver''}
+\section{solving PDEs on a grid}
 
 %\begin{frame}{ice sheet flows and their boundaries}
 %\begin{columns}
@@ -159,7 +159,7 @@
 %\end{frame}
 
 
-\begin{frame}{examples: Poisson equation and minimal surface equation}
+\begin{frame}{examples: Poisson and minimal surface equations}
 
 \begin{itemize}
 \item for most of this talk I'll use just two examples:
@@ -167,10 +167,11 @@
 
     \bigskip
 	\item[$\circ$] \emph{Poisson equation} with Dirichlet boundary conditions:
-	    $$- \grad^2 u = f \text{ on } \Omega = [0,1]^3 \text{ with } u\big|_{\partial \Omega} = g,$$
+	    $$- \grad^2 u = f \text{ on } \Omega \subset \RR^d \text{ with } u\big|_{\partial \Omega} = g,$$
 	    \vspace{-5mm}
 		\begin{itemize}
-		\item 3D and linear
+		\item linear problem
+		\item $d=2,3$ and various $\Omega$
 		\end{itemize}
 
     \bigskip
@@ -178,7 +179,7 @@
 	    $$- \grad\cdot \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0  \text{ on } \Omega = [0,1]^2 \text{ with } u\big|_{\partial \Omega} = g.$$
 	    \vspace{-2mm}
 		\begin{itemize}
-		\item 2D and nonlinear
+		\item nonlinear problem in 2D
 		\end{itemize}
 	\end{itemize}
 
@@ -193,11 +194,12 @@
 
 \begin{frame}{structured grids}
 \begin{itemize}
-\item and for all of this talk I'll stick to \emph{structured grids} on $\Omega$
+\item for much of this talk I'll us \emph{structured grids} on $\Omega=[0,1]^d$
 \item they will have various resolutions
 	\begin{itemize}
 	\item[$\circ$] denoted $\Omega^{(k)}$ where $k$ is the \emph{level}
     \item[$\circ$] the coarsest one under consideration is always $\Omega^{(0)}$
+    \item[$\circ$] if we use $\Omega^{(0)},\Omega^{(1)},\dots,\Omega^{(k)}$ in a method then we call $\Omega^{(k)}$ \emph{the fine grid}
 	\end{itemize}
 
 \bigskip
@@ -216,19 +218,31 @@
 \begin{tikzpicture}[scale=1.7]
   \pgfmathsetmacro\eigth{1.0/8.0}
   \draw[xstep=\eigth,ystep=\eigth,black,thin] (0.0,0.0) grid (1.0,1.0);
-  \node at (0.5,-0.4) {$\Omega^{(2)}$};
+  \node at (0.5,-0.4) {$\phantom{\Omega^{(2)}}\dots\phantom{\Omega^{(2)}}$};
 \end{tikzpicture}
 \quad
 \begin{tikzpicture}[scale=1.7]
   \pgfmathsetmacro\sixteenth{1.0/16.0}
   \draw[xstep=\sixteenth,ystep=\sixteenth,black,thin] (0.0,0.0) grid (1.0,1.0);
-  \node at (0.5,-0.4) {$\Omega^{(3)}$};
+  \node at (0.5,-0.4) {$\Omega^{(k)}$};
 \end{tikzpicture}
 \end{itemize}
 \end{frame}
 
 
-\section{solving linear PDEs on a grid}
+\begin{frame}{approximation: finite differences}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{approximation: finite elements}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{FIXME}
 \begin{itemize}
@@ -237,9 +251,40 @@
 \end{frame}
 
 
-\section{solving nonlinear PDEs}
+\section{what is an ``optimal solver''?}
 
-\begin{frame}{FIXME}
+\begin{frame}{define ``optimal''}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{example: solving tridiagonal matrices}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{non-example:  banded Gaussian elimination (2D,3D)}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{tangent: spectral methods}
+\begin{itemize}
+\item FIXME
+\item spectral methods show that pursuit of optimality is \emph{not} the only good goal
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Krylov methods}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{rate of convergence of CG}
 \begin{itemize}
 \item FIXME
 \end{itemize}
@@ -254,8 +299,32 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{FIXME}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
 
-\section{demonstrating optimality, and barriers}
+\begin{frame}{an optimality lemma}
+
+conditions under which multgrid cycles as preconditioners for CG give optimal solver
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{nonlinear problems and unstructured grids}
+
+\begin{frame}{FIXME}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+
+\section{parallel scaling, and barriers to optimality}
 
 \begin{frame}{FIXME}
 \begin{itemize}
