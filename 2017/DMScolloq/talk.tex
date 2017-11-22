@@ -115,14 +115,14 @@
 \setbeamerfont{date}{size=\scriptsize}
 \date{}
 
-%\AtBeginSection[]
-%{
-%  \begin{frame}<beamer>
-%    \frametitle{Outline}
-%    %\tableofcontents[currentsection,hideallsubsections]
-%    \tableofcontents[currentsection]
-%  \end{frame}
-%}
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    %\tableofcontents[currentsection,hideallsubsections]
+    \tableofcontents[currentsection]
+  \end{frame}
+}
 
 
 \begin{document}
@@ -130,17 +130,17 @@
 %\graphicspath{{../../old/commonfigs/}}
 
 \begin{frame}
-\vspace{10mm}
-  \titlepage
-  \begin{center}
-  \tiny DMS Colloquium \quad 28 November, 2017
-  \end{center}
+    \vspace{10mm}
+    \titlepage
+    \begin{center}
+    \tiny DMS Colloquium \quad 28 November, 2017
+    \end{center}
 \end{frame}
 
-  \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
-  \end{frame}
+%\begin{frame}
+%    \frametitle{Outline}
+%    \tableofcontents
+%\end{frame}
 
 
 \section{approximately solving PDEs on a grid}
@@ -447,11 +447,117 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 
 
 
-\section{parallel scaling, and barriers to optimality}
+\section{barriers to optimality}
 
-\begin{frame}{FIXME}
+
+\begin{frame}{low regularity of solution}
 \begin{itemize}
-\item FIXME
+\item again assume solution of (nonlinear) BVP on $\Omega \subset \RR^d$
+\item $W(h)$ Newton iterations
+\item $K(h)$ preconditioned Krylov steps per Newton
+\item FIXME  in some case number of Newton steps (or Krylov steps) now grows as $h\to 0$
+\item can demo w MSE
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{constrained problem}
+\begin{itemize}
+\item FIXME  number of Newton steps proportional to $D/h$ where $D$ is distance-to-move free boundary
+\item Max working on it
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{initial/boundary value problems}
+
+\begin{itemize}
+\item problem posed on $\Omega \times [0,T]$ where $\Omega \subset \RR^d$
+    \begin{itemize}
+    \item[$\circ$] example: nonlinear convection/diffusion/reaction equation
+      $$u_t = \Div(a(u) \grad u) - b(u)\cdot \grad u + f(u)$$
+    \item[$\circ$] evolution problem with states in some $W_k^p(\Omega)$
+    \end{itemize}
+\item for these problems there's no intrinsic ``barrier'' \dots
+\item rather a lack of clarity about what ``optimal'' should mean
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{numerical parameters for IBVPs}
+
+\begin{itemize}
+\item assume structured grid: $h=\Delta x = \Delta y=\Delta z$
+    \begin{itemize}
+    \item[$\circ$] $N=$ (spatial degrees of freedom) $=O(h^{-d})$
+    \end{itemize}
+\item time step is limited in some way \dots almost always:
+    $$\Delta t \le O(h^q)$$
+    \vspace{-5mm}
+    \begin{itemize}
+    \item[$\circ$] stability: $q=2$ for explicit schemes on diffusions
+	    \begin{itemize}
+	    \item explicit schemes clearly not optimal
+	    \end{itemize}
+    \item[$\circ$] accuracy: usually $q=1$
+	    \begin{itemize}
+	    \item e.g.~for $O(h^2+\Delta t^2)$ methods
+	    \end{itemize}
+    \item[$\circ$] movie: generate $M$ frames, so $\Delta t = T/M$
+    \item[$\circ$] ``total number of degrees of freedom'' $=M N$?
+    \end{itemize}
+\item (implicit) solution for one time step using NK:
+    \begin{itemize}
+    \item[$\circ$] $W(h)$ Newton iterations
+    \item[$\circ$] $K(h)$ preconditioned Krylov steps per Newton
+    \item[$\circ$] $W(h)=K(h)=1$ for explicit methods
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{optimality(?) for IBVPs}
+
+\begin{itemize}
+\item yields: a ``performance model'' for solving IBVPs on $\Omega \times [0,T]$
+\item cost of computation:
+\footnotesize
+\begin{align*}
+C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{cost of 1 spatial residual}) \\
+  &= O(h^{-q}) \cdot W(h) \, K(h) \cdot O(h^{-d})
+\end{align*}
+\normalsize
+\item we define solver to be \emph{optimal} if work is $O(MN)$?
+    \begin{itemize}
+    \item[$\circ$] optimal movie-limited (implicit) steps:
+        $$C = M \cdot W \cdot O(1) \cdot O(h^{-d}) = O(MN)$$
+    \item[$\circ$] optimal accuracy-limited (implicit) steps:
+        $$C = O(h^{-1}) \cdot W \cdot O(1) \cdot O(h^{-d}) = O(N^{1+1/d})$$
+    \item[$\circ$] explicit:
+        $$C = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-d}) = O(N^{1+2/d}) \hfill \alert{\leftarrow \text{ beat this!?}}$$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{goal of parallel scaling}
+\begin{itemize}
+\item FIXME not exactly a ``barrier'' but a conflict
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{conclusion}
+\begin{itemize}
+\item as you head toward $N=\infty$, in approximately solving your PDE-type problem on a modern computer,
+
+\bigskip
+\begin{quote}
+\alert{you should be able to solve $N$ equations in $N$ unknowns in $O(N)$ time!}
+\end{quote}
+
+\bigskip
+\item it is a good goal, anyway
 \end{itemize}
 \end{frame}
 
