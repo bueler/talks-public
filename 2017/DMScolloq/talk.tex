@@ -143,7 +143,7 @@
   \end{frame}
 
 
-\section{solving PDEs on a grid}
+\section{approximately solving PDEs on a grid}
 
 %\begin{frame}{ice sheet flows and their boundaries}
 %\begin{columns}
@@ -159,34 +159,129 @@
 %\end{frame}
 
 
-\begin{frame}{examples: Poisson and minimal surface equations}
+\begin{frame}{example: Poisson equation}
 
 \begin{itemize}
-\item for most of this talk I'll use just two examples:
+\item for most of this talk I'll use just two examples
+
+\bigskip
+\item[\textbf{1.}] \emph{Poisson equation} with Dirichlet boundary conditions:
+	    $$- \grad^2 u = f \qquad \text{ on } \Omega \subset \RR^d \text{ with } u\big|_{\partial \Omega} = g,$$
+    \vspace{-5mm}
 	\begin{itemize}
-
-    \bigskip
-	\item[$\circ$] \emph{Poisson equation} with Dirichlet boundary conditions:
-	    $$- \grad^2 u = f \text{ on } \Omega \subset \RR^d \text{ with } u\big|_{\partial \Omega} = g,$$
-	    \vspace{-5mm}
+	\item[$\circ$] a linear elliptic PDE problem
+	\item[$\circ$] recall that $\grad^2 u = \Div \left(\grad u\right) = u_{xx}+u_{yy}+u_{zz}$
+	\item[$\circ$] will use dimension $d=2$ or $d=3$
+	\item[$\circ$] will use various domains $\Omega$
 		\begin{itemize}
-		\item linear problem
-		\item $d=2,3$ and various $\Omega$
-		\end{itemize}
+        \item including a cube and a snowflake fractal \hfill\begin{tikzpicture}[scale=1.0,baseline]
+  \draw[line width=1.000000pt] (-0.866025,0.500000) -- (-0.673575,0.500000);
+  \draw[line width=1.000000pt] (-0.673575,0.500000) -- (-0.577350,0.666667);
+  \draw[line width=1.000000pt] (-0.577350,0.666667) -- (-0.481125,0.500000);
+  \draw[line width=1.000000pt] (-0.481125,0.500000) -- (-0.288675,0.500000);
+  \draw[line width=1.000000pt] (-0.288675,0.500000) -- (-0.192450,0.666667);
+  \draw[line width=1.000000pt] (-0.192450,0.666667) -- (-0.288675,0.833333);
+  \draw[line width=1.000000pt] (-0.288675,0.833333) -- (-0.096225,0.833333);
+  \draw[line width=1.000000pt] (-0.096225,0.833333) -- (0.000000,1.000000);
+  \draw[line width=1.000000pt] (0.000000,1.000000) -- (0.096225,0.833333);
+  \draw[line width=1.000000pt] (0.096225,0.833333) -- (0.288675,0.833333);
+  \draw[line width=1.000000pt] (0.288675,0.833333) -- (0.192450,0.666667);
+  \draw[line width=1.000000pt] (0.192450,0.666667) -- (0.288675,0.500000);
+  \draw[line width=1.000000pt] (0.288675,0.500000) -- (0.481125,0.500000);
+  \draw[line width=1.000000pt] (0.481125,0.500000) -- (0.577350,0.666667);
+  \draw[line width=1.000000pt] (0.577350,0.666667) -- (0.673575,0.500000);
+  \draw[line width=1.000000pt] (0.673575,0.500000) -- (0.866025,0.500000);
+  \draw[line width=1.000000pt] (0.866025,0.500000) -- (0.769800,0.333333);
+  \draw[line width=1.000000pt] (0.769800,0.333333) -- (0.866025,0.166667);
+  \draw[line width=1.000000pt] (0.866025,0.166667) -- (0.673575,0.166667);
+  \draw[line width=1.000000pt] (0.673575,0.166667) -- (0.577350,0.000000);
+  \draw[line width=1.000000pt] (0.577350,0.000000) -- (0.673575,-0.166667);
+  \draw[line width=1.000000pt] (0.673575,-0.166667) -- (0.866025,-0.166667);
+  \draw[line width=1.000000pt] (0.866025,-0.166667) -- (0.769800,-0.333333);
+  \draw[line width=1.000000pt] (0.769800,-0.333333) -- (0.866025,-0.500000);
+  \draw[line width=1.000000pt] (0.866025,-0.500000) -- (0.673575,-0.500000);
+  \draw[line width=1.000000pt] (0.673575,-0.500000) -- (0.577350,-0.666667);
+  \draw[line width=1.000000pt] (0.577350,-0.666667) -- (0.481125,-0.500000);
+  \draw[line width=1.000000pt] (0.481125,-0.500000) -- (0.288675,-0.500000);
+  \draw[line width=1.000000pt] (0.288675,-0.500000) -- (0.192450,-0.666667);
+  \draw[line width=1.000000pt] (0.192450,-0.666667) -- (0.288675,-0.833333);
+  \draw[line width=1.000000pt] (0.288675,-0.833333) -- (0.096225,-0.833333);
+  \draw[line width=1.000000pt] (0.096225,-0.833333) -- (0.000000,-1.000000);
+  \draw[line width=1.000000pt] (0.000000,-1.000000) -- (-0.096225,-0.833333);
+  \draw[line width=1.000000pt] (-0.096225,-0.833333) -- (-0.288675,-0.833333);
+  \draw[line width=1.000000pt] (-0.288675,-0.833333) -- (-0.192450,-0.666667);
+  \draw[line width=1.000000pt] (-0.192450,-0.666667) -- (-0.288675,-0.500000);
+  \draw[line width=1.000000pt] (-0.288675,-0.500000) -- (-0.481125,-0.500000);
+  \draw[line width=1.000000pt] (-0.481125,-0.500000) -- (-0.577350,-0.666667);
+  \draw[line width=1.000000pt] (-0.577350,-0.666667) -- (-0.673575,-0.500000);
+  \draw[line width=1.000000pt] (-0.673575,-0.500000) -- (-0.866025,-0.500000);
+  \draw[line width=1.000000pt] (-0.866025,-0.500000) -- (-0.769800,-0.333333);
+  \draw[line width=1.000000pt] (-0.769800,-0.333333) -- (-0.866025,-0.166667);
+  \draw[line width=1.000000pt] (-0.866025,-0.166667) -- (-0.673575,-0.166667);
+  \draw[line width=1.000000pt] (-0.673575,-0.166667) -- (-0.577350,0.000000);
+  \draw[line width=1.000000pt] (-0.577350,0.000000) -- (-0.673575,0.166667);
+  \draw[line width=1.000000pt] (-0.673575,0.166667) -- (-0.866025,0.166667);
+  \draw[line width=1.000000pt] (-0.866025,0.166667) -- (-0.769800,0.333333);
+  \draw[line width=1.000000pt] (-0.769800,0.333333) -- (-0.866025,0.500000);
+\end{tikzpicture}
+        \end{itemize}
+	\item[$\circ$] $f(x,y,z)$ and $g(x,y,z)$ given
+	\end{itemize}
+\end{itemize}
+\end{frame}
 
-    \bigskip
-	\item[$\circ$] \emph{minimal surface equation (MSE)} with Dirichlet b.c.s:
-	    $$- \grad\cdot \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0  \text{ on } \Omega = [0,1]^2 \text{ with } u\big|_{\partial \Omega} = g.$$
-	    \vspace{-2mm}
-		\begin{itemize}
-		\item nonlinear problem in 2D
-		\end{itemize}
+
+\begin{frame}{example: minimal surface equation}
+
+\begin{itemize}
+\item[\textbf{2.}] \emph{minimal surface equation (MSE)} with Dirichlet b.c.s:
+	    $$- \grad\cdot \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0  \qquad \text{ with } u\big|_{\partial \Omega} = g.$$
+    \vspace{-2mm}
+	\begin{itemize}
+	\item[$\circ$] a nonlinear elliptic PDE in 2D
+	\item[$\circ$] specifically: $\Omega = [0,1]^2$
+	\item[$\circ$] the solution $u(x,y)$ gives the height of a soap bubble, in zero gravity, which spans a wire frame with height $z=g(x,y)$
 	\end{itemize}
 
-\medskip
-\item these are well-posed elliptic PDE problems
+\begin{center}
+\begin{tikzpicture}[scale=1.6]
+  \draw[->,gray,very thin] (0.0,0.0) -- (1.2,0.0) node[below] {$x$};
+  \draw[->,gray,very thin] (0.0,0.0) -- (-0.75,0.75) node[left] {$y$};
+  \draw[line width=1.0pt] (0.0,0.0) -- (1.0,0.0) -- (0.45,0.55) -- (-0.55,0.55) -- (-0.275,0.5) -- cycle;
+  %\draw[dashed,thin] (-0.275,0.275) -- (-0.275,0.5);
+  %\node at (-0.33,0.42) {$H$};
+\end{tikzpicture}
+\end{center}
+
+\item both examples 1 \& 2:
 	\begin{itemize}
-	\item[$\circ$] derived from variational principles
+	\item[$\circ$] are well-posed PDE BVPs
+	\item[$\circ$] derivable from variational principles
+	\item[$\circ$] seek $u \in H_g^1(\Omega)$ \dots from an \alert{$\infty$-dimensional vector space}
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{approximation: finite differences}
+\begin{itemize}
+\item a PDE BVP is a system of $\infty$ equations in $\infty$ unknowns
+\item some problems can be solved exactly
+	\begin{itemize}
+	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $-\grad^2 u = 0$
+	\end{itemize}
+\item most problems are not solved exactly
+	\begin{itemize}
+	\item[$\circ$] approximation by $N$ equations in $N$ unknowns where $N \ll \infty$
+	\end{itemize}
+\item e.g.~by \emph{finite difference} approximations:
+	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
+	\begin{itemize}
+    \vspace{-5mm}
+	\item[$\circ$] in 2D:
+	    $$u_{xx}+u_{yy} \approx \frac{u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4 u_{ij}}{h^2}$$
+	(if the grid has equal spacing $h$ in $x$ and $y$ directions)
+	\item[$\circ$] ``finite difference method'' is FDM
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -194,12 +289,20 @@
 
 \begin{frame}{structured grids}
 \begin{itemize}
-\item for much of this talk I'll us \emph{structured grids} on $\Omega=[0,1]^d$
+\item for a majority of this talk I'll use \emph{structured grids}
+	\begin{itemize}
+	\item[$\circ$] for $\Omega=[0,1]^d$, anyway
+	\end{itemize}
 \item they will have various resolutions
 	\begin{itemize}
-	\item[$\circ$] denoted $\Omega^{(k)}$ where $k$ is the \emph{level}
-    \item[$\circ$] the coarsest one under consideration is always $\Omega^{(0)}$
-    \item[$\circ$] if we use $\Omega^{(0)},\Omega^{(1)},\dots,\Omega^{(k)}$ in a method then we call $\Omega^{(k)}$ \emph{the fine grid}
+	\item[$\circ$] grid denoted $\Omega^{(k)}$
+		\begin{itemize}
+        \item $k$ is the \emph{level}
+        \item $N_k$ points
+        \item equal spacing $h_k$ in each direction
+        \end{itemize}
+    \item[$\circ$] the coarsest one is always $\Omega^{(0)}$
+    \item[$\circ$] typically: $N_{k+1} = 2^d N_k$ (or nearly so)
 	\end{itemize}
 
 \bigskip
@@ -230,23 +333,30 @@
 \end{frame}
 
 
-\begin{frame}{approximation: finite differences}
+\begin{frame}{linear system with sparse matrix}
 \begin{itemize}
-\item FIXME
+\item FIXME show
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{approximation: finite elements}
 \begin{itemize}
-\item FIXME
+\item another way to discretize uses the \emph{weak form} of the PDE
+\item \dots and a (generally) unstructured \emph{mesh}, FIXME show mesh on Koch
+\item \dots and an $N$-dimensional subspace $\mathcal{X}_N \subset H^1(\Omega)$,
+\item \dots and a basis of \emph{tent functions} $\psi_i(x,y)$ FIXME show tent
+\item weak form from integrating PDE (\emph{strong form}) by parts:
+    $$\int_\Omega \grad u \cdot \grad v \stackrel{\ast}{=} \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
+\item by supposing [2D] $u(x,y) = \sum_j u_{j} \psi_{j}(x,y)$ and requiring $\ast$ for all $v=\psi_i$ we get system of $N$ eqns in $N$ unknowns FIXME show spy
+\item ``finite element method'' is FEM
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{FIXME}
 \begin{itemize}
-\item FIXME
+\item FIXME  SPD?
 \end{itemize}
 \end{frame}
 
@@ -255,7 +365,20 @@
 
 \begin{frame}{define ``optimal''}
 \begin{itemize}
-\item FIXME
+\item consider $N$ equations in $N$ unknowns $\mathbf{F}(\mathbf{u}) = 0$
+	\begin{itemize}
+	\item[$\circ$] $\mathbf{F}:\RR^N \to \RR^N$, the \emph{residual}, is generally nonlinear
+	\item[$\circ$] but $\mathbf{F}(\mathbf{w}) = \mathbf{b} - A \mathbf{w}$ is the linear case
+	\end{itemize}
+\item for FDM and FEM discretizations of a PDE, evaluating $\mathbf{F}(\mathbf{w})$, for given $\mathbf{w}$, requires $O(N)$ work
+
+\bigskip
+\indent \item[\textbf{def.}]  an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ or $O(N\log N)$ work
+
+\bigskip
+\item  ``solves'' means that it generates $\mathbf{u}_n$ so that
+	    $$\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$$
+where $\mathbf{u}_0$ is an initial guess
 \end{itemize}
 \end{frame}
 
