@@ -171,10 +171,12 @@
 	\begin{itemize}
 	\item[$\circ$] a linear elliptic PDE problem
 	\item[$\circ$] recall that $\grad^2 u = \Div \left(\grad u\right) = u_{xx}+u_{yy}+u_{zz}$
+	\item[$\circ$] $f(x,y,z)$ and $g(x,y,z)$ given
 	\item[$\circ$] will use dimension $d=2$ or $d=3$
 	\item[$\circ$] will use various domains $\Omega$
 		\begin{itemize}
-        \item including a cube and a snowflake fractal \hfill\begin{tikzpicture}[scale=1.0,baseline]
+        \item including a cube
+        \item and a snowflake fractal \hfill\begin{tikzpicture}[scale=1.0,baseline]
   \draw[line width=1.000000pt] (-0.866025,0.500000) -- (-0.673575,0.500000);
   \draw[line width=1.000000pt] (-0.673575,0.500000) -- (-0.577350,0.666667);
   \draw[line width=1.000000pt] (-0.577350,0.666667) -- (-0.481125,0.500000);
@@ -225,7 +227,6 @@
   \draw[line width=1.000000pt] (-0.769800,0.333333) -- (-0.866025,0.500000);
 \end{tikzpicture}
         \end{itemize}
-	\item[$\circ$] $f(x,y,z)$ and $g(x,y,z)$ given
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -270,18 +271,17 @@
 	\begin{itemize}
 	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $-\grad^2 u = 0$
 	\end{itemize}
-\item most problems are not solved exactly
+\item most problems are not solved exactly, so we approximate
 	\begin{itemize}
-	\item[$\circ$] approximation by $N$ equations in $N$ unknowns where $N \ll \infty$
+	\item[$\circ$] by $N$ equations in $N$ unknowns where $N \ll \infty$
 	\end{itemize}
-\item e.g.~by \emph{finite difference} approximations:
+\item e.g.~by \emph{finite difference method} (FDM) approximations:
 	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
 	\begin{itemize}
     \vspace{-5mm}
 	\item[$\circ$] in 2D:
 	    $$u_{xx}+u_{yy} \approx \frac{u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4 u_{ij}}{h^2}$$
 	(if the grid has equal spacing $h$ in $x$ and $y$ directions)
-	\item[$\circ$] ``finite difference method'' is FDM
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -291,16 +291,12 @@
 \begin{itemize}
 \item for a majority of this talk I'll use \emph{structured grids}
 	\begin{itemize}
-	\item[$\circ$] for $\Omega=[0,1]^d$, anyway
+	\item[$\circ$] always when domain is $\Omega=[0,1]^d$
 	\end{itemize}
-\item they will have various resolutions
+\item sequence of grids $\Omega^{(k)}$ with increasing resolution $h_k \to 0$
 	\begin{itemize}
-	\item[$\circ$] grid denoted $\Omega^{(k)}$
-		\begin{itemize}
-        \item $k$ is the \emph{level}
-        \item $N_k$ points
-        \item equal spacing $h_k$ in each direction
-        \end{itemize}
+	\item[$\circ$] \emph{level} $k$ equal spacing $h_k$ in each direction
+    \item[$\circ$] has $N_k$ points and $N_k = O(h_k^{-d}) \to \infty$
     \item[$\circ$] the coarsest one is always $\Omega^{(0)}$
     \item[$\circ$] typically: $N_{k+1} = 2^d N_k$ (or nearly so)
 	\end{itemize}
