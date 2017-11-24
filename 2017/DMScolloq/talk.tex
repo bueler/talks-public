@@ -24,6 +24,9 @@
 \usepackage{animate}
 \usepackage{amsmath,verbatim}
 
+\usepackage[noend]{algpseudocode}
+\usepackage{listings}
+
 % see http://tex.stackexchange.com/questions/86188/labelling-with-arrows-in-an-automated-way
 
 \newif\ifclipme\clipmetrue
@@ -76,10 +79,15 @@
 \newcommand{\bU}{\mathbf{U}}
 \newcommand{\bX}{\mathbf{X}}
 
+\newcommand{\bb}{\mathbf{b}}
 \newcommand{\bq}{\mathbf{q}}
+\newcommand{\br}{\mathbf{r}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
 \newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
 
 \newcommand{\Div}{\nabla\cdot}
 \newcommand{\eps}{\epsilon}
@@ -176,56 +184,7 @@
 	\item[$\circ$] will use various domains $\Omega$
 		\begin{itemize}
         \item including a cube
-        \item and a snowflake fractal \hfill\begin{tikzpicture}[scale=1.0,baseline]
-  \draw[line width=1.000000pt] (-0.866025,0.500000) -- (-0.673575,0.500000);
-  \draw[line width=1.000000pt] (-0.673575,0.500000) -- (-0.577350,0.666667);
-  \draw[line width=1.000000pt] (-0.577350,0.666667) -- (-0.481125,0.500000);
-  \draw[line width=1.000000pt] (-0.481125,0.500000) -- (-0.288675,0.500000);
-  \draw[line width=1.000000pt] (-0.288675,0.500000) -- (-0.192450,0.666667);
-  \draw[line width=1.000000pt] (-0.192450,0.666667) -- (-0.288675,0.833333);
-  \draw[line width=1.000000pt] (-0.288675,0.833333) -- (-0.096225,0.833333);
-  \draw[line width=1.000000pt] (-0.096225,0.833333) -- (0.000000,1.000000);
-  \draw[line width=1.000000pt] (0.000000,1.000000) -- (0.096225,0.833333);
-  \draw[line width=1.000000pt] (0.096225,0.833333) -- (0.288675,0.833333);
-  \draw[line width=1.000000pt] (0.288675,0.833333) -- (0.192450,0.666667);
-  \draw[line width=1.000000pt] (0.192450,0.666667) -- (0.288675,0.500000);
-  \draw[line width=1.000000pt] (0.288675,0.500000) -- (0.481125,0.500000);
-  \draw[line width=1.000000pt] (0.481125,0.500000) -- (0.577350,0.666667);
-  \draw[line width=1.000000pt] (0.577350,0.666667) -- (0.673575,0.500000);
-  \draw[line width=1.000000pt] (0.673575,0.500000) -- (0.866025,0.500000);
-  \draw[line width=1.000000pt] (0.866025,0.500000) -- (0.769800,0.333333);
-  \draw[line width=1.000000pt] (0.769800,0.333333) -- (0.866025,0.166667);
-  \draw[line width=1.000000pt] (0.866025,0.166667) -- (0.673575,0.166667);
-  \draw[line width=1.000000pt] (0.673575,0.166667) -- (0.577350,0.000000);
-  \draw[line width=1.000000pt] (0.577350,0.000000) -- (0.673575,-0.166667);
-  \draw[line width=1.000000pt] (0.673575,-0.166667) -- (0.866025,-0.166667);
-  \draw[line width=1.000000pt] (0.866025,-0.166667) -- (0.769800,-0.333333);
-  \draw[line width=1.000000pt] (0.769800,-0.333333) -- (0.866025,-0.500000);
-  \draw[line width=1.000000pt] (0.866025,-0.500000) -- (0.673575,-0.500000);
-  \draw[line width=1.000000pt] (0.673575,-0.500000) -- (0.577350,-0.666667);
-  \draw[line width=1.000000pt] (0.577350,-0.666667) -- (0.481125,-0.500000);
-  \draw[line width=1.000000pt] (0.481125,-0.500000) -- (0.288675,-0.500000);
-  \draw[line width=1.000000pt] (0.288675,-0.500000) -- (0.192450,-0.666667);
-  \draw[line width=1.000000pt] (0.192450,-0.666667) -- (0.288675,-0.833333);
-  \draw[line width=1.000000pt] (0.288675,-0.833333) -- (0.096225,-0.833333);
-  \draw[line width=1.000000pt] (0.096225,-0.833333) -- (0.000000,-1.000000);
-  \draw[line width=1.000000pt] (0.000000,-1.000000) -- (-0.096225,-0.833333);
-  \draw[line width=1.000000pt] (-0.096225,-0.833333) -- (-0.288675,-0.833333);
-  \draw[line width=1.000000pt] (-0.288675,-0.833333) -- (-0.192450,-0.666667);
-  \draw[line width=1.000000pt] (-0.192450,-0.666667) -- (-0.288675,-0.500000);
-  \draw[line width=1.000000pt] (-0.288675,-0.500000) -- (-0.481125,-0.500000);
-  \draw[line width=1.000000pt] (-0.481125,-0.500000) -- (-0.577350,-0.666667);
-  \draw[line width=1.000000pt] (-0.577350,-0.666667) -- (-0.673575,-0.500000);
-  \draw[line width=1.000000pt] (-0.673575,-0.500000) -- (-0.866025,-0.500000);
-  \draw[line width=1.000000pt] (-0.866025,-0.500000) -- (-0.769800,-0.333333);
-  \draw[line width=1.000000pt] (-0.769800,-0.333333) -- (-0.866025,-0.166667);
-  \draw[line width=1.000000pt] (-0.866025,-0.166667) -- (-0.673575,-0.166667);
-  \draw[line width=1.000000pt] (-0.673575,-0.166667) -- (-0.577350,0.000000);
-  \draw[line width=1.000000pt] (-0.577350,0.000000) -- (-0.673575,0.166667);
-  \draw[line width=1.000000pt] (-0.673575,0.166667) -- (-0.866025,0.166667);
-  \draw[line width=1.000000pt] (-0.866025,0.166667) -- (-0.769800,0.333333);
-  \draw[line width=1.000000pt] (-0.769800,0.333333) -- (-0.866025,0.500000);
-\end{tikzpicture}
+        \item and a snowflake fractal \hfill \input{tikz/snowflake.tex}
         \end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -302,29 +261,7 @@
 	\end{itemize}
 
 \bigskip
-\begin{tikzpicture}[scale=1.7]
-  \pgfmathsetmacro\half{1.0/2.0}
-  \draw[xstep=\half,ystep=\half,black,thin] (0.0,0.0) grid (1.0,1.0);
-  \node at (0.5,-0.4) {$\Omega^{(0)}$};
-\end{tikzpicture}
-\quad
-\begin{tikzpicture}[scale=1.7]
-  \pgfmathsetmacro\fourth{1.0/4.0}
-  \draw[xstep=\fourth,ystep=\fourth,black,thin] (0.0,0.0) grid (1.0,1.0);
-  \node at (0.5,-0.4) {$\Omega^{(1)}$};
-\end{tikzpicture}
-\quad
-\begin{tikzpicture}[scale=1.7]
-  \pgfmathsetmacro\eigth{1.0/8.0}
-  \draw[xstep=\eigth,ystep=\eigth,black,thin] (0.0,0.0) grid (1.0,1.0);
-  \node at (0.5,-0.4) {$\phantom{\Omega^{(2)}}\dots\phantom{\Omega^{(2)}}$};
-\end{tikzpicture}
-\quad
-\begin{tikzpicture}[scale=1.7]
-  \pgfmathsetmacro\sixteenth{1.0/16.0}
-  \draw[xstep=\sixteenth,ystep=\sixteenth,black,thin] (0.0,0.0) grid (1.0,1.0);
-  \node at (0.5,-0.4) {$\Omega^{(k)}$};
-\end{tikzpicture}
+\input{tikz/fourlevelsofgrids.tex}
 \end{itemize}
 \end{frame}
 
@@ -412,13 +349,38 @@ where $\mathbf{u}_0$ is an initial guess
 
 \section{multigrid}
 
-\begin{frame}{FIXME}
+\begin{frame}{multigrid: what it does}
+
+\small
 \begin{itemize}
-\item FIXME
+\item given structured grids $\left\{\Omega^{(j)}\right\}_0^k$
+\item given initial guess $\bu_0$ on the finest grid $\Omega^{(k)}$
+\item basic multigrid cycle to solve $A \bu = \bb$ is $\text{\textsc{Vcycle}}(\bu_0,k)$:
+
+\medskip
+\begin{algorithmic}
+\footnotesize
+\Function{Vcycle}{$\bw,l$}
+    \If{$l == 0$}
+        \State solve $A \bv = \bb$, e.g.~by a direct solver
+    \Else
+        \State improve $\bw$ on the level $l$ grid, giving $\bv$
+        \State compute residual $\br = \bb - A \bv$
+        \State restrict $\br$ to level $l-1$, giving $\br^C$
+        \State $\bz^C = \text{\textsc{Vcycle}}(0,l-1$)
+        \State $\bv \gets \bv + (\text{interpolate } \bz^C \text{ to level $l$ grid})$
+        \State improve $\bv$ some more on the level $l$ grid
+        \EndIf
+    \Return $\bv$
+\EndFunction
+\end{algorithmic}
 \end{itemize}
+
+\medskip
+\qquad \input{tikz/fourlevelsofgrids.tex}
 \end{frame}
 
-\begin{frame}{FIXME}
+\begin{frame}{multigrid: why it works}
 \begin{itemize}
 \item FIXME
 \end{itemize}
