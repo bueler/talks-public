@@ -170,7 +170,7 @@
 \begin{frame}{example: Poisson equation}
 
 \begin{itemize}
-\item for most of this talk I'll use just two examples
+\item for much of this talk I'll use two example PDE problems
 
 \bigskip
 \item[\textbf{1.}] \emph{Poisson equation} with Dirichlet boundary conditions:
@@ -213,7 +213,7 @@
 \vspace{-2mm}
 \item both examples 1 \& 2:
 	\begin{itemize}
-	\item[$\circ$] are well-posed PDE BVPs
+	\item[$\circ$] are well-posed elliptic  PDE BVPs
 	\item[$\circ$] derivable from variational principles
 	\item[$\circ$] seek $u \in H_g^1(\Omega)$ \dots from an \alert{$\infty$-dimensional vector space}
 	\end{itemize}
@@ -226,7 +226,7 @@
 \item a PDE BVP is a system of $\infty$ equations in $\infty$ unknowns
 \item some problems can be solved exactly
 	\begin{itemize}
-	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $-\grad^2 u = 0$
+	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $\grad^2 u = 0$
 	\end{itemize}
 \item most problems are not solved exactly, so we
 	\begin{itemize}
@@ -248,18 +248,18 @@
 
 \begin{frame}{structured grids}
 \begin{itemize}
-\item for a majority of this talk I'll use \emph{structured grids}
+\item for a much of this talk I'll use \emph{structured grids}
 	\begin{itemize}
 	\item[$\circ$] used in all FDM examples
 	\end{itemize}
-\item in fact, I'll use a sequence of grids $\Omega^{(k)}$
-\item the \emph{level} $k$ grid has
+\item in fact, a sequence of grids $\Omega^{(k)}$
+\item regarding notation, the \emph{level} $k$ grid has
 	\begin{itemize}
 	\item[$\circ$] equal spacing $h_k$ in each direction
-	\item[$\circ$] ``increasing resolution'' meaning $h_k \to 0$
-    \item[$\circ$] $N_k = O(h_k^{-d}) \to \infty$ points
+	\item[$\circ$] ``increasing resolution'' and ``refinement'' both mean $h_k \to 0$
+    \item[$\circ$] $N_k = O(h_k^{-d})$ points in the level $k$ grid
 	    \begin{itemize}
-	    \item typically: $N_{k+1} = 2^d N_k$ or nearly so
+	    \item typically: $N_{k+1} = 2^d N_k$ \hfill \dots or nearly so
 	    \end{itemize}
     %\item[$\circ$] the coarsest grid is denoted $\Omega^{(0)}$
 	\end{itemize}
@@ -272,10 +272,17 @@
 
 \begin{frame}{approximation: finite element method (FEM)}
 \begin{itemize}
-\item another way to discretize uses the \emph{weak form} of the PDE
-\item for example, the weak form for the Poisson equation comes from integrating-by-parts:
+\item this discretization uses the \emph{weak form} of the PDE
+\item example: the weak form for the Poisson equation is
     $$\int_\Omega \grad u \cdot \grad v = \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
-\item FEM well-suited to unstructured meshes
+    \vspace{-4mm}
+	\begin{itemize}
+	\item[$\circ$] multiply PDE by $v$ and integrate by parts
+	\end{itemize}
+\item well-suited to unstructured meshes of arbitrary polygonal/polyhedral domains
+	\begin{itemize}
+	\item[$\circ$] e.g.~triangulate the snowflake:
+	\end{itemize}
 \end{itemize}
 
 \begin{center}
@@ -287,27 +294,82 @@
 
 
 \begin{frame}{approximation: finite element method}
+
+in more detail, the FEM uses
 \begin{itemize}
-\item \dots and an $N$-dimensional subspace $\mathcal{X}_N \subset H^1(\Omega)$,
-\item \dots and a basis of \emph{tent functions} $\psi_i(x,y)$ FIXME show tent
-\item by supposing [2D] $u(x,y) = \sum_j u_{j} \psi_{j}(x,y)$ and requiring $\ast$ for all $v=\psi_i$ we get system of $N$ eqns in $N$ unknowns
+\item a triangular/quadrilateral/tetrahedral/etc.~mesh of $N$ nodes
+\item an $N$-dimensional subspace $\mathcal{X}_N \subset H^1(\Omega)$ with basis $\{\psi_j\}$ of
+\item \begin{minipage}[t]{50mm}
+\dots \emph{hat functions} $\psi_j$ which are zero at all $N$ nodes of the mesh except the $j$th where it's one
+\end{minipage}
+\qquad
+\begin{minipage}[t]{40mm}
+\vspace{-4mm}
+\begin{tikzpicture}[scale=0.6, z={(.707,.3)}, baseline]
+\input{tikz/hatfunction.tex}
+\end{tikzpicture}
+\end{minipage}
 \end{itemize}
+
+then the FEM
+\begin{itemize}
+\item supposes
+   $$u(x,y) = \sum_j u_{j}\, \psi_{j}(x,y)$$
+for $u_j\in \RR$ ($N$ unknowns)
+\item and requires the weak form to hold for all $v=\psi_i$ ($N$ eqns)
+\end{itemize}
+
+again: a system of $N$ eqns in $N$ unknowns
 \end{frame}
 
 
 \begin{frame}{linear systems with sparse matrices}
 \begin{itemize}
-\item FDM and FEM produce FIXME
+\item both methods (FDM and FEM) produce \emph{sparse matrices}
+\item the linear Poisson equation becomes a single linear system
+    $$A \bu = \bb$$
+    \vspace{-4mm}
+	\begin{itemize}
+	\item[$\circ$] $A\in\RR^{N\times N}$ is sparse
+	\item[$\circ$] $A$ is symmetric positive definite (SPD)
+	\end{itemize}
+\item the nonlinear MSE produces such a linear system at each Newton step (\emph{more later})
+\item \emph{pro tip}: Matlab's \texttt{spy()} command shows nonzero structure
 \end{itemize}
 
-\includegraphics[width=\textwidth]{figs/spythree}
+\bigskip
+\begin{center}
+\includegraphics[width=0.85\textwidth]{figs/spythree}
+
+\scriptsize
+\qquad Poisson 1D \qquad\qquad\quad MSE FDM 2D square \qquad\quad Poisson FEM 2D snowflake
+
+\end{center}
 \end{frame}
 
 
-\begin{frame}{FIXME}
+\begin{frame}{sparse matrices: key fact}
+
 \begin{itemize}
-\item FIXME  SPD?
+\item if $A$ is $N\times N$ and sparse, and
+\item if \emph{the number of nonzeros per row is bounded independently of} $N$ then
+\begin{quote}
+the work of computing $A \bv$ is $O(N)$
+\end{quote}
+\item computing $A \bv$ is called a ``mat-vec''
+\item this ``bounded'' condition
+	\begin{itemize}
+    \item[$\circ$] is automatic for structured grids (e.g.~FDM)
+    \item[$\circ$] for unstructured triangulations and FEM
+   $$\text{(nonzeros in row } j) = \operatorname{degree}(\text{node } j) + 1$$
+	so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
+	\end{itemize}
 \end{itemize}
+
+\vspace{5mm}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/spythree}
+\end{center}
 \end{frame}
 
 
