@@ -151,7 +151,7 @@
 %\end{frame}
 
 
-\section{approximately solving PDEs on a grid}
+\section{how to approximately solve a PDE}
 
 %\begin{frame}{ice sheet flows and their boundaries}
 %\begin{columns}
@@ -177,14 +177,13 @@
 	    $$- \grad^2 u = f \qquad \text{ on } \Omega \subset \RR^d \text{ with } u\big|_{\partial \Omega} = g,$$
     \vspace{-5mm}
 	\begin{itemize}
-	\item[$\circ$] a linear elliptic PDE problem
+	\item[$\circ$] a linear elliptic PDE problem in dimension $d=2$ or $d=3$
 	\item[$\circ$] recall that $\grad^2 u = \Div \left(\grad u\right) = u_{xx}+u_{yy}+u_{zz}$
-	\item[$\circ$] $f(x,y,z)$ and $g(x,y,z)$ given
-	\item[$\circ$] will use dimension $d=2$ or $d=3$
-	\item[$\circ$] will use various domains $\Omega$
+	\item[$\circ$] source $f(x,y,z)$ given
+	\item[$\circ$] boundary values $g(x,y,z)$ given
+	\item[$\circ$] will use various domains $\Omega$ including a square, a cube, and
 		\begin{itemize}
-        \item including a cube
-        \item and a snowflake fractal \hfill \input{tikz/snowflake.tex}
+        \item a snowflake fractal \hspace{0.3in} \begin{tikzpicture}[scale=1.2,baseline] \input{tikz/snowflake.tex} \end{tikzpicture}
         \end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -199,8 +198,8 @@
     \vspace{-2mm}
 	\begin{itemize}
 	\item[$\circ$] a nonlinear elliptic PDE in 2D
-	\item[$\circ$] specifically: $\Omega = [0,1]^2$
-	\item[$\circ$] the solution $u(x,y)$ gives the height of a soap bubble, in zero gravity, which spans a wire frame with height $z=g(x,y)$
+	\item[$\circ$] here on a square domain $\Omega = [0,1]^2$
+	\item[$\circ$] the solution $u(x,y)$ gives the height of a zero-gravity soap bubble which spans a wire frame with height $z=g(x,y)$:
 	\end{itemize}
 
 \begin{center}
@@ -208,11 +207,10 @@
   \draw[->,gray,very thin] (0.0,0.0) -- (1.2,0.0) node[below] {$x$};
   \draw[->,gray,very thin] (0.0,0.0) -- (-0.75,0.75) node[left] {$y$};
   \draw[line width=1.0pt] (0.0,0.0) -- (1.0,0.0) -- (0.45,0.55) -- (-0.55,0.55) -- (-0.275,0.5) -- cycle;
-  %\draw[dashed,thin] (-0.275,0.275) -- (-0.275,0.5);
-  %\node at (-0.33,0.42) {$H$};
 \end{tikzpicture}
 \end{center}
 
+\vspace{-2mm}
 \item both examples 1 \& 2:
 	\begin{itemize}
 	\item[$\circ$] are well-posed PDE BVPs
@@ -223,24 +221,26 @@
 \end{frame}
 
 
-\begin{frame}{approximation: finite differences}
+\begin{frame}{approximation: finite difference method}
 \begin{itemize}
 \item a PDE BVP is a system of $\infty$ equations in $\infty$ unknowns
 \item some problems can be solved exactly
 	\begin{itemize}
 	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $-\grad^2 u = 0$
 	\end{itemize}
-\item most problems are not solved exactly, so we approximate
+\item most problems are not solved exactly, so we
 	\begin{itemize}
-	\item[$\circ$] by $N$ equations in $N$ unknowns where $N \ll \infty$
+	\item[$\circ$] \alert{approximate by $N$ equations in $N$ unknowns}
+	\item[$\circ$] \dots where $N \ll \infty$
 	\end{itemize}
-\item e.g.~by \emph{finite difference method} (FDM) approximations:
+\item one method is \emph{finite differences} (FDM), based on
 	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
-	\begin{itemize}
-    \vspace{-5mm}
-	\item[$\circ$] in 2D:
+\item in 2D this approximation is used for the Poisson equation:
 	    $$u_{xx}+u_{yy} \approx \frac{u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4 u_{ij}}{h^2}$$
-	(if the grid has equal spacing $h$ in $x$ and $y$ directions)
+	\vspace{-4mm}
+	\begin{itemize}
+	\item[$\circ$] this assumes the grid has equal spacing $h$ in $x$ and $y$
+	\item[$\circ$] similar formula in 3D
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -250,14 +250,18 @@
 \begin{itemize}
 \item for a majority of this talk I'll use \emph{structured grids}
 	\begin{itemize}
-	\item[$\circ$] always when domain is $\Omega=[0,1]^d$
+	\item[$\circ$] used in all FDM examples
 	\end{itemize}
-\item sequence of grids $\Omega^{(k)}$ with increasing resolution $h_k \to 0$
+\item in fact, I'll use a sequence of grids $\Omega^{(k)}$
+\item the \emph{level} $k$ grid has
 	\begin{itemize}
-	\item[$\circ$] \emph{level} $k$ equal spacing $h_k$ in each direction
-    \item[$\circ$] has $N_k$ points and $N_k = O(h_k^{-d}) \to \infty$
-    \item[$\circ$] the coarsest one is always $\Omega^{(0)}$
-    \item[$\circ$] typically: $N_{k+1} = 2^d N_k$ (or nearly so)
+	\item[$\circ$] equal spacing $h_k$ in each direction
+	\item[$\circ$] ``increasing resolution'' meaning $h_k \to 0$
+    \item[$\circ$] $N_k = O(h_k^{-d}) \to \infty$ points
+	    \begin{itemize}
+	    \item typically: $N_{k+1} = 2^d N_k$ or nearly so
+	    \end{itemize}
+    %\item[$\circ$] the coarsest grid is denoted $\Omega^{(0)}$
 	\end{itemize}
 
 \bigskip
@@ -266,24 +270,37 @@
 \end{frame}
 
 
-\begin{frame}{linear system with sparse matrix}
+\begin{frame}{approximation: finite element method (FEM)}
 \begin{itemize}
-\item FIXME show
+\item another way to discretize uses the \emph{weak form} of the PDE
+\item for example, the weak form for the Poisson equation comes from integrating-by-parts:
+    $$\int_\Omega \grad u \cdot \grad v = \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
+\item FEM well-suited to unstructured meshes
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.5,baseline] \input{tikz/snowflake.tex} \end{tikzpicture}
+\qquad $\to$ \qquad
+\begin{tikzpicture}[scale=1.5,baseline] \input{tikz/meshedsnowflake.tex} \end{tikzpicture}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{approximation: finite element method}
+\begin{itemize}
+\item \dots and an $N$-dimensional subspace $\mathcal{X}_N \subset H^1(\Omega)$,
+\item \dots and a basis of \emph{tent functions} $\psi_i(x,y)$ FIXME show tent
+\item by supposing [2D] $u(x,y) = \sum_j u_{j} \psi_{j}(x,y)$ and requiring $\ast$ for all $v=\psi_i$ we get system of $N$ eqns in $N$ unknowns
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{approximation: finite elements}
+\begin{frame}{linear systems with sparse matrices}
 \begin{itemize}
-\item another way to discretize uses the \emph{weak form} of the PDE
-\item \dots and a (generally) unstructured \emph{mesh}, FIXME show mesh on Koch
-\item \dots and an $N$-dimensional subspace $\mathcal{X}_N \subset H^1(\Omega)$,
-\item \dots and a basis of \emph{tent functions} $\psi_i(x,y)$ FIXME show tent
-\item weak form from integrating PDE (\emph{strong form}) by parts:
-    $$\int_\Omega \grad u \cdot \grad v \stackrel{\ast}{=} \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
-\item by supposing [2D] $u(x,y) = \sum_j u_{j} \psi_{j}(x,y)$ and requiring $\ast$ for all $v=\psi_i$ we get system of $N$ eqns in $N$ unknowns FIXME show spy
-\item ``finite element method'' is FEM
+\item FDM and FEM produce FIXME
 \end{itemize}
+
+\includegraphics[width=\textwidth]{figs/spythree}
 \end{frame}
 
 
@@ -375,16 +392,29 @@ where $\mathbf{u}_0$ is an initial guess
 \EndFunction
 \end{algorithmic}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{multigrid V-cycles}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+
+\input{tikz/vwcycles.tex}
+
 
 \medskip
 \qquad \input{tikz/fourlevelsofgrids.tex}
 \end{frame}
+
 
 \begin{frame}{multigrid: why it works}
 \begin{itemize}
 \item FIXME
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}{an optimality lemma}
 
