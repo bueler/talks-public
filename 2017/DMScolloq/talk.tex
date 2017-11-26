@@ -432,26 +432,46 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it d
 
 \begin{frame}{example: solving tridiagonal matrices}
 \begin{itemize}
-\item FIXME
+\item an easy example of optimal solution is for tridiagonal matrices
+\item Gauss elimination without pivoting, a.k.a.~the \emph{Thomas algorithm}, solves $A \bu = \bb$ in $8N-6=O(N)$ operations
+	\begin{itemize}
+	\item[$\circ$] strictly diagonally-dominant suffices to avoid pivoting
+    \item[$\circ$] for SPD matrices, can use \emph{banded Cholesky decomposition}, again sans pivoting and $O(N)$
+	\end{itemize}
+\item also applies to pentadiagonal, septadiagonal, \dots
+\item thus 1D Poisson problem \, $-u''=f$ \, has optimal method 
+\end{itemize}
+
+\bigskip
+\begin{center}
+\includegraphics[width=0.2\textwidth]{figs/spytri}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{non-example:  banded direct methods in 2D,3D}
+\begin{itemize}
+\item \dots \emph{but} in 2D and 3D the bandwidth grows as $h\to 0$
+\item for example, for MSE on $\Omega=[0,1]\times[0,1]$:
+
+\begin{center}
+\begin{tikzpicture}[scale=1.6,baseline] \input{tikz/unitsquaregridordering.tex} \end{tikzpicture} \qquad \begin{minipage}[b]{5mm} $\to$ \vspace{10mm} \end{minipage} \qquad \includegraphics[width=0.19\textwidth]{figs/spybanded}
+\end{center}
+
+\item if $N\times N$ matrix $A$ has bandwidth $p$ then banded Cholesky does $O(N p^2)$ work
+\item banded direct methods for PDE problems on structured grids with $m$ points in each direction:
+	\begin{itemize}
+	\item[$\circ$] $N=m^2$ and $p=m$ so $O(N^2)$ work in 2D
+	\item[$\circ$] $N=m^3$ and $p=m^2$ so $O(N^{7/3})$ work in 3D
+	\end{itemize}
+\item variable reordering helps a lot \dots but not enough
 \end{itemize}
 \end{frame}
 
-\begin{frame}{non-example:  banded Gaussian elimination (2D,3D)}
-\begin{itemize}
-\item FIXME
-\end{itemize}
-\end{frame}
-
-\begin{frame}{tangent: spectral methods}
-\begin{itemize}
-\item FIXME
-\item spectral methods show that pursuit of optimality is \emph{not} the only good goal
-\end{itemize}
-\end{frame}
 
 \begin{frame}{Krylov methods}
 \begin{itemize}
-\item $\text{A New Hope}^{\, \includegraphics[width=0.06\textwidth]{figs/anewhope}}$ among numerical analysts (circa 1970), for FDM and FEM discretizations of a PDE,
+\item $\text{A New Hope in the 1970s}^{\includegraphics[width=0.06\textwidth]{figs/anewhope}}$ among numerical analysts, for FDM and FEM discretizations of a PDE, was to notice that
 
 \begin{quote}
 given $\mathbf{w}\in\RR^N$, evaluating $\mathbf{F}(\mathbf{w})$ requires $O(N)$ work
@@ -461,9 +481,18 @@ given $\mathbf{w}\in\RR^N$, evaluating $\mathbf{F}(\mathbf{w})$ requires $O(N)$ 
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}{rate of convergence of CG}
 \begin{itemize}
 \item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{tangent: spectral methods}
+\begin{itemize}
+\item FIXME
+\item spectral methods show that pursuit of optimality is \emph{not} the only good goal
 \end{itemize}
 \end{frame}
 

@@ -1,0 +1,26 @@
+  \draw[->,gray,very thin] (0.0,0.0) -- (1.2,0.0) node[below] {\tiny $x$};
+  \draw[->,gray,very thin] (0.0,0.0) -- (0.0,1.2) node[left] {\tiny $y$};
+  \draw[line width=1.0pt] (0.0,0.0) -- (0.0,1.0) -- (1.0,1.0) -- (1.0,0.0) -- cycle;
+  \pgfmathsetmacro\third{1.0/3.0}
+  \pgfmathsetmacro\half{1.0/2.0}
+  \node[gray] at (0.0,-0.1) {\scriptsize $0$};
+  \node[gray] at (\third,-0.1) {\scriptsize $1$};
+  \node at (\half,-0.2) {\scriptsize $i$};
+  \node[gray] at (2*\third,-0.1) {\scriptsize $2$};
+  \node[gray] at (1.0,-0.1) {\scriptsize $3$};
+  \node[gray] at (-0.1,0.0) {\scriptsize $0$};
+  \node[gray] at (-0.1,\third) {\scriptsize $1$};
+  \node[gray] at (-0.1,2*\third) {\scriptsize $2$};
+  \node at (-0.25,0.5) {\scriptsize $j$};
+  \node[gray] at (-0.1,1.0) {\scriptsize $3$};
+  \draw[xstep=\third,ystep=\third,black,thin] (0.0,0.0) grid (1.0,1.0);
+  \pgfmathsetmacro\dd{0.05}
+  \foreach \y in {0,1,2,3} {
+    \foreach \x in {0,1,2,3} {
+      \pgfmathsetmacro\k{4*\y+\x}
+  %    \draw (\x*\third+\dd,\y*\half+\dd) node{$\pgfmathprintnumber[fixed]{\k}$};
+      \node at (\x * \third + 0.1,\y * \third + 0.1) {\scriptsize $\pgfmathprintnumber[fixed]{\k}$};
+      \filldraw (\x * \third,\y * \third) circle (0.5pt);
+    }
+  }
+
