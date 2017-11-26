@@ -153,21 +153,7 @@
 
 \section{how to approximately solve a PDE}
 
-%\begin{frame}{ice sheet flows and their boundaries}
-%\begin{columns}
-%\begin{column}{0.45\textwidth}
-%\begin{itemize}
-%\item surface slope is discontinuous at grounded margins
-%\end{itemize}
-%\end{column}
-%\begin{column}{0.55\textwidth}
-%FIXME
-%\end{column}
-%\end{columns}
-%\end{frame}
-
-
-\begin{frame}{example: Poisson equation}
+\begin{frame}{Poisson equation}
 
 \begin{itemize}
 \item for much of this talk I'll use two example PDE problems
@@ -183,14 +169,15 @@
 	\item[$\circ$] boundary values $g(x,y,z)$ given
 	\item[$\circ$] will use various domains $\Omega$ including a square, a cube, and
 		\begin{itemize}
-        \item a snowflake fractal \hspace{0.3in} \begin{tikzpicture}[scale=1.2,baseline] \input{tikz/snowflake.tex} \end{tikzpicture}
+        \item a snowflake fractal \hspace{0.3in} \begin{tikzpicture}[scale=0.8,baseline] \input{tikz/snowflake.tex} \end{tikzpicture}
         \end{itemize}
+	\item[$\circ$] the solution $u(x,y,z)$ of $- \grad^2 u = 1$ with $g=0$ gives the expected time for a Brownian motion to first hit $\partial\Omega$
 	\end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{example: minimal surface equation}
+\begin{frame}{minimal surface equation}
 
 \begin{itemize}
 \item[\textbf{2.}] \emph{minimal surface equation (MSE)} with Dirichlet b.c.s:
@@ -198,7 +185,7 @@
     \vspace{-2mm}
 	\begin{itemize}
 	\item[$\circ$] a nonlinear elliptic PDE in 2D
-	\item[$\circ$] here on a square domain $\Omega = [0,1]^2$
+	\item[$\circ$] here: square domain $\Omega = [0,1] \times [0,1]$
 	\item[$\circ$] the solution $u(x,y)$ gives the height of a zero-gravity soap bubble which spans a wire frame with height $z=g(x,y)$:
 	\end{itemize}
 
@@ -209,21 +196,34 @@
   \draw[line width=1.0pt] (0.0,0.0) -- (1.0,0.0) -- (0.45,0.55) -- (-0.55,0.55) -- (-0.275,0.5) -- cycle;
 \end{tikzpicture}
 \end{center}
+\end{itemize}
+\end{frame}
 
-\vspace{-2mm}
-\item both examples 1 \& 2:
-	\begin{itemize}
-	\item[$\circ$] are well-posed elliptic  PDE BVPs
-	\item[$\circ$] derivable from variational principles
-	\item[$\circ$] seek $u \in H_g^1(\Omega)$ \dots from an \alert{$\infty$-dimensional vector space}
-	\end{itemize}
+
+\begin{frame}{mostly elliptic PDEs today}
+
+both examples {\color{Blue} \textbf{1}} \& {\color{Blue} \textbf{2}}
+\begin{itemize}
+\item are well-posed elliptic PDE BVPs
+\item seek solution $u$ from an \alert{$\infty$-dimensional vector space}
+\end{itemize}
+
+\bigskip\bigskip
+
+\scriptsize
+technical/expert comments:
+\begin{itemize}
+\item both examples derivable from variational principles, thus well-posed
+\item ``$\infty$-dimensional vector space'' means a Sobolev space such as $H^1(\Omega)$
+\item \emph{numerically}, nonlinear elliptic PDE BVPs are representative of the hardest class of PDE problems because they arise as the time-step problems in the (harder) stiff time-dependent case
+\item \dots but smoothness of the solution matters \emph{a lot}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{approximation: finite difference method}
 \begin{itemize}
-\item a PDE BVP is a system of $\infty$ equations in $\infty$ unknowns
+\item \emph{main idea}: a PDE BVP is a system of $\infty$ eqns in $\infty$ unknowns
 \item some problems can be solved exactly
 	\begin{itemize}
 	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $\grad^2 u = 0$
@@ -231,16 +231,16 @@
 \item most problems are not solved exactly, so we
 	\begin{itemize}
 	\item[$\circ$] \alert{approximate by $N$ equations in $N$ unknowns}
-	\item[$\circ$] \dots where $N \ll \infty$
+	\item[$\circ$] \dots \, where $N \ll \infty$
 	\end{itemize}
 \item one method is \emph{finite differences} (FDM), based on
 	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
-\item in 2D this approximation is used for the Poisson equation:
+\item as used for the 2D Poisson equation:
 	    $$u_{xx}+u_{yy} \approx \frac{u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4 u_{ij}}{h^2}$$
 	\vspace{-4mm}
 	\begin{itemize}
-	\item[$\circ$] this assumes the grid has equal spacing $h$ in $x$ and $y$
-	\item[$\circ$] similar formula in 3D
+	\item[$\circ$] assumes the grid has equal spacing $h$ in $x$ and $y$
+	\item[$\circ$] similar formula in 3D and for 2D MSE
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -250,18 +250,18 @@
 \begin{itemize}
 \item for a much of this talk I'll use \emph{structured grids}
 	\begin{itemize}
+	\item[$\circ$] i.e.~products of grids in 1D
 	\item[$\circ$] used in all FDM examples
 	\end{itemize}
-\item in fact, a sequence of grids $\Omega^{(k)}$
+\item in fact, I'll use a sequence of such grids $\Omega^{(k)}$
 \item regarding notation, the \emph{level} $k$ grid has
 	\begin{itemize}
 	\item[$\circ$] equal spacing $h_k$ in each direction
 	\item[$\circ$] ``increasing resolution'' and ``refinement'' both mean $h_k \to 0$
     \item[$\circ$] $N_k = O(h_k^{-d})$ points in the level $k$ grid
 	    \begin{itemize}
-	    \item typically: $N_{k+1} = 2^d N_k$ \hfill \dots or nearly so
+	    \item typically: $N_{k+1} = 2^d N_k$
 	    \end{itemize}
-    %\item[$\circ$] the coarsest grid is denoted $\Omega^{(0)}$
 	\end{itemize}
 
 \bigskip
@@ -277,19 +277,22 @@
     $$\int_\Omega \grad u \cdot \grad v = \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
     \vspace{-4mm}
 	\begin{itemize}
-	\item[$\circ$] multiply PDE by $v$ and integrate by parts
+	\item[$\circ$] to derive, multiply PDE by $v$ and integrate by parts
 	\end{itemize}
 \item well-suited to unstructured meshes of arbitrary polygonal/polyhedral domains
 	\begin{itemize}
 	\item[$\circ$] e.g.~triangulate the snowflake:
 	\end{itemize}
-\end{itemize}
 
 \begin{center}
-\begin{tikzpicture}[scale=1.5,baseline] \input{tikz/snowflake.tex} \end{tikzpicture}
+\begin{tikzpicture}[scale=1.3,baseline] \input{tikz/snowflake.tex} \end{tikzpicture}
 \qquad $\to$ \qquad
-\begin{tikzpicture}[scale=1.5,baseline] \input{tikz/meshedsnowflake.tex} \end{tikzpicture}
+\begin{tikzpicture}[scale=1.3,baseline] \input{tikz/meshedsnowflake.tex} \end{tikzpicture}
 \end{center}
+
+\footnotesize
+\item Fall 2018: graduate seminar in FEM
+\end{itemize}
 \end{frame}
 
 
@@ -297,8 +300,8 @@
 
 in more detail, the FEM uses
 \begin{itemize}
-\item a triangular/quadrilateral/tetrahedral/etc.~mesh of $N$ nodes
-\item an $N$-dimensional subspace $\mathcal{X}_N \subset H^1(\Omega)$ with basis $\{\psi_j\}$ of
+\item a {\footnotesize triangular/quadrilateral/tetrahedral/etc.}~mesh of $N$ nodes on $\Omega$
+\item an $N$-dimensional subspace $\mathcal{X} \subset H^1(\Omega)$ with basis $\{\psi_j\}$ of
 \item \begin{minipage}[t]{50mm}
 \dots \emph{hat functions} $\psi_j$ which are zero at all $N$ nodes of the mesh except the $j$th where it's one
 \end{minipage}
@@ -319,7 +322,7 @@ for $u_j\in \RR$ ($N$ unknowns)
 \item and requires the weak form to hold for all $v=\psi_i$ ($N$ eqns)
 \end{itemize}
 
-again: a system of $N$ eqns in $N$ unknowns
+again: yields a system of $N$ eqns in $N$ unknowns
 \end{frame}
 
 
@@ -334,7 +337,7 @@ again: a system of $N$ eqns in $N$ unknowns
 	\item[$\circ$] $A$ is symmetric positive definite (SPD)
 	\end{itemize}
 \item the nonlinear MSE produces such a linear system at each Newton step (\emph{more later})
-\item \emph{pro tip}: Matlab's \texttt{spy()} command shows nonzero structure
+\item \emph{pro tip}: Matlab's \texttt{spy(A)} shows nonzero structure
 \end{itemize}
 
 \bigskip
@@ -342,7 +345,7 @@ again: a system of $N$ eqns in $N$ unknowns
 \includegraphics[width=0.85\textwidth]{figs/spythree}
 
 \scriptsize
-\qquad Poisson 1D \qquad\qquad\quad MSE FDM 2D square \qquad\quad Poisson FEM 2D snowflake
+Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowflake
 
 \end{center}
 \end{frame}
@@ -350,25 +353,31 @@ again: a system of $N$ eqns in $N$ unknowns
 
 \begin{frame}{sparse matrices: key fact}
 
+if
 \begin{itemize}
-\item if $A$ is $N\times N$ and sparse, and
-\item if \emph{the number of nonzeros per row is bounded independently of} $N$ then
+\item $A$ is $N\times N$ and sparse, and
+\item number of nonzeros per row is bounded independently of $N$
+\end{itemize}
+then
 \begin{quote}
 the work of computing $A \bv$ is $O(N)$
 \end{quote}
+
+\begin{itemize}
 \item computing $A \bv$ is called a ``mat-vec''
-\item this ``bounded'' condition
-	\begin{itemize}
-    \item[$\circ$] is automatic for structured grids (e.g.~FDM)
-    \item[$\circ$] for unstructured triangulations and FEM
+\item the ``bounded'' condition is automatic for structured grids
+\item for unstructured triangulations and FEM
    $$\text{(nonzeros in row } j) = \operatorname{degree}(\text{node } j) + 1$$
-	so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
-	\end{itemize}
+so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
 \end{itemize}
 
-\vspace{5mm}
+\bigskip
 \begin{center}
-\includegraphics[width=0.6\textwidth]{figs/spythree}
+\includegraphics[width=0.5\textwidth]{figs/spythree}
+
+\tiny
+
+\qquad $3$ \qquad\qquad\qquad\qquad $9$ \qquad\qquad\quad $\max \operatorname{degree} + 1$
 \end{center}
 \end{frame}
 
@@ -377,22 +386,49 @@ the work of computing $A \bv$ is $O(N)$
 
 \begin{frame}{define ``optimal''}
 \begin{itemize}
-\item consider $N$ equations in $N$ unknowns $\mathbf{F}(\mathbf{u}) = 0$
+\item consider $N$ equations in $N$ unknowns: \qquad $\mathbf{F}(\mathbf{u}) = 0$
 	\begin{itemize}
 	\item[$\circ$] $\mathbf{F}:\RR^N \to \RR^N$, the \emph{residual}, is generally nonlinear
-	\item[$\circ$] but $\mathbf{F}(\mathbf{w}) = \mathbf{b} - A \mathbf{w}$ is the linear case
+	\item[$\circ$] $\mathbf{F}(\mathbf{w}) = \mathbf{b} - A \mathbf{w}$ in the linear case
 	\end{itemize}
-\item for FDM and FEM discretizations of a PDE, evaluating $\mathbf{F}(\mathbf{w})$, for given $\mathbf{w}$, requires $O(N)$ work
 
 \bigskip
-\indent \item[\textbf{def.}]  an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ or $O(N\log N)$ work
+\noindent \textbf{definition.}  \begin{minipage}[t]{80mm}
+an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}} if it does $O(N)$ or $O(N\log N)$ work
+\end{minipage}
 
-\bigskip
-\item  ``solves'' means that it generates $\mathbf{u}_n$ so that
-	    $$\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$$
-where $\mathbf{u}_0$ is an initial guess
+\bigskip \bigskip
+\item if you have ever tried solving big, nontrivially-coupled systems of nonlinear equations, that's generally hopeless!
+	\begin{itemize}
+	\item[$\circ$] or linear equations!
+	\end{itemize}
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{slide full of caveats}
+
+\small
+\noindent \textbf{definition.}  \begin{minipage}[t]{80mm}
+an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ or $O(N\log N)$ work
+\end{minipage}
+
+\bigskip
+\normalsize
+\begin{itemize}
+\item  ``solves'' means that it generates $\mathbf{u}_n$ so that $\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$ where $\mathbf{u}_0$ is an initial guess
+	\begin{itemize}
+	\item[$\circ$] in linear case $A\bu=\bb$, given any rounding error, only $O(\kappa(A)\eps_{\text{mach}})$ accuracy is possible anyway\footnote{for students of MATH 614}
+	\end{itemize}
+\item ``work'' $=$ (count of floating point operations)
+	\begin{itemize}
+	\item[$\circ$] \emph{or} time for the algorithm to run (\emph{in serial}; more later), but timing on modern computers is really messy
+	\end{itemize}
+\item yes, ``$O(\dots)$'' hides a constant!
+\item definition could say ``work is less than $O(N^{1+\delta})$ for any $\delta>0$''
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{example: solving tridiagonal matrices}
 \begin{itemize}
@@ -415,6 +451,12 @@ where $\mathbf{u}_0$ is an initial guess
 
 \begin{frame}{Krylov methods}
 \begin{itemize}
+\item $\text{A New Hope}^{\, \includegraphics[width=0.06\textwidth]{figs/anewhope}}$ among numerical analysts (circa 1970), for FDM and FEM discretizations of a PDE,
+
+\begin{quote}
+given $\mathbf{w}\in\RR^N$, evaluating $\mathbf{F}(\mathbf{w})$ requires $O(N)$ work
+\end{quote}
+
 \item FIXME
 \end{itemize}
 \end{frame}
@@ -488,6 +530,24 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 
 
 \section{nonlinear problems and unstructured grids}
+
+\begin{frame}{wider applicability of multigrid}
+
+\begin{columns}
+\begin{column}{0.8\textwidth}
+\begin{itemize}
+\item multigrid was invented for Poisson and linear elliptic equations by Federenko (1962, 1964)
+\item apparently, by 1975 optimism about multigrid was limited to one person: Achi Brandt
+\item faith in its wider applicability has been growing every since
+\end{itemize}
+\end{column}
+
+\begin{column}{0.15\textwidth}
+
+\includegraphics[width=\textwidth]{figs/starwars-achi-mashup.jpg}
+\end{column}
+\end{columns}
+\end{frame}
 
 \begin{frame}{FIXME}
 \begin{itemize}
