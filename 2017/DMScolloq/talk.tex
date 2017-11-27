@@ -590,12 +590,12 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 \item $W(h)$ Newton iterations
 \item $K(h)$ preconditioned Krylov steps per Newton
 \item FIXME  in some case number of Newton steps (or Krylov steps) now grows as $h\to 0$
-\item can demo w MSE
+\item can demo w MSE  \includegraphics[width=0.4\textwidth]{figs/rayleigh-taylor-instability}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{constrained problem}
+\begin{frame}{constrained problems}
 \begin{itemize}
 \item FIXME  number of Newton steps proportional to $D/h$ where $D$ is distance-to-move free boundary
 \item Max working on it
@@ -687,7 +687,7 @@ C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{co
 
 \bigskip
 \begin{quote}
-\alert{you should be able to solve $N$ equations in $N$ unknowns in $O(N)$ time!}
+\alert{you should be able to solve $N$ equations in $N$ unknowns in $O(N)$ time}
 \end{quote}
 
 \bigskip
