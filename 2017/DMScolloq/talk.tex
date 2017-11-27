@@ -200,7 +200,7 @@
 \end{frame}
 
 
-\begin{frame}{mostly elliptic PDEs today}
+\begin{frame}{today's talk: mostly elliptic PDEs}
 
 both examples {\color{Blue} \textbf{1}} \& {\color{Blue} \textbf{2}}
 \begin{itemize}
@@ -214,9 +214,9 @@ both examples {\color{Blue} \textbf{1}} \& {\color{Blue} \textbf{2}}
 technical/expert comments:
 \begin{itemize}
 \item both examples derivable from variational principles, thus well-posed
-\item ``$\infty$-dimensional vector space'' means a Sobolev space such as $H^1(\Omega)$
+\item the ``$\infty$-dimensional vector space'' is a Sobolev space such as $H^1(\Omega)$
 \item \emph{numerically}, nonlinear elliptic PDE BVPs are representative of the hardest class of PDE problems because they arise as the time-step problems in the (harder) stiff time-dependent case
-\item \dots but smoothness of the solution matters \emph{a lot}
+\item \dots but smoothness of the solution matters \emph{a lot} to numerical difficulty
 \end{itemize}
 \end{frame}
 
@@ -237,11 +237,6 @@ technical/expert comments:
 	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
 \item as used for the 2D Poisson equation:
 	    $$u_{xx}+u_{yy} \approx \frac{u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4 u_{ij}}{h^2}$$
-	\vspace{-4mm}
-	\begin{itemize}
-	\item[$\circ$] assumes the grid has equal spacing $h$ in $x$ and $y$
-	\item[$\circ$] similar formula in 3D and for 2D MSE
-	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -251,14 +246,11 @@ technical/expert comments:
 \item for a much of this talk I'll use \emph{structured grids}
 	\begin{itemize}
 	\item[$\circ$] i.e.~products of grids in 1D
-	\item[$\circ$] used in all FDM examples
 	\end{itemize}
-\item in fact, I'll use a sequence of such grids $\Omega^{(k)}$
-\item regarding notation, the \emph{level} $k$ grid has
+\item a sequence of such grids $\Omega^{(k)}$; the \emph{level} $k$ grid has
 	\begin{itemize}
 	\item[$\circ$] equal spacing $h_k$ in each direction
-	\item[$\circ$] ``increasing resolution'' and ``refinement'' both mean $h_k \to 0$
-    \item[$\circ$] $N_k = O(h_k^{-d})$ points in the level $k$ grid
+    \item[$\circ$] $N_k = O(h_k^{-d})$ points in $d$ dimensions
 	    \begin{itemize}
 	    \item typically: $N_{k+1} = 2^d N_k$
 	    \end{itemize}
@@ -266,6 +258,9 @@ technical/expert comments:
 
 \bigskip
 \input{tikz/fourlevelsofgrids.tex}
+
+\medskip
+\item ``increasing resolution'' or ``refinement'' means $h_k \to 0$
 \end{itemize}
 \end{frame}
 
@@ -277,7 +272,7 @@ technical/expert comments:
     $$\int_\Omega \grad u \cdot \grad v = \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
     \vspace{-4mm}
 	\begin{itemize}
-	\item[$\circ$] to derive, multiply PDE by $v$ and integrate by parts
+	\item[$\circ$] derivation: multiply PDE by $v$ and integrate by parts
 	\end{itemize}
 \item well-suited to unstructured meshes of arbitrary polygonal/polyhedral domains
 	\begin{itemize}
@@ -291,12 +286,12 @@ technical/expert comments:
 \end{center}
 
 \footnotesize
-\item Fall 2018: graduate seminar in FEM
+\item \alert{Fall 2018: graduate seminar in FEM}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{approximation: finite element method}
+\begin{frame}{finite element method}
 
 in more detail, the FEM uses
 \begin{itemize}
@@ -314,6 +309,7 @@ in more detail, the FEM uses
 \end{minipage}
 \end{itemize}
 
+\vspace{-3mm}
 then the FEM
 \begin{itemize}
 \item supposes
@@ -322,14 +318,15 @@ for $u_j\in \RR$ ($N$ unknowns)
 \item and requires the weak form to hold for all $v=\psi_i$ ($N$ eqns)
 \end{itemize}
 
-again: yields a system of $N$ eqns in $N$ unknowns
+\medskip
+which yields a system of $N$ eqns in $N$ unknowns
 \end{frame}
 
 
 \begin{frame}{linear systems with sparse matrices}
 \begin{itemize}
 \item both methods (FDM and FEM) produce \emph{sparse matrices}
-\item the linear Poisson equation becomes a single linear system
+\item for example, the Poisson equation becomes a linear system
     $$A \bu = \bb$$
     \vspace{-4mm}
 	\begin{itemize}
@@ -351,7 +348,7 @@ Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowfla
 \end{frame}
 
 
-\begin{frame}{sparse matrices: key fact}
+\begin{frame}{sparse matrices have cheap mat-vec}
 
 if
 \begin{itemize}
@@ -398,23 +395,14 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}}
 \end{minipage}
 
 \bigskip \bigskip
-\item if you have ever tried solving big, nontrivially-coupled systems of nonlinear equations, that's generally hopeless!
-	\begin{itemize}
-	\item[$\circ$] or linear equations!
-	\end{itemize}
+\item if you have ever tried solving big, nontrivially-coupled systems of equations, you'll conclude optimality is generally hopeless
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{slide full of caveats}
 
-\small
-\noindent \textbf{definition.}  \begin{minipage}[t]{80mm}
-an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ or $O(N\log N)$ work
-\end{minipage}
-
-\bigskip
-\normalsize
+in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ or $O(N\log N)$ work,''
 \begin{itemize}
 \item  ``solves'' means that it generates $\mathbf{u}_n$ so that $\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$ where $\mathbf{u}_0$ is an initial guess
 	\begin{itemize}
@@ -422,24 +410,24 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it d
 	\end{itemize}
 \item ``work'' $=$ (count of floating point operations)
 	\begin{itemize}
-	\item[$\circ$] \emph{or} time for the algorithm to run (\emph{in serial}; more later), but timing on modern computers is really messy
+	\item[$\circ$] \emph{or} time for the algorithm to run, but timing on modern computers is really messy
 	\end{itemize}
-\item yes, ``$O(\dots)$'' hides a constant!
-\item definition could say ``work is less than $O(N^{1+\delta})$ for any $\delta>0$''
+\item ``$O(\dots)$'' hides a constant which may depend on tol but may not depend on $N$
+\item a nearly-equivalent definition could say ``work is less than $O(N^{1+\delta})$ for any $\delta>0$''
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{example: solving tridiagonal matrices}
 \begin{itemize}
-\item an easy example of optimal solution is for tridiagonal matrices
-\item Gauss elimination without pivoting, a.k.a.~the \emph{Thomas algorithm}, solves $A \bu = \bb$ in $8N-6=O(N)$ operations
+\item an easy example of optimality is for tridiagonal matrices
+\item Gauss elimination without pivoting\footnote{a.k.a.~the \emph{Thomas algorithm}} solves $A \bu = \bb$ in $8N-6=O(N)$ operations
 	\begin{itemize}
 	\item[$\circ$] strictly diagonally-dominant suffices to avoid pivoting
-    \item[$\circ$] for SPD matrices, can use \emph{banded Cholesky decomposition}, again sans pivoting and $O(N)$
 	\end{itemize}
+\item for SPD tridiagonal matrices, use \emph{banded Cholesky decomposition}, again $O(N)$
 \item also applies to pentadiagonal, septadiagonal, \dots
-\item thus 1D Poisson problem \, $-u''=f$ \, has optimal method 
+\item thus 1D Poisson problem \, $-u''=f$ \, has optimal solution method 
 \end{itemize}
 
 \bigskip
@@ -451,7 +439,7 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it d
 
 \begin{frame}{non-example:  banded direct methods in 2D,3D}
 \begin{itemize}
-\item \dots \emph{but} in 2D and 3D the bandwidth grows as $h\to 0$
+\item for structured-grid FDM method on PDEs in 2D and 3D the bandwidth of $A$ grows as $h\to 0$
 \item for example, for MSE on $\Omega=[0,1]\times[0,1]$:
 
 \begin{center}
@@ -459,7 +447,7 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it d
 \end{center}
 
 \item if $N\times N$ matrix $A$ has bandwidth $p$ then banded Cholesky does $O(N p^2)$ work
-\item banded direct methods for PDE problems on structured grids with $m$ points in each direction:
+\item thus for direct methods for PDE problems on structured grids with $m$ points in each direction:
 	\begin{itemize}
 	\item[$\circ$] $N=m^2$ and $p=m$ so $O(N^2)$ work in 2D
 	\item[$\circ$] $N=m^3$ and $p=m^2$ so $O(N^{7/3})$ work in 3D
@@ -471,13 +459,13 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it d
 
 \begin{frame}{Krylov methods}
 \begin{itemize}
-\item $\text{A New Hope in the 1970s}^{\includegraphics[width=0.06\textwidth]{figs/anewhope}}$ among numerical analysts, for FDM and FEM discretizations of a PDE, was to notice that
+\item $\text{A New Hope}^{\includegraphics[width=0.06\textwidth]{figs/anewhope}}$ in the 1970s among numerical analysts, for FDM and FEM discretizations of a PDE, emphasized that
 
 \begin{quote}
 given $\mathbf{w}\in\RR^N$, evaluating $\mathbf{F}(\mathbf{w})$ requires $O(N)$ work
 \end{quote}
 
-\item FIXME
+\item FIXME    \includegraphics[width=0.2\textwidth]{figs/krylov}
 \end{itemize}
 \end{frame}
 
@@ -545,6 +533,13 @@ given $\mathbf{w}\in\RR^N$, evaluating $\mathbf{F}(\mathbf{w})$ requires $O(N)$ 
 \begin{frame}{multigrid: why it works}
 \begin{itemize}
 \item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{algebraic multigrid}
+\begin{itemize}
+\item FIXME   \includegraphics[width=0.2\textwidth]{figs/urschel}
 \end{itemize}
 \end{frame}
 
