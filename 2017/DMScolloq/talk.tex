@@ -190,7 +190,7 @@
 	\end{itemize}
 
 \begin{center}
-\begin{tikzpicture}[scale=1.6]
+\begin{tikzpicture}[scale=2.0]
   \draw[->,gray,very thin] (0.0,0.0) -- (1.2,0.0) node[below] {$x$};
   \draw[->,gray,very thin] (0.0,0.0) -- (-0.75,0.75) node[left] {$y$};
   \draw[line width=1.0pt] (0.0,0.0) -- (1.0,0.0) -- (0.45,0.55) -- (-0.55,0.55) -- (-0.275,0.5) -- cycle;
@@ -211,7 +211,7 @@ both examples {\color{Blue} \textbf{1}} \& {\color{Blue} \textbf{2}}
 \bigskip\bigskip
 
 \scriptsize
-technical/expert comments:
+fine print:
 \begin{itemize}
 \item both examples derivable from variational principles, thus well-posed
 \item the ``$\infty$-dimensional vector space'' is a Sobolev space such as $H^1(\Omega)$
@@ -348,37 +348,6 @@ Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowfla
 \end{frame}
 
 
-\begin{frame}{sparse matrices have cheap mat-vec}
-
-if
-\begin{itemize}
-\item $A$ is $N\times N$ and sparse, and
-\item number of nonzeros per row is bounded independently of $N$
-\end{itemize}
-then
-\begin{quote}
-the work of computing $A \bv$ is $O(N)$
-\end{quote}
-
-\begin{itemize}
-\item computing $A \bv$ is called a ``mat-vec''
-\item the ``bounded'' condition is automatic for structured grids
-\item for unstructured triangulations and FEM
-   $$\text{(nonzeros in row } j) = \operatorname{degree}(\text{node } j) + 1$$
-so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
-\end{itemize}
-
-\bigskip
-\begin{center}
-\includegraphics[width=0.5\textwidth]{figs/spythree}
-
-\tiny
-
-\qquad $3$ \qquad\qquad\qquad\qquad $9$ \qquad\qquad\quad $\max \operatorname{degree} + 1$
-\end{center}
-\end{frame}
-
-
 \section{what is an ``optimal solver''?}
 
 \begin{frame}{define ``optimal''}
@@ -457,15 +426,58 @@ in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \e
 \end{frame}
 
 
-\begin{frame}{Krylov methods}
-\begin{itemize}
-\item $\text{A New Hope}^{\includegraphics[width=0.06\textwidth]{figs/anewhope}}$ in the 1970s among numerical analysts, for FDM and FEM discretizations of a PDE, emphasized that
+\begin{frame}{sparse matrices have $O(N)$ mat-vec}
 
+if
+\begin{itemize}
+\item $A$ is $N\times N$ and sparse, and
+\item number of nonzeros per row is bounded independently of $N$
+\end{itemize}
+then
 \begin{quote}
-given $\mathbf{w}\in\RR^N$, evaluating $\mathbf{F}(\mathbf{w})$ requires $O(N)$ work
+the work of computing $A \bv$ is $O(N)$
 \end{quote}
 
-\item FIXME    \includegraphics[width=0.2\textwidth]{figs/krylov}
+\begin{itemize}
+\item computing $A \bv$ is called a ``mat-vec''
+\item the ``bounded'' condition is automatic for structured grids
+\item for unstructured triangulations and FEM
+   $$\text{(nonzeros in row } j) = \operatorname{degree}(\text{node } j) + 1$$
+so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
+\end{itemize}
+
+\bigskip
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/spythree}
+
+\tiny
+
+\qquad $3$ \qquad\qquad\qquad\qquad $9$ \qquad\qquad\quad $\max \operatorname{degree} + 1$
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Krylov methods}
+\begin{itemize}
+\item among numerical analysts of the 1960s and 1970s, observing that sparse mat-vecs and residual evaluations are $O(N)$ for FDM and FEM discretizations of a PDE was $\text{A New Hope}^{\includegraphics[width=0.06\textwidth]{figs/anewhope}}$
+\item \begin{minipage}[t]{0.7\textwidth}
+naval engineer A.~Krylov (1931) observed that the solution to $A\bu=\bb$ might be well-approximated by a vector in
+
+\vspace{-4mm}
+$$\mathcal{K}_m(A,\bb) = \operatorname{span}\left\{\bb,A\bb,A^2\bb,\dots,A^m\bb\right\}$$
+\end{minipage} \quad
+\begin{minipage}[t]{0.15\textwidth}
+\vspace{0mm}
+
+\includegraphics[width=\textwidth]{figs/krylov}
+\end{minipage}
+
+    \vspace{2mm}
+	\begin{itemize}
+	\item[$\circ$] computing $\bv \in \mathcal{K}_m(A,\bb)$ is an $O(mN)$ if $A\bw$ is $O(N)$
+	\item[$\circ$] $\bv \in \mathcal{K}_m(A,\bb) \iff \bv = p_m(A) \bb$
+	\end{itemize}
+\item to solve $A\bu=\bb$ we want $\bu = A^{-1}\bb \approx p_m(A) \bb$
 \end{itemize}
 \end{frame}
 
@@ -581,7 +593,7 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 
 
 
-\section{barriers to optimality}
+\section{barriers and issues}
 
 
 \begin{frame}{low regularity of solution}
@@ -606,14 +618,15 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 \begin{frame}{initial/boundary value problems}
 
 \begin{itemize}
-\item problem posed on $\Omega \times [0,T]$ where $\Omega \subset \RR^d$
+\item consider a problem posed on $\Omega \times [0,T]$ where $\Omega \subset \RR^d$
     \begin{itemize}
-    \item[$\circ$] example: nonlinear convection/diffusion/reaction equation
+    \item[$\circ$] hyperbolic example: nonlinear wave equation (system)
+      $$FIXME$$
+    \item[$\circ$] general example: nonlinear convection/diffusion/reaction equation
       $$u_t = \Div(a(u) \grad u) - b(u)\cdot \grad u + f(u)$$
-    \item[$\circ$] evolution problem with states in some $W_k^p(\Omega)$
+    \item[$\circ$] evolution problem with states in some $\infty$-dimensional (Sobolev) space
     \end{itemize}
-\item for these problems there's no intrinsic ``barrier'' \dots
-\item rather a lack of clarity about what ``optimal'' should mean
+\item what should ``optimal'' mean?
 \end{itemize}
 \end{frame}
 
@@ -621,7 +634,7 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 \begin{frame}{numerical parameters for IBVPs}
 
 \begin{itemize}
-\item assume structured grid: $h=\Delta x = \Delta y=\Delta z$
+\item assume structured spatial grid: $h=\Delta x = \Delta y=\Delta z$
     \begin{itemize}
     \item[$\circ$] $N=$ (spatial degrees of freedom) $=O(h^{-d})$
     \end{itemize}
@@ -653,6 +666,7 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 \begin{frame}{optimality(?) for IBVPs}
 
 \begin{itemize}
+\item FIXME for hyperbolic where $\Delta t \sim \Delta x$, explicit schemes already optimal
 \item yields: a ``performance model'' for solving IBVPs on $\Omega \times [0,T]$
 \item cost of computation:
 \footnotesize
@@ -683,15 +697,21 @@ C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{co
 
 \begin{frame}{conclusion}
 \begin{itemize}
-\item as you head toward $N=\infty$, in approximately solving your PDE-type problem on a modern computer,
+\item in approximately solving your PDE-type problem on a modern computer, as you head toward $N=\infty$ unknowns,
 
 \bigskip
 \begin{quote}
-\alert{you should be able to solve $N$ equations in $N$ unknowns in $O(N)$ time}
+\alert{you should try to solve $N$ equations in $O(N)$ time}
 \end{quote}
 
 \bigskip
-\item it is a good goal, anyway
+\item this is a good goal for PDE problems, but you must exploit
+    \begin{itemize}
+    \item[$\circ$] the locality (sparsity) of the problem, and
+    \item[$\circ$] correlation (smoothness) of the solution
+    \end{itemize}
+\item multigrid does that!
+\item for general linear algebra on dense systems $A\bu=\bb$ the goal is $O(N^2)$ \dots but how to get there is an open problem
 \end{itemize}
 \end{frame}
 
