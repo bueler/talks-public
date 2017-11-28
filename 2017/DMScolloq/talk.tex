@@ -206,32 +206,34 @@ both examples {\color{Blue} \textbf{1}} \& {\color{Blue} \textbf{2}}
 \begin{itemize}
 \item are well-posed elliptic PDE BVPs
 \item seek solution $u$ from an \alert{$\infty$-dimensional vector space}
+\item \emph{main idea}: a PDE BVP is a system of $\infty$ eqns in $\infty$ unknowns
 \end{itemize}
 
-\bigskip\bigskip
+\bigskip\bigskip\bigskip
 
 \scriptsize
 fine print:
 \begin{itemize}
 \item both examples derivable from variational principles, thus well-posed
 \item the ``$\infty$-dimensional vector space'' is a Sobolev space such as $H^1(\Omega)$
-\item \emph{numerically}, nonlinear elliptic PDE BVPs are representative of the hardest class of PDE problems because they arise as the time-step problems in the (harder) stiff time-dependent case
-\item \dots but smoothness of the solution matters \emph{a lot} to numerical difficulty
+%\item \emph{numerically}, nonlinear elliptic PDE BVPs are representative of the hardest class of PDE problems because they arise as the time-step problems in the (harder) stiff time-dependent case
+%\item \dots but smoothness of the solution matters \emph{a lot} to numerical difficulty
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{approximation: finite difference method}
 \begin{itemize}
-\item \emph{main idea}: a PDE BVP is a system of $\infty$ eqns in $\infty$ unknowns
-\item some problems can be solved exactly
-	\begin{itemize}
-	\item[$\circ$] \emph{example}.  $u(x,y)=x^2-y^2$ solves $\grad^2 u = 0$
-	\end{itemize}
-\item most problems are not solved exactly, so we
+\item most problems are not solvable exactly, so we
 	\begin{itemize}
 	\item[$\circ$] \alert{approximate by $N$ equations in $N$ unknowns}
-	\item[$\circ$] \dots \, where $N \ll \infty$
+	\item[$\circ$] where $N\in\ZZ^+$ so $N \ll \infty$
+
+    \smallskip
+	\item[$\circ$] of course, some problems can be solved exactly
+        \begin{itemize}
+        \item[\emph{example}.]  $u(x,y)=x^2-y^2$ solves $\grad^2 u = 0$
+        \end{itemize}
 	\end{itemize}
 \item one method is \emph{finite differences} (FDM), based on
 	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
@@ -247,7 +249,7 @@ fine print:
 	\begin{itemize}
 	\item[$\circ$] i.e.~products of grids in 1D
 	\end{itemize}
-\item a sequence of such grids $\Omega^{(k)}$; the \emph{level} $k$ grid has
+\item sequence of such grids $\Omega^{(k)}$; the \emph{level} $k$ grid has
 	\begin{itemize}
 	\item[$\circ$] equal spacing $h_k$ in each direction
     \item[$\circ$] $N_k = O(h_k^{-d})$ points in $d$ dimensions
@@ -260,6 +262,7 @@ fine print:
 \input{tikz/fourlevelsofgrids.tex}
 
 \medskip
+\item $N_k$ is the number of equations and of unknowns
 \item ``increasing resolution'' or ``refinement'' means $h_k \to 0$
 \end{itemize}
 \end{frame}
@@ -274,7 +277,7 @@ fine print:
 	\begin{itemize}
 	\item[$\circ$] derivation: multiply PDE by $v$ and integrate by parts
 	\end{itemize}
-\item well-suited to unstructured meshes of arbitrary polygonal/polyhedral domains
+\item FEM is well-suited to unstructured meshes of arbitrary polygonal/polyhedral domains
 	\begin{itemize}
 	\item[$\circ$] e.g.~triangulate the snowflake:
 	\end{itemize}
@@ -295,13 +298,16 @@ fine print:
 
 in more detail, the FEM uses
 \begin{itemize}
-\item a {\footnotesize triangular/quadrilateral/tetrahedral/etc.}~mesh of $N$ nodes on $\Omega$
+\item a {\footnotesize triangular/quadrilateral/tetrahedral/etc.}~mesh of $N$ nodes $\bx_i$ on $\Omega$
 \item an $N$-dimensional subspace $\mathcal{X} \subset H^1(\Omega)$ with basis $\{\psi_j\}$ of
-\item \begin{minipage}[t]{50mm}
-\dots \emph{hat functions} $\psi_j$ which are zero at all $N$ nodes of the mesh except the $j$th where it's one
+\item \begin{minipage}[t]{55mm}
+\dots \emph{hat functions} $\psi_j$
+	\begin{itemize}
+	\item[$\circ$] $\psi_j(\bx_i)=0$ except $\psi_j(\bx_j)=1$
+	\end{itemize}
 \end{minipage}
-\qquad
-\begin{minipage}[t]{40mm}
+\quad
+\begin{minipage}[t]{35mm}
 \vspace{-4mm}
 \begin{tikzpicture}[scale=0.6, z={(.707,.3)}, baseline]
 \input{tikz/hatfunction.tex}
@@ -312,14 +318,14 @@ in more detail, the FEM uses
 \vspace{-3mm}
 then the FEM
 \begin{itemize}
-\item supposes
+\item defines
    $$u(x,y) = \sum_j u_{j}\, \psi_{j}(x,y)$$
-for $u_j\in \RR$ ($N$ unknowns)
+for unknown coefficients $\bu=\{u_j\}\in \RR^N$
 \item and requires the weak form to hold for all $v=\psi_i$ ($N$ eqns)
 \end{itemize}
 
 \medskip
-which yields a system of $N$ eqns in $N$ unknowns
+which again yields a system of $N$ eqns in $N$ unknowns
 \end{frame}
 
 
@@ -333,7 +339,6 @@ which yields a system of $N$ eqns in $N$ unknowns
 	\item[$\circ$] $A\in\RR^{N\times N}$ is sparse
 	\item[$\circ$] $A$ is symmetric positive definite (SPD)
 	\end{itemize}
-\item the nonlinear MSE produces such a linear system at each Newton step (\emph{more later})
 \item \emph{pro tip}: Matlab's \texttt{spy(A)} shows nonzero structure
 \end{itemize}
 
@@ -341,9 +346,35 @@ which yields a system of $N$ eqns in $N$ unknowns
 \begin{center}
 \includegraphics[width=0.85\textwidth]{figs/spythree}
 
+\medskip
 \scriptsize
 Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowflake
 
+\end{center}
+\end{frame}
+
+
+\begin{frame}{nonlinear PDEs produce sparse systems too}
+\begin{itemize}
+\item FDM or FEM applied to a nonlinear elliptic PDE BVP gives a nonlinear (algebraic) system of $N$ equations in $N$ unknowns:
+    $$\mathbf{F}(\bu)=0$$
+     \vspace{-4mm}
+	\begin{itemize}
+	\item[$\circ$] $\mathbf{F}:\RR^N\to\RR^N$
+	\item[$\circ$] $\mathbf{F}(\bw)$ is the \emph{residual} if $\bw$ is a guess at the solution $\bu$
+	\end{itemize}
+
+\item the nonlinear MSE produces a sparse linear system at each Newton step
+
+FIXME
+\end{itemize}
+
+\bigskip
+\begin{center}
+\includegraphics[width=0.3\textwidth]{figs/spybanded}
+
+\scriptsize
+ MSE FDM 2D square
 \end{center}
 \end{frame}
 
@@ -360,7 +391,7 @@ Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowfla
 
 \bigskip
 \noindent \textbf{definition.}  \begin{minipage}[t]{80mm}
-an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}} if it does $O(N)$ or $O(N\log N)$ work
+an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}} if it does $O(N)$ work
 \end{minipage}
 
 \bigskip \bigskip
@@ -371,17 +402,18 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}}
 
 \begin{frame}{slide full of caveats}
 
-in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ or $O(N\log N)$ work,''
+in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ work,''
 \begin{itemize}
 \item  ``solves'' means that it generates $\mathbf{u}_n$ so that $\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$ where $\mathbf{u}_0$ is an initial guess
 	\begin{itemize}
 	\item[$\circ$] in linear case $A\bu=\bb$, given any rounding error, only $O(\kappa(A)\eps_{\text{mach}})$ accuracy is possible anyway\footnote{for students of MATH 614}
+    \item[$\circ$] ``$O(\dots)$'' hides a constant which may depend on tol but may not depend on $N$
 	\end{itemize}
 \item ``work'' $=$ (count of floating point operations)
 	\begin{itemize}
 	\item[$\circ$] \emph{or} time for the algorithm to run, but timing on modern computers is really messy
 	\end{itemize}
-\item ``$O(\dots)$'' hides a constant which may depend on tol but may not depend on $N$
+\item actually, $O(N\log N)$ is accepted as ``optimal'' too
 \item a nearly-equivalent definition could say ``work is less than $O(N^{1+\delta})$ for any $\delta>0$''
 \end{itemize}
 \end{frame}
