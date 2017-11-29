@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import sys
 
 dash = 0.06
-filenames = ['NPplane.pdf','NPplaneweakstrong.pdf']
+filenames = ['NPplane.pdf','NPplanestatic.pdf','NPplaneweakstrong.pdf']
 
 SHOW = False
 def writeout(outname):
@@ -21,7 +21,7 @@ def writeout(outname):
         print('writing file ' + outname)
         plt.savefig(outname,bbox_inches='tight')
 
-for j in range(2):
+for j in range(3):
     plt.figure(figsize=(7,6))
     ax = plt.gca()
 
@@ -38,12 +38,13 @@ for j in range(2):
     ax.arrow(1.0, 0.5, 0.0, 5.0, head_width=0.15, head_length=0.2, fc='w', ec='k')
     plt.text(0.65,2.5,'optimality',fontsize=12.0,rotation=90.0)
 
-    plt.plot([5.0, 5.0],[-dash,dash],'k')
-    ax.arrow(5.0, 0.5, 0.0, 5.0, head_width=0.15, head_length=0.2, fc='w', ec='k')
-    plt.text(4.7,2.8,'static scaling',fontsize=12.0,rotation=90.0)
-    plt.text(4.9,-0.5,'$\hat P$',fontsize=12.0)
+    if j >= 1:
+        plt.plot([5.0, 5.0],[-dash,dash],'k')
+        ax.arrow(5.0, 0.5, 0.0, 5.0, head_width=0.15, head_length=0.2, fc='w', ec='k')
+        plt.text(4.7,2.8,'static scaling',fontsize=12.0,rotation=90.0)
+        plt.text(4.9,-0.5,'$\hat P$',fontsize=12.0)
 
-    if j == 1:
+    if j >= 2:
         ax.arrow(1.5, 1.5, 4.3, 4.3, head_width=0.15, head_length=0.2, fc='w', ec='k')
         plt.text(1.5,3.4,'weak scaling (slope=1)',fontsize=12.0,rotation=44.0)
 

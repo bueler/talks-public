@@ -158,21 +158,12 @@
 \begin{frame}{why this talk?}
 
 \begin{itemize}
-\item I am writing a book called \emph{PETSc for PDEs}
-
-\medskip
-\small
-\item PETSc = Portable, Extensible Toolkit for Scientific computation
-
+\item I have been thinking about what is the \emph{goal} when solving differential equations
+\item there are reliable black boxes for ODE IVPs
 	\begin{itemize}
-	\footnotesize
-	\item[$\circ$] \href{https://www.mcs.anl.gov/petsc/}{\texttt{www.mcs.anl.gov/petsc}}
-	\item[$\circ$] \dots a big (ugly?) library of C codes
+	\item[$\circ$] \texttt{ode45} in \textsc{Matlab}
 	\end{itemize}
-
-\smallskip
-\normalsize
-\item this talk attempts to explain why anyone would even want to use a big, complicated library of C codes to solve PDEs
+\item how would you build a good PDE black box?
 \end{itemize}
 \end{frame}
 
@@ -278,7 +269,7 @@ fine print:
 \item sequence of such grids $\Omega^{(k)}$; the \emph{level} $k$ grid has
 	\begin{itemize}
 	\item[$\circ$] equal spacing $h_k$ in each direction
-    \item[$\circ$] $N_k = O(h_k^{-d})$ points in $d$ dimensions
+    \item[$\circ$] $N_k = O(h_k^{-d})$ grid points in $d$ dimensions
 	    \begin{itemize}
 	    \item typically: $N_{k+1} = 2^d N_k$
 	    \end{itemize}
@@ -660,9 +651,9 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
         \State solve $A \bv = \bb$, e.g.~by a direct solver
     \Else
         \State improve $\bw$ on the level $l$ grid, giving $\bv$
-        \State $\br^C = \left(\text{restriction of } \br = \bb - A \bv \text{ to } \Omega^{(l-1)}\right)$
+        \State $\br^C = \left(\text{restrict } \br = \bb - A \bv \text{ to } \Omega^{(l-1)}\right)$
         \State $\bz^C = \text{\textsc{Vcycle}}(A^C,\br^C,0,l-1$)
-        \State $\bv \gets \bv + (\text{interpolate } \bz^C \text{ to level $l$ grid})$
+        \State $\bv \gets \bv + \left(\text{interpolate } \bz^C \text{ to } \Omega^{(l)}\right)$
         \State improve $\bv$ some more on the level $l$ grid
     \EndIf
 
@@ -687,8 +678,9 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \emph{answer}: \alert{smoothing}
 \item many classical linear iterations are smoothing
 	\begin{itemize}
-	\item[$\circ$] e.g.~Jacobi and Gauss-Seidel
-	\item[$\circ$] easy $O(N)$ operations which reduce high-frequency components of the error
+	\item[$\circ$] e.g.~weighted Jacobi and Gauss-Seidel
+	\item[$\circ$] fast $O(N)$ operations
+	\item[$\circ$] single iteration reduces high-frequency components of the error
 	\end{itemize}
 \end{itemize}
 
@@ -707,6 +699,41 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \includegraphics[width=0.2\textwidth]{figs/ps-wjacobismoothed} \qquad
 \includegraphics[width=0.2\textwidth]{figs/ps-gssmoothed}}
 \end{center}
+\end{frame}
+
+
+\begin{frame}{multigrid: why it is $O(N)$}
+
+\begin{itemize}
+\item multigrid is a systematic way of combining two actions
+	\begin{itemize}
+	\item[$\circ$] \emph{smoothing}: filter out high frequencies of the error on your grid
+	\item[$\circ$] \emph{coarsening}: transfer to a smaller-$N$ grid
+    	\begin{itemize}
+	    \item frequencies that were ``medium-low'' are now ``high''
+    	\end{itemize}
+	\end{itemize}
+\item the work of restricting and interpolating is comparable to the $O(N)$ smoother step
+	\begin{itemize}
+	\item[$\circ$] total work on $\Omega^{(l)}$ is $C N_l$ for fixed $C$
+	\end{itemize}
+\item then the total work of a V-cycle is a finite geometric series:
+
+\vspace{-3mm}
+\small
+\begin{align*}
+&(\Omega^{(k)} \text{ work}) + (\Omega^{(k-1)} \text{ work}) + \dots + (\Omega^{(1)} \text{ work}) + (\Omega^{(0)} \text{ work}) \\
+&\quad = C N_k + C N_{k-1} + \dots + C N_1 + C_0 \\
+&\quad = C N_k + \frac{C}{2} N_k + \dots + C \left(\frac{1}{2}\right)^{k-1} N_k + C_0 \\
+&\quad \le 2 C N_k + C_0
+\end{align*}
+
+    \vspace{-2mm}
+	\begin{itemize}
+	\item[$\circ$] coarsest grid \dots who cares! \dots $C_0$ is independent of $N$
+	\end{itemize}
+
+\end{itemize}
 \end{frame}
 
 
@@ -941,8 +968,10 @@ C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{co
 \end{itemize}
 
 \begin{center}
+\only<1>{\hspace{0mm}}
 \includegraphics<1>[width=0.6\textwidth]{figs/NPplane}
-\includegraphics<2>[width=0.6\textwidth]{figs/NPplaneweakstrong}
+\includegraphics<2>[width=0.6\textwidth]{figs/NPplanestatic}
+\includegraphics<3>[width=0.6\textwidth]{figs/NPplaneweakstrong}
 \end{center}
 \end{frame}
 
@@ -953,17 +982,23 @@ C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{co
 
 \bigskip
 \begin{quote}
-\alert{you should try to solve $N$ equations in $O(N)$ time}
+\alert{you should be solving the $N$ equations in $O(N)$ work}
 \end{quote}
 
 \bigskip
-\item this is a good goal for PDE problems, but you must exploit
+\item this is a good \emph{goal} for PDE BVPs
+\item \dots but you must exploit
     \begin{itemize}
     \item[$\circ$] the locality (sparsity) of the problem, and
     \item[$\circ$] correlation (smoothness) of the solution
     \end{itemize}
-\item multigrid does that!
-\item for general linear algebra on dense systems $A\bu=\bb$ the goal is $O(N^2)$ \dots but how to get there is an open problem
+\item multigrid is the only hope!?
+
+\bigskip
+\item for general dense systems $A\bu=\bb$ the goal is $O(N^2)$?
+    \begin{itemize}
+    \item[$\circ$] how to get there is an open problem
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
