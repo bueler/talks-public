@@ -158,7 +158,7 @@
 \begin{frame}{why this talk?}
 
 \begin{itemize}
-\item I have been thinking about what is the \emph{goal} when solving differential equations
+\item I have been thinking about what is the \emph{goal} when numerically solving differential equations
 \item there are reliable black boxes for ODE IVPs
 	\begin{itemize}
 	\item[$\circ$] \texttt{ode45} in \textsc{Matlab}
@@ -724,22 +724,24 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \begin{align*}
 &(\Omega^{(k)} \text{ work}) + (\Omega^{(k-1)} \text{ work}) + \dots + (\Omega^{(1)} \text{ work}) + (\Omega^{(0)} \text{ work}) \\
 &\quad = C N_k + C N_{k-1} + \dots + C N_1 + C_0 \\
-&\quad = C N_k + \frac{C}{2} N_k + \dots + C \left(\frac{1}{2}\right)^{k-1} N_k + C_0 \\
+&\quad = C N_k + C \frac{N_k}{2^d}  + \dots + C \left(\frac{1}{2^d}\right)^{k-1} N_k + C_0 \\
 &\quad \le 2 C N_k + C_0
 \end{align*}
 
     \vspace{-2mm}
 	\begin{itemize}
-	\item[$\circ$] coarsest grid \dots who cares! \dots $C_0$ is independent of $N$
+	\item[$\circ$] re the coarsest grid \dots who cares! \dots $C_0$ is independent of $N$
 	\end{itemize}
 
 \end{itemize}
 \end{frame}
 
+\newcommand{\niceprob}{V-cycle-preconditioned CG iterations on $\Omega=[0,1]^d$ Poisson}
+\newcommand{\niceprobtwo}{V-cycle-preconditioned CG iterations on $\Omega=[0,1]^2$ Poisson}
 
 \begin{frame}{multigrid on Poisson}
 \begin{itemize}
-\item V-cycle-preconditioned CG iterations on the Poisson problem
+\item \niceprobtwo
 \end{itemize}
 
 \begin{center}
@@ -752,7 +754,7 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
 \begin{frame}{multigrid on Poisson: evidence of optimality}
 \begin{itemize}
-\item V-cycle-preconditioned CG iterations on the Poisson problem
+\item \niceprob
 \end{itemize}
 
 \begin{center}
@@ -765,7 +767,7 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
 \begin{frame}{multigrid on Poisson: evidence of optimality}
 \begin{itemize}
-\item V-cycle-preconditioned CG iterations on the Poisson problem
+\item \niceprob
 \end{itemize}
 
 \begin{center}
@@ -778,7 +780,7 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
 \begin{frame}{multigrid on Poisson: evidence of optimality}
 \begin{itemize}
-\item V-cycle-preconditioned CG iterations on the Poisson problem
+\item \niceprob
 \end{itemize}
 
 \begin{center}
@@ -791,15 +793,16 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
 \begin{frame}{multigrid on MSE: evidence of optimality}
 \begin{itemize}
-\item V-cycle-preconditioned CG iterations on each Newton step in the MSE problem
+\item the MSE problem  on $\Omega=[0,1]^2$
+\item FIXME  nonlinear F cycle
+\item V-cycle-preconditioned CG iterations on each Newton step
 \end{itemize}
 
 \begin{center}
-%\includegraphics[width=0.6\textwidth]{figs/optimal-timeperN}
-
-\small FIXME
+\includegraphics[width=0.6\textwidth]{figs/minoptimal}
 \end{center}
 \end{frame}
+
 
 \begin{frame}{algebraic multigrid}
 \begin{itemize}
