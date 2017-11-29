@@ -15,14 +15,13 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[multidot]{grffile}
-\usepackage{verbatim,empheq}
+\usepackage{amsmath,verbatim,empheq,xspace}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,shadows}
 \usetikzlibrary{decorations.pathreplacing}
 
-\usepackage{animate}
-\usepackage{amsmath,verbatim}
+%\usepackage{animate}
 
 \usepackage[noend]{algpseudocode}
 \usepackage{listings}
@@ -82,6 +81,7 @@
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bq}{\mathbf{q}}
 \newcommand{\br}{\mathbf{r}}
+\newcommand{\bs}{\mathbf{s}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
 \newcommand{\bw}{\mathbf{w}}
@@ -96,6 +96,9 @@
 \renewcommand{\bar}{\overline}
 
 \newcommand{\ip}[2]{\ensuremath{\left<#1,#2\right>}}
+
+
+\newcommand{\FM}{F$\begin{smallmatrix} \text{D} \\ \text{E} \end{smallmatrix}$M\xspace}
 
 
 \newenvironment{transbox}[1][]{%
@@ -150,6 +153,13 @@
 %    \tableofcontents
 %\end{frame}
 
+\begin{frame}{explanation}
+
+\begin{itemize}
+\item I am writing a book called \emph{PETSc for PDEs}
+\item this talk explains why you would want to use a big, complicated library of C codes to solve PDEs
+\end{itemize}
+\end{frame}
 
 \section{how to approximately solve a PDE}
 
@@ -331,7 +341,7 @@ which again yields a system of $N$ eqns in $N$ unknowns
 
 \begin{frame}{linear systems with sparse matrices}
 \begin{itemize}
-\item both methods (FDM and FEM) produce \emph{sparse matrices}
+\item both methods (\FM) produce \emph{sparse matrices}
 \item for example, the Poisson equation becomes a linear system
     $$A \bu = \bb$$
     \vspace{-4mm}
@@ -354,28 +364,35 @@ Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowfla
 \end{frame}
 
 
-\begin{frame}{nonlinear PDEs produce sparse systems too}
+\begin{frame}{nonlinear PDEs make sparse matrices too}
 \begin{itemize}
-\item FD$|$EM applied to a nonlinear elliptic PDE BVP gives a nonlinear (algebraic) system of $N$ equations in $N$ unknowns:
+\item \FM applied to a nonlinear elliptic PDE BVP gives a nonlinear (algebraic) system of $N$ equations in $N$ unknowns:
     $$\mathbf{F}(\bu)=0$$
      \vspace{-4mm}
 	\begin{itemize}
 	\item[$\circ$] $\mathbf{F}:\RR^N\to\RR^N$
-	\item[$\circ$] $\mathbf{F}(\bw)$ is the \emph{residual} if $\bw$ is a guess at the solution $\bu$
+	\item[$\circ$] $\mathbf{F}(\bw)$ is the \emph{residual} if $\bw$ is a guess at the solution
 	\end{itemize}
 
-\item the nonlinear MSE produces a sparse linear system at each Newton step
+\item \begin{minipage}[t]{70mm}
+usually apply Newton's method to solve:
+    $$J_{\mathbf{F}}(\bu_{\ell+1})\, \bs = - \mathbf{F}(\bu_\ell)$$
+     \vspace{-4mm}
+	\begin{itemize}
+	\item[$\circ$] $J_{\mathbf{F}}(\bw) \in \RR^{N\times N}$ is the Jacobian of $\mathbf{F}$
+	\item[$\circ$] $\bs \in \RR^N$ is the step
+	\item[$\circ$] $A=J_{\mathbf{F}}(\bu_\ell)$ is a sparse matrix (right)
+	\end{itemize}
+\end{minipage}
+\quad
+\begin{minipage}[t]{20mm}
+\vspace{10mm}
+\includegraphics[width=\textwidth]{figs/spybanded}
 
-FIXME
-\end{itemize}
-
-\bigskip
-\begin{center}
-\includegraphics[width=0.3\textwidth]{figs/spybanded}
-
-\scriptsize
+\tiny
  MSE FDM 2D square
-\end{center}
+\end{minipage}
+\end{itemize}
 \end{frame}
 
 
@@ -385,13 +402,13 @@ FIXME
 \begin{itemize}
 \item consider $N$ equations in $N$ unknowns: \qquad $\mathbf{F}(\mathbf{u}) = 0$
 	\begin{itemize}
-	\item[$\circ$] $\mathbf{F}:\RR^N \to \RR^N$, the \emph{residual}, is generally nonlinear
+	\item[$\circ$] residual $\mathbf{F}:\RR^N \to \RR^N$ is generally nonlinear
 	\item[$\circ$] $\mathbf{F}(\mathbf{w}) = \mathbf{b} - A \mathbf{w}$ in the linear case
 	\end{itemize}
 
-\bigskip
+\bigskip\medskip
 \noindent \textbf{definition.}  \begin{minipage}[t]{80mm}
-an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}} if it does $O(N)$ work
+an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work is \alert{\emph{optimal}}
 \end{minipage}
 
 \bigskip \bigskip
@@ -402,12 +419,12 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \alert{\emph{optimal}}
 
 \begin{frame}{slide full of caveats}
 
-in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \emph{optimal} if it does $O(N)$ work,''
+in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work is \emph{optimal}'':
 \begin{itemize}
 \item  ``solves'' means that it generates $\mathbf{u}_n$ so that $\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$ where $\mathbf{u}_0$ is an initial guess
 	\begin{itemize}
 	\item[$\circ$] in linear case $A\bu=\bb$, given any rounding error, only $O(\kappa(A)\eps_{\text{mach}})$ accuracy is possible anyway\footnote{for students of MATH 614}
-    \item[$\circ$] ``$O(\dots)$'' hides a constant which may depend on tol but may not depend on $N$
+    \item[$\circ$] ``$O(\dots)$'' hides a constant which may depend on tol but not on $N$
 	\end{itemize}
 \item ``work'' $=$ (count of floating point operations)
 	\begin{itemize}
@@ -419,16 +436,16 @@ in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \e
 \end{frame}
 
 
-\begin{frame}{example: solving tridiagonal matrices}
+\begin{frame}{example: tridiagonal matrices}
 \begin{itemize}
-\item an easy example of optimality is for tridiagonal matrices
-\item Gauss elimination without pivoting\footnote{a.k.a.~the \emph{Thomas algorithm}} solves $A \bu = \bb$ in $8N-6=O(N)$ operations
+\item an easy example of optimality
+\item Gauss elimination solves $A \bu = \bb$ in $8N-6=O(N)$ flops
 	\begin{itemize}
-	\item[$\circ$] strictly diagonally-dominant suffices to avoid pivoting
+	\item[$\circ$] need to avoid pivoting
 	\end{itemize}
 \item for SPD tridiagonal matrices, use \emph{banded Cholesky decomposition}, again $O(N)$
 \item also applies to pentadiagonal, septadiagonal, \dots
-\item thus 1D Poisson problem \, $-u''=f$ \, has optimal solution method 
+\item the 1D Poisson problem $-u''=f$, and generally all ODE BVPs, have optimal solution methods
 \end{itemize}
 
 \bigskip
@@ -458,58 +475,55 @@ in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ is \e
 \end{frame}
 
 
-\begin{frame}{sparse matrices have $O(N)$ mat-vec}
-
-if
-\begin{itemize}
-\item $A$ is $N\times N$ and sparse, and
-\item number of nonzeros per row is bounded independently of $N$
-\end{itemize}
-then
-\begin{quote}
-the work of computing $A \bv$ is $O(N)$
-\end{quote}
+\begin{frame}{sparse matrices from PDEs have $O(N)$ mat-vec}
 
 \begin{itemize}
+\item however, if
+    \begin{itemize}
+    \item[$\circ$] $A \in \RR^{N\times N}$ is sparse, and
+    \item[$\circ$] number of nonzeros per row is bounded independent of $N$
+    \end{itemize}
+then the \emph{work of computing $A \bv$ is $O(N)$}
 \item computing $A \bv$ is called a ``mat-vec''
 \item the ``bounded'' condition is automatic for structured grids
-\item for unstructured triangulations and FEM
+\item for FEM on unstructured meshes
    $$\text{(nonzeros in row } j) = \operatorname{degree}(\text{node } j) + 1$$
 so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
 \end{itemize}
 
-\bigskip
+\smallskip
 \begin{center}
-\includegraphics[width=0.5\textwidth]{figs/spythree}
+\includegraphics[width=0.65\textwidth]{figs/spythree}
 
 \tiny
 
-\qquad $3$ \qquad\qquad\qquad\qquad $9$ \qquad\qquad\quad $\max \operatorname{degree} + 1$
+\qquad $3$ \qquad\qquad\qquad\qquad\qquad\qquad $9$ \quad\qquad\qquad\qquad\quad $\max \operatorname{degree} + 1$
 \end{center}
 \end{frame}
 
 
 \begin{frame}{Krylov methods}
 \begin{itemize}
-\item among numerical analysts of the 1960s and 1970s, observing that sparse mat-vecs and residual evaluations are $O(N)$ for FDM and FEM discretizations of a PDE was $\text{A New Hope}^{\includegraphics[width=0.06\textwidth]{figs/anewhope}}$
+\item among numerical analysts of the 1960s and 1970s, observing that sparse mat-vecs and residual evaluations are $O(N)$ for \FM discretizations was the new hope
 \item \begin{minipage}[t]{0.7\textwidth}
-naval engineer A.~Krylov (1931) observed that the solution to $A\bu=\bb$ might be well-approximated by a vector in
+naval engineer A.~Krylov (1931): the solution to $A\bu=\bb$ may be well-approximated by $\bv$ in
 
 \vspace{-4mm}
 $$\mathcal{K}_m(A,\bb) = \operatorname{span}\left\{\bb,A\bb,A^2\bb,\dots,A^m\bb\right\}$$
 \end{minipage} \quad
-\begin{minipage}[t]{0.15\textwidth}
-\vspace{0mm}
+\begin{minipage}[t]{0.18\textwidth}
+\vspace{-3mm}
 
 \includegraphics[width=\textwidth]{figs/krylov}
 \end{minipage}
 
     \vspace{2mm}
 	\begin{itemize}
-	\item[$\circ$] computing $\bv \in \mathcal{K}_m(A,\bb)$ is an $O(mN)$ if $A\bw$ is $O(N)$
+	\item[$\circ$] computing $\bv \in \mathcal{K}_m(A,\bb)$ costs $O(mN)$
 	\item[$\circ$] $\bv \in \mathcal{K}_m(A,\bb) \iff \bv = p_m(A) \bb$
 	\end{itemize}
 \item to solve $A\bu=\bb$ we want $\bu = A^{-1}\bb \approx p_m(A) \bb$
+\item thus: a Krylov method is optimal if $m$ is bounded independently of $N$
 \end{itemize}
 \end{frame}
 
@@ -521,7 +535,7 @@ $$\mathcal{K}_m(A,\bb) = \operatorname{span}\left\{\bb,A\bb,A^2\bb,\dots,A^m\bb\
 \end{frame}
 
 
-\begin{frame}{tangent: spectral methods}
+\begin{frame}{contrast: spectral methods}
 \begin{itemize}
 \item FIXME
 \item spectral methods show that pursuit of optimality is \emph{not} the only good goal
@@ -625,7 +639,7 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 
 
 
-\section{barriers and issues}
+\section{barriers}
 
 
 \begin{frame}{low regularity of solution}
@@ -643,6 +657,28 @@ conditions under which multgrid cycles as preconditioners for CG give optimal so
 \begin{itemize}
 \item FIXME  number of Newton steps proportional to $D/h$ where $D$ is distance-to-move free boundary
 \item Max working on it
+\end{itemize}
+\end{frame}
+
+
+\section{extensions}
+
+
+\begin{frame}{when is optimality the right concept?}
+\begin{itemize}
+\item so far the
+    \begin{itemize}
+    \item[$\circ$] problems are elliptic PDE BVPs
+    \item[$\circ$] algorithms are serial
+    \end{itemize}
+\item is the question of optimality useful more broadly?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{hyperbolic PDE IBVPs}
+\begin{itemize}
+\item FIXME
 \end{itemize}
 \end{frame}
 
