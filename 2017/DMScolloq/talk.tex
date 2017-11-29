@@ -18,8 +18,9 @@
 \usepackage{amsmath,verbatim,empheq,xspace}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes,arrows,shadows}
-\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{shapes,shadows,fadings}
+\usetikzlibrary{decorations.markings,decorations.pathreplacing}
+\usetikzlibrary{arrows,arrows.meta}
 
 %\usepackage{animate}
 
@@ -284,7 +285,9 @@ fine print:
 	\end{itemize}
 
 \bigskip
+\begin{tikzpicture}[scale=1.6]
 \input{tikz/fourlevelsofgrids.tex}
+\end{tikzpicture}
 
 \medskip
 \item $N_k$ is the number of equations and of unknowns
@@ -604,13 +607,35 @@ the number of CG iterations $m$ increases with $N=O(h^{-d})$
 	\item[$\circ$] $(M^{-1}A)\bu=M^{-1}\bb$ is the \emph{left-preconditioned} system
 	\item[$\circ$] $(AM^{-1})M\bu=\bb$ is the \emph{right-preconditioned} system
 	\end{itemize}
-\item when you apply a Krylov method to these preconditioned systems it is $\kappa_2(M^{-1}A)$ or $\kappa_2(AM^{-1})$ which determines iterations
-
-\vspace{5mm}
-\item \emph{new goal}:  find preconditioners $M$ which make the condition number $\kappa=\kappa_2(M^{-1}A)$ bounded independent of $N$
+\item new condition numbers $\kappa_2(M^{-1}A)$ or $\kappa_2(AM^{-1})$ can be much smaller
+\item ``$M^{-1}$'' must be a cheap $O(N)$ method for this to help
+	\begin{itemize}
+	\item[$\circ$] e.g.~Meijerink \& van der Vorst (1977): incomplete LU and Cholesky factorizations
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}{an optimality lemma}
+
+
+\begin{itemize}
+\item \emph{lemma}.  for SPD matrices $A\in\RR^{N\times N}$, if a symmetric preconditioning method produces bounded condition numbers,
+     $$\kappa_2(M^{-1}A) \le B,$$
+where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
+
+    \medskip
+	\begin{itemize}
+	\item[$\circ$] or for right-preconditioning with ``$\kappa_2(AM^{-1})$''
+	\end{itemize}
+
+\vspace{5mm}
+\item \emph{new goal}:  find preconditioners which make the new condition number $\kappa_2(M^{-1}A)$ bounded independent of $N$
+
+\bigskip
+\item \emph{multigrid} is such a preconditioner
+\end{itemize}
+\end{frame}
 
 
 \section{multigrid}
@@ -619,51 +644,135 @@ the number of CG iterations $m$ increases with $N=O(h^{-d})$
 
 \small
 \begin{itemize}
-\item given structured grids $\left\{\Omega^{(j)}\right\}_0^k$
-\item given initial guess $\bu_0$ on the finest grid $\Omega^{(k)}$
-\item basic multigrid cycle to solve $A \bu = \bb$ is $\text{\textsc{Vcycle}}(\bu_0,k)$:
+\item given sequence of grids $\left\{\Omega^{(j)}\right\}_0^k$ \qquad \begin{tikzpicture}[scale=0.8,baseline]
+\input{tikz/fourlevelsofgrids.tex}
+\end{tikzpicture}
+\item given initial guess $\bw$ on the finest grid $\Omega^{(k)}$
+\item a multigrid cycle approximately solves $A \bu = \bb$
+\item for example: $\bw \gets \text{\textsc{Vcycle}}(A,\bb,\bw,k)$
+\end{itemize}
 
-\medskip
+\begin{minipage}[t]{75mm}
 \begin{algorithmic}
 \footnotesize
-\Function{Vcycle}{$\bw,l$}
+\Function{Vcycle}{$A,\bb,\bw,l$}
     \If{$l == 0$}
         \State solve $A \bv = \bb$, e.g.~by a direct solver
     \Else
         \State improve $\bw$ on the level $l$ grid, giving $\bv$
-        \State compute residual $\br = \bb - A \bv$
-        \State restrict $\br$ to level $l-1$, giving $\br^C$
-        \State $\bz^C = \text{\textsc{Vcycle}}(0,l-1$)
+        \State $\br^C = \left(\text{restriction of } \br = \bb - A \bv \text{ to } \Omega^{(l-1)}\right)$
+        \State $\bz^C = \text{\textsc{Vcycle}}(A^C,\br^C,0,l-1$)
         \State $\bv \gets \bv + (\text{interpolate } \bz^C \text{ to level $l$ grid})$
         \State improve $\bv$ some more on the level $l$ grid
-        \EndIf
-    \Return $\bv$
+    \EndIf
+
+    \noindent \quad\, \Return $\bv$
 \EndFunction
 \end{algorithmic}
-\end{itemize}
+\end{minipage}
+\quad
+\begin{minipage}[t]{25mm}
+\vspace{0mm}
+
+\input{tikz/vcycle.tex}
+\end{minipage}
 \end{frame}
 
 
-\begin{frame}{multigrid V-cycles}
+\begin{frame}{multigrid uses cheap smoothers}
 
 \begin{itemize}
-\item FIXME
+\item \emph{question}: what does ``improve $\bw$ on the level $l$ grid'' mean?
+
+\emph{answer}: \alert{smoothing}
+\item many classical linear iterations are smoothing
+	\begin{itemize}
+	\item[$\circ$] e.g.~Jacobi and Gauss-Seidel
+	\item[$\circ$] easy $O(N)$ operations which reduce high-frequency components of the error
+	\end{itemize}
 \end{itemize}
 
-\input{tikz/vwcycles.tex}
+\begin{center}
+\includegraphics[width=0.25\textwidth]{figs/ps-unsmoothed}
 
+\vspace{-3mm}
 
-\medskip
-\qquad \input{tikz/fourlevelsofgrids.tex}
+\begin{tikzpicture}[scale=2.0]
+  \draw[-Stealth] (-0.8,0.0) -- (-1.2,-0.25) node [midway,rotate=30,above] {\tiny Jacobi};
+  \draw[-Stealth] (0.0,0.0) -- (0.0,-0.25) node [midway,left] {\tiny weighted} node [midway,right] {\tiny Jacobi};
+  \draw[-Stealth] (0.8,0.0) -- (1.2,-0.25) node [midway,rotate=-30,above] {\tiny Gauss-Seidel};
+\end{tikzpicture}
+
+\mbox{\includegraphics[width=0.2\textwidth]{figs/ps-jacobismoothed} \qquad
+\includegraphics[width=0.2\textwidth]{figs/ps-wjacobismoothed} \qquad
+\includegraphics[width=0.2\textwidth]{figs/ps-gssmoothed}}
+\end{center}
 \end{frame}
 
 
-\begin{frame}{multigrid: why it works}
+\begin{frame}{multigrid on Poisson}
 \begin{itemize}
-\item FIXME
+\item V-cycle-preconditioned CG iterations on the Poisson problem
 \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/pccondition}
+
+\small values of $\kappa_2(M^{-1}A)$ for 2D problem
+\end{center}
 \end{frame}
 
+
+\begin{frame}{multigrid on Poisson: evidence of optimality}
+\begin{itemize}
+\item V-cycle-preconditioned CG iterations on the Poisson problem
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/optimal-flops}
+
+\small direct demonstration of $O(N)$ work
+\end{center}
+\end{frame}
+
+
+\begin{frame}{multigrid on Poisson: evidence of optimality}
+\begin{itemize}
+\item V-cycle-preconditioned CG iterations on the Poisson problem
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/optimal-flopsperN}
+
+\small i.e.~constant amount of work per degree of freedom
+\end{center}
+\end{frame}
+
+
+\begin{frame}{multigrid on Poisson: evidence of optimality}
+\begin{itemize}
+\item V-cycle-preconditioned CG iterations on the Poisson problem
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/optimal-timeperN}
+
+\small also (\emph{better than?}) constant amount of time per degree of freedom
+\end{center}
+\end{frame}
+
+
+\begin{frame}{multigrid on MSE: evidence of optimality}
+\begin{itemize}
+\item V-cycle-preconditioned CG iterations on each Newton step in the MSE problem
+\end{itemize}
+
+\begin{center}
+%\includegraphics[width=0.6\textwidth]{figs/optimal-timeperN}
+
+\small FIXME
+\end{center}
+\end{frame}
 
 \begin{frame}{algebraic multigrid}
 \begin{itemize}
@@ -671,14 +780,6 @@ the number of CG iterations $m$ increases with $N=O(h^{-d})$
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{an optimality lemma}
-
-conditions under which multgrid cycles as preconditioners for CG give optimal solver
-\begin{itemize}
-\item FIXME
-\end{itemize}
-\end{frame}
 
 
 \section{nonlinear problems and unstructured grids}

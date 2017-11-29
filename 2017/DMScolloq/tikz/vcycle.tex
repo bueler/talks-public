@@ -1,0 +1,26 @@
+\begin{tikzpicture}[scale=1.2]
+% see also fullcycle.tex
+
+  \pgfmathsetmacro\hstep{0.3}
+  \pgfmathsetmacro\vstep{0.6}
+  \pgfmathsetmacro\ceps{0.08}   % size of square for coarse grid
+
+% grid labels at left
+  \node at (-0.5,3*\vstep) {$\Omega^{(k)}$};
+  \node at (-0.5,2*\vstep) {\dots};
+  \node at (-0.5,\vstep) {$\Omega^{(1)}$};
+  \node at (-0.5,0.0) {$\Omega^{(0)}$};
+
+% V-cycle
+  \draw[black,thin] (0.0,3*\vstep) -- (\hstep,2*\vstep) --  (2*\hstep,\vstep) -- (3*\hstep,0.0)
+                    -- (4*\hstep,\vstep) -- (5*\hstep,2*\vstep) -- (6*\hstep,3*\vstep);
+  \filldraw (0.0,3*\vstep) circle (2.0pt);
+  \filldraw (\hstep,2*\vstep) circle (2.0pt);
+  \filldraw (2*\hstep,\vstep) circle (2.0pt);
+  \draw     (3*\hstep-\ceps,-\ceps) rectangle (3*\hstep+\ceps,+\ceps);
+  \draw     (4*\hstep,\vstep) circle (2.0pt);
+  \draw     (5*\hstep,2*\vstep) circle (2.0pt);
+  \draw     (6*\hstep,3*\vstep) circle (2.0pt);
+
+\end{tikzpicture}
+
