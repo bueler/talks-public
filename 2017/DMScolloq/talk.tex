@@ -356,7 +356,7 @@ Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowfla
 
 \begin{frame}{nonlinear PDEs produce sparse systems too}
 \begin{itemize}
-\item FDM or FEM applied to a nonlinear elliptic PDE BVP gives a nonlinear (algebraic) system of $N$ equations in $N$ unknowns:
+\item FD$|$EM applied to a nonlinear elliptic PDE BVP gives a nonlinear (algebraic) system of $N$ equations in $N$ unknowns:
     $$\mathbf{F}(\bu)=0$$
      \vspace{-4mm}
 	\begin{itemize}
@@ -724,6 +724,11 @@ C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{co
 \begin{itemize}
 \item FIXME not exactly a ``barrier'' but a conflict
 \end{itemize}
+
+\begin{center}
+\includegraphics<1>[width=0.6\textwidth]{figs/NPplane}
+\includegraphics<2>[width=0.6\textwidth]{figs/NPplaneweakstrong}
+\end{center}
 \end{frame}
 
 
