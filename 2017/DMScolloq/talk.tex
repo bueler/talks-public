@@ -241,12 +241,6 @@ fine print:
 	\begin{itemize}
 	\item[$\circ$] \alert{approximate by $N$ equations in $N$ unknowns}
 	\item[$\circ$] where $N\in\ZZ^+$ so $N \ll \infty$
-
-    \smallskip
-	\item[$\circ$] of course, some problems can be solved exactly
-        \begin{itemize}
-        \item[\emph{example}.]  $u(x,y)=x^2-y^2$ solves $\grad^2 u = 0$
-        \end{itemize}
 	\end{itemize}
 \item one method is \emph{finite differences} (FDM), based on
 	    $$f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \approx \frac{f(x+h)-f(x)}{h}$$
@@ -265,10 +259,6 @@ fine print:
 \item sequence of such grids $\Omega^{(k)}$; the \emph{level} $k$ grid has
 	\begin{itemize}
 	\item[$\circ$] equal spacing $h_k$ in each direction
-    \item[$\circ$] $N_k = O(h_k^{-d})$ grid points in $d$ dimensions
-	    \begin{itemize}
-	    \item typically: $N_{k+1} = 2^d N_k$
-	    \end{itemize}
 	\end{itemize}
 
 \bigskip
@@ -278,7 +268,12 @@ fine print:
 
 \medskip
 \item $N_k$ is the number of equations and of unknowns
-\item ``increasing resolution'' or ``refinement'' means $h_k \to 0$
+\item ``increasing resolution'' means $h_k \to 0$ and $N_k \to \infty$
+	\begin{itemize}
+	\item[$\circ$] a.k.a.~``refinement''
+    \item[$\circ$] $N_k = O(h_k^{-d})$ grid points in $d$ dimensions
+	\item[$\circ$] typically: $N_{k+1} = 2^d N_k$
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -286,7 +281,7 @@ fine print:
 \begin{frame}{approximation: finite element method (FEM)}
 \begin{itemize}
 \item this discretization uses the \emph{weak form} of the PDE
-\item example: the weak form for the Poisson equation is
+\item example: for the Poisson equation it is
     $$\int_\Omega \grad u \cdot \grad v = \int_\Omega f v \qquad \forall v \in H_0^1(\Omega)$$
     \vspace{-4mm}
 	\begin{itemize}
@@ -313,12 +308,13 @@ fine print:
 
 in more detail, the FEM uses
 \begin{itemize}
-\item a {\footnotesize triangular/quadrilateral/tetrahedral/etc.}~mesh of $N$ nodes $\bx_i$ on $\Omega$
-\item an $N$-dimensional subspace $\mathcal{X} \subset H^1(\Omega)$ with basis $\{\psi_j\}$ of
+\item a {\footnotesize triangular/quadrilateral/tetrahedral/etc.}~mesh of $N$ nodes on $\Omega$
+\item an $N$-dimensional subspace $\mathcal{X} \subset H^1(\Omega)$
 \item \begin{minipage}[t]{55mm}
-\dots \emph{hat functions} $\psi_j$
+basis of \emph{hat functions} $\psi_j(x,y)$
 	\begin{itemize}
-	\item[$\circ$] $\psi_j(\bx_i)=0$ except $\psi_j(\bx_j)=1$
+	\item[$\circ$] $\psi_j(x_i,y_i)=0$ if $i\ne j$
+	\item[$\circ$] $\psi_j(x_j,y_j)=1$
 	\end{itemize}
 \end{minipage}
 \quad
@@ -335,16 +331,13 @@ then the FEM
 \begin{itemize}
 \item defines
    $$u(x,y) = \sum_j u_{j}\, \psi_{j}(x,y)$$
-for unknown coefficients $\bu=\{u_j\}\in \RR^N$
-\item and requires the weak form to hold for all $v=\psi_i$ ($N$ eqns)
+for unknown coefficients $\bu=\{u_j\}\in \RR^N$ ($N$ unknowns)
+\item requires the weak form to hold for all $v=\psi_i$ ($N$ eqns)
 \end{itemize}
-
-\medskip
-which again yields a system of $N$ eqns in $N$ unknowns
 \end{frame}
 
 
-\begin{frame}{linear systems with sparse matrices}
+\begin{frame}{sparse matrices}
 \begin{itemize}
 \item both methods (\FM) produce \emph{sparse matrices}
 \item for example, the Poisson equation becomes a linear system
@@ -375,18 +368,20 @@ Poisson 1D (either method) \quad MSE FDM 2D square \qquad Poisson FEM 2D snowfla
     $$\mathbf{F}(\bu)=0$$
      \vspace{-4mm}
 	\begin{itemize}
-	\item[$\circ$] $\mathbf{F}:\RR^N\to\RR^N$
-	\item[$\circ$] $\mathbf{F}(\bw)$ is the \emph{residual} if $\bw$ is a guess at the solution
+	\item[$\circ$] $\mathbf{F}:\RR^N\to\RR^N$ is a nonlinear function
+	\item[$\circ$] call $\mathbf{F}(\bw)$ the \emph{residual} if $\bw$ is a guess at the solution
 	\end{itemize}
 
 \item \begin{minipage}[t]{70mm}
 usually apply Newton's method to solve:
-    $$J_{\mathbf{F}}(\bu_{\ell+1})\, \bs = - \mathbf{F}(\bu_\ell)$$
-     \vspace{-4mm}
+\begin{align*}
+J_{\mathbf{F}}(\bu_\ell)\, \bs &= - \mathbf{F}(\bu_\ell)  \\
+    \bu_{\ell+1} &= \bu_\ell + \bs
+\end{align*}
+    \vspace{-6mm}
 	\begin{itemize}
 	\item[$\circ$] $J_{\mathbf{F}}(\bw) \in \RR^{N\times N}$ is the Jacobian of $\mathbf{F}$
-	\item[$\circ$] $\bs \in \RR^N$ is the step
-	\item[$\circ$] $A=J_{\mathbf{F}}(\bu_\ell)$ is a sparse matrix (right)
+	\item[$\circ$] it is a sparse matrix (right)
 	\end{itemize}
 \end{minipage}
 \quad
@@ -415,7 +410,7 @@ usually apply Newton's method to solve:
 
 \bigskip\medskip
 \noindent \textbf{definition.}  \begin{minipage}[t]{80mm}
-an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work is \alert{\emph{optimal}}
+an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work, as $N\to\infty$, is \alert{\emph{optimal}}
 \end{minipage}
 
 \bigskip \bigskip
@@ -426,19 +421,25 @@ an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work is \alert{
 
 \begin{frame}{slide full of caveats}
 
-in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work is \emph{optimal}'':
+in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O(N)$ work, as $N\to\infty$, is \emph{optimal}'':
 \begin{itemize}
-\item  ``solves'' means that it generates $\mathbf{u}_n$ so that $\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$ where $\mathbf{u}_0$ is an initial guess
+\item  ``solves'' means: generates $\mathbf{u}_n$ so that $\frac{\|\mathbf{F}(\mathbf{u}_n)\|}{\|\mathbf{F}(\mathbf{u}_0)\|} \le \text{tol}$
 	\begin{itemize}
+	\item[$\circ$] where $\mathbf{u}_0$ is an initial guess
 	\item[$\circ$] in linear case $A\bu=\bb$, given any rounding error, only $O(\kappa(A)\eps_{\text{mach}})$ accuracy is possible anyway\footnote{for students of MATH 614}
-    \item[$\circ$] ``$O(\dots)$'' hides a constant which may depend on tol but not on $N$
 	\end{itemize}
+\item ``$O(N)$'' hides constant; may depend on tol but not on $N$
 \item ``work'' $=$ (count of floating point operations)
 	\begin{itemize}
-	\item[$\circ$] \emph{or} time for the algorithm to run, but timing on modern computers is really messy
+	\item[$\circ$] or runtime, but timing on modern computers is really messy
 	\end{itemize}
-\item actually, $O(N\log N)$ is accepted as ``optimal'' too
-\item a nearly-equivalent definition could say ``work is less than $O(N^{1+\delta})$ for any $\delta>0$''
+\item ``$N\to\infty$'' limit is notional only
+	\begin{itemize}
+	\item[$\circ$] real computers run out of memory
+
+	\smallskip
+	\item[$\circ$] \alert{optimal algorithms are often memory-limited} \scriptsize \hfill (that's a \emph{feature})
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -450,8 +451,7 @@ in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O
 	\begin{itemize}
 	\item[$\circ$] need to avoid pivoting
 	\end{itemize}
-\item for SPD tridiagonal matrices, use \emph{banded Cholesky decomposition}, again $O(N)$
-\item also applies to pentadiagonal, septadiagonal, \dots
+\item for SPD tridiagonal matrices, use Cholesky decomposition, again $O(N)$
 \item the 1D Poisson problem $-u''=f$, and generally all ODE BVPs, have optimal solution methods
 \end{itemize}
 
@@ -464,14 +464,14 @@ in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O
 
 \begin{frame}{non-example:  banded direct methods in 2D,3D}
 \begin{itemize}
-\item for structured-grid FDM method on PDEs in 2D and 3D the bandwidth of $A$ grows as $h\to 0$
+\item for structured-grid FDM method on PDEs in 2D and 3D the bandwidth of $A$ grows as $N \to \infty$
 \item for example, for MSE on $\Omega=[0,1]\times[0,1]$:
 
 \begin{center}
 \begin{tikzpicture}[scale=1.6,baseline] \input{tikz/unitsquaregridordering.tex} \end{tikzpicture} \qquad \begin{minipage}[b]{5mm} $\to$ \vspace{10mm} \end{minipage} \qquad \includegraphics[width=0.19\textwidth]{figs/spybanded}
 \end{center}
 
-\item if $N\times N$ matrix $A$ has bandwidth $p$ then banded Cholesky does $O(N p^2)$ work
+\item if bandwidth $p$ then Cholesky does $O(N p^2)$ work
 \item thus for direct methods for PDE problems on structured grids with $m$ points in each direction:
 	\begin{itemize}
 	\item[$\circ$] $N=m^2$ and $p=m$ so $O(N^2)$ work in 2D
@@ -485,16 +485,16 @@ in the definition ``an algorithm which solves $\mathbf{F}(\mathbf{u}) = 0$ in $O
 \begin{frame}{sparse matrices from PDEs have $O(N)$ mat-vec}
 
 \begin{itemize}
-\item however, if
+\item if
     \begin{itemize}
-    \item[$\circ$] $A \in \RR^{N\times N}$ is sparse, and
-    \item[$\circ$] number of nonzeros per row is bounded independent of $N$
+    \item[$\circ$] $A \in \RR^{N\times N}$ is sparse, with
+    \item[$\circ$] number of nonzeros per row bounded independent of $N$
     \end{itemize}
 then the \emph{work of computing $A \bv$ is $O(N)$}
 \item computing $A \bv$ is called a ``mat-vec''
-\item the ``bounded'' condition is automatic for structured grids
-\item for FEM on unstructured meshes
-   $$\text{(nonzeros in row } j) = \operatorname{degree}(\text{node } j) + 1$$
+\item condition is automatic for structured grids and any \FM
+\item for typical FEM on an unstructured mesh,
+   $$\text{(nonzeros in row } j \text{ of } A) = \operatorname{degree}(\text{node } j) + 1$$
 so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
 \end{itemize}
 
@@ -504,16 +504,16 @@ so cost of $A\bv$ is $O((\max \operatorname{degree}) N)$
 
 \tiny
 
-\qquad $3$ \qquad\qquad\qquad\qquad\qquad\qquad $9$ \quad\qquad\qquad\qquad\quad $\max \operatorname{degree} + 1$
+nonzeros per row $=$ $3$ \qquad\qquad\qquad $9$ \quad\qquad\qquad\qquad $\max \operatorname{degree} + 1$
 \end{center}
 \end{frame}
 
 
 \begin{frame}{Krylov methods}
 \begin{itemize}
-\item among numerical analysts of the 1960s and 1970s, observing that sparse mat-vecs and residual evaluations are $O(N)$ for \FM discretizations was the new hope
+\item among numerical analysts of the 1960s and 1970s, ``sparse mat-vecs are $O(N)$'' was the new hope
 \item \begin{minipage}[t]{0.7\textwidth}
-naval engineer A.~Krylov (1931): the solution to $A\bu=\bb$ may be well-approximated by $\bv$ in
+because naval engineer A.~Krylov (1931) observed that the solution to $A\bu=\bb$ may be well-approximated by $\bv$ in
 
 \vspace{-4mm}
 $$\mathcal{K}_m(A,\bb) = \operatorname{span}\left\{\bb,A\bb,A^2\bb,\dots,A^m\bb\right\}$$
@@ -540,11 +540,11 @@ $$\mathcal{K}_m(A,\bb) = \operatorname{span}\left\{\bb,A\bb,A^2\bb,\dots,A^m\bb\
 \item example: \emph{conjugate gradients} (CG) is a Krylov method
 	\begin{itemize}
 	\item[$\circ$] $A$ must be SPD because CG is a minimization algorithm
-	\item[$\circ$] CG generates the ``best'' iterates $\bv_m$ from a Krylov space
+	\item[$\circ$] CG generates the ``best'' iterates $\bu_m$ from a Krylov space
 		\begin{itemize}
-		\item the error $\be_m=\bv_m-\bu$ is minimal in norm $\|\cdot\|_A$
+		\item the error $\be_m=\bu_m-\bu$ is minimal in norm $\|\cdot\|_A$
 		\end{itemize}
-	\item[$\circ$] work per iteration is $O(N)$ for $A$ from \FM
+	\item[$\circ$] work per CG iteration is $O(N)$
 	\item[$\circ$] thus work is $O(mN)$ for $m$ iterations
 	\end{itemize}
 \item if $\kappa=\kappa_2(A)$ is the condition number of $A$ then
@@ -576,10 +576,10 @@ the number of CG iterations $m$ increases with $N=O(h^{-d})$
 \item other Krylov methods are similar
 
 \vspace{5mm}
-\item general lesson:
+\item general reminder:
 
 \begin{quote}
-\alert{a Krylov method can only be optimal if the number of iterations $m$ is independent of $N$}
+\alert{a Krylov method can only be optimal if the number of iterations $m$ is bounded independently of $N$}
 \end{quote}
 \end{itemize}
 \end{frame}
@@ -595,7 +595,7 @@ the number of CG iterations $m$ increases with $N=O(h^{-d})$
 	\item[$\circ$] $(AM^{-1})M\bu=\bb$ is the \emph{right-preconditioned} system
 	\end{itemize}
 \item new condition numbers $\kappa_2(M^{-1}A)$ or $\kappa_2(AM^{-1})$ can be much smaller
-\item ``$M^{-1}$'' must be a cheap $O(N)$ method for this to help
+\item ``$M^{-1}$'' must be a cheap method for this to help
 	\begin{itemize}
 	\item[$\circ$] e.g.~Meijerink \& van der Vorst (1977): incomplete LU and Cholesky factorizations
 	\end{itemize}
@@ -603,21 +603,16 @@ the number of CG iterations $m$ increases with $N=O(h^{-d})$
 \end{frame}
 
 
-\begin{frame}{an optimality lemma}
+\begin{frame}{where we stand: an optimality lemma}
 
 
 \begin{itemize}
-\item \emph{lemma}.  for SPD matrices $A\in\RR^{N\times N}$, if a symmetric preconditioning method produces bounded condition numbers,
+\item \emph{lemma}.  as $N\to\infty$, if $A\in\RR^{N\times N}$ is SPD and if a symmetric preconditioning method produces bounded condition numbers,
      $$\kappa_2(M^{-1}A) \le B,$$
 where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
-    \medskip
-	\begin{itemize}
-	\item[$\circ$] or for right-preconditioning with ``$\kappa_2(AM^{-1})$''
-	\end{itemize}
-
 \vspace{5mm}
-\item \emph{new goal}:  find preconditioners which make the new condition number $\kappa_2(M^{-1}A)$ bounded independent of $N$
+\item \emph{optimality goal}:  find preconditioners which make $\kappa_2(M^{-1}A)$ bounded independent of $N$
 
 \bigskip
 \item \emph{multigrid} is such a preconditioner
@@ -629,14 +624,11 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
 \begin{frame}{multigrid: what it does}
 
-\small
 \begin{itemize}
-\item given sequence of grids $\left\{\Omega^{(j)}\right\}_0^k$ \qquad \begin{tikzpicture}[scale=0.8,baseline]
+\item given sequence of grids $\{\Omega^{(j)}\}_0^k$ \quad \begin{tikzpicture}[scale=0.75,baseline]
 \input{tikz/fourlevelsofgrids.tex}
 \end{tikzpicture}
-\item given initial guess $\bw$ on the finest grid $\Omega^{(k)}$
-\item a multigrid cycle approximately solves $A \bu = \bb$
-\item for example: $\bw \gets \text{\textsc{Vcycle}}(A,\bb,\bw,k)$
+\item given initial guess $\bw$ on the finest grid $\Omega^{(k)}$, a multigrid cycle (e.g.~a ``V cycle'') approximately solves $A \bu = \bb$
 \end{itemize}
 
 \begin{minipage}[t]{75mm}
@@ -646,8 +638,8 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
     \If{$l == 0$}
         \State solve $A \bv = \bb$, e.g.~by a direct solver
     \Else
-        \State improve $\bw$ on the level $l$ grid, giving $\bv$
-        \State $\br^C = \left(\text{restrict } \br = \bb - A \bv \text{ to } \Omega^{(l-1)}\right)$
+        \State improve $\bw$ on the level $l$ grid
+        \State $\br^C = \left(\text{restrict } \br = \bb - A \bw \text{ to } \Omega^{(l-1)}\right)$
         \State $\bz^C = \text{\textsc{Vcycle}}(A^C,\br^C,0,l-1$)
         \State $\bv \gets \bv + \left(\text{interpolate } \bz^C \text{ to } \Omega^{(l)}\right)$
         \State improve $\bv$ some more on the level $l$ grid
@@ -674,7 +666,7 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \emph{answer}: \alert{smoothing}
 \item many classical linear iterations are smoothing
 	\begin{itemize}
-	\item[$\circ$] e.g.~weighted Jacobi and Gauss-Seidel
+	\item[$\circ$] e.g.~weighted Jacobi and Gauss-Seidel using $A$
 	\item[$\circ$] fast $O(N)$ operations
 	\item[$\circ$] single iteration reduces high-frequency components of the error
 	\end{itemize}
@@ -704,15 +696,14 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \item multigrid is a systematic way of combining two actions
 	\begin{itemize}
 	\item[$\circ$] \emph{smoothing}: filter out high frequencies of the error on your grid
-	\item[$\circ$] \emph{coarsening}: transfer to a smaller-$N$ grid
+	\item[$\circ$] \emph{coarsening}: transfer to an easier grid
     	\begin{itemize}
 	    \item frequencies that were ``medium-low'' are now ``high''
     	\end{itemize}
 	\end{itemize}
-\item the work of restricting and interpolating is comparable to the $O(N)$ smoother step
-	\begin{itemize}
-	\item[$\circ$] total work on $\Omega^{(l)}$ is $C N_l$ for fixed $C$
-	\end{itemize}
+\item restricting and interpolating on $\Omega^{(l)}$ is $O(N_l)$
+\item a single step of the smoother on $\Omega^{(l)}$ is $O(N_l)$
+\item thus total work on $\Omega^{(l)}$ is $C N_l$ for fixed $C$
 \item then the total work of a V-cycle is a finite geometric series:
 
 \vspace{-3mm}
@@ -801,8 +792,8 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \item multigrid solution is by nonlinear ``F-cycle''
     \begin{itemize}
     \item[$\circ$] a.k.a.~nested iteration with V-cycles
-    \item[$\circ$] start on coarse grid
-    \item[$\circ$] interpolating from coarse grid gives good initial iterate
+    \item[$\circ$] \emph{start} on coarse grid $\Omega^{(0)}$
+    \item[$\circ$] interpolating upward supplies good initial iterate
     \end{itemize}
 \end{itemize}
 
@@ -834,7 +825,7 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \begin{itemize}
 \item what about multigrid on unstructured grids?
     \begin{itemize}
-    \item[$\circ$] remember the snowflake fractal!
+    \item[$\circ$] remember the snowflake?
     \item[$\circ$] for ``geometric'' multigrid (used so far) one need subgrids and grid-based restriction and interpolation operations
     \end{itemize}
 \item new idea $\sim$1985 is \emph{algebraic multigrid}
@@ -854,14 +845,15 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \end{frame}
 
 
-\begin{frame}{algebraic multigrid: evidence of optimality}
+\begin{frame}{algebraic multigrid: evidence of (near-)optimality}
 \begin{itemize}
 \item \begin{minipage}[t]{65mm}
 recall unstructured mesh on a snowflake polygon; level 2 at right
 \end{minipage} \quad \begin{minipage}[t]{20mm}
 \begin{tikzpicture}[scale=0.7,baseline] \input{tikz/meshedsnowflake.tex} \end{tikzpicture}
 \end{minipage}
-\item now we generate level 5,6,7,8,9 approximations of the Koch fractal, and mesh them
+\item generate level 5,6,7,8,9 approximations of the Koch fractal
+\item mesh them
 \item and test algebraic-multigrid-preconditioned CG method, on the Poisson equation $-\grad^2 u = 1$, for optimality
 \end{itemize}
 
@@ -877,7 +869,8 @@ recall unstructured mesh on a snowflake polygon; level 2 at right
 \begin{column}{0.8\textwidth}
 \begin{itemize}
 \item multigrid was invented for Poisson and linear elliptic equations by Federenko (1962, 1964)
-\item apparently, in 1980 or so optimism about multigrid was limited to one person, Achi Brandt,
+\item but there was a period of darkness
+\item by 1980 or so optimism about multigrid was limited to one mathematician: Achi Brandt
     \begin{itemize}
     \item[$\circ$] a creator of algebraic multigrid,
     \item[$\circ$] and of a fully-nonlinear multigrid, the \emph{full approximation scheme} (not covered here),
@@ -970,26 +963,29 @@ can demonstrate this with MSE for nonsmooth boundary conditions
 \end{frame}
 
 
-\begin{frame}{contrast: numerical convergence, and spectral methods}
+\begin{frame}{numerical convergence, and spectral methods}
 \begin{itemize}
 \item for a PDE BVP, as $h\to 0$ and $N\to\infty$ we \alert{first want convergence to the continuum solution}
     \begin{itemize}
     \item[$\circ$] I have been assuming that our methods are convergent!
     \end{itemize}
-\item spectral methods get very close to the continuum solution for very small $N$
+\item spectral methods get very close to the continuum solution for very small $N$ \hfill \scriptsize \dots compared to \FM \normalsize
     \begin{itemize}
     \item[$\circ$] \emph{if} the geometry is simple (rectangle)
     \item[$\circ$] \emph{and} the solution is smooth
     \end{itemize}
-\item with such a spectral method, even $O(N^3)$ solution of the discrete equations is often acceptable
-\item spectral methods show that pursuit of optimality is \emph{not} the only good goal
+\item often $A$ is dense
+\item but with such a spectral method, even $O(N^3)$ solution of the discrete equations is often acceptable because $N$ is small
+
+\bigskip
+\item recalling these things shows that optimality is \emph{not} the only good goal
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{optimality, by numerical DE subfield}
 \begin{itemize}
-\item for all DE problems, need to define $N$, the number of discrete degrees of freedom, before we can talk optimality
+\item for all DE problems, one needs to define $N$, the number of discrete degrees of freedom, before we can talk optimality
 \only<1>{
 \item ODE IVP
     \begin{itemize}
@@ -1004,7 +1000,8 @@ can demonstrate this with MSE for nonsmooth boundary conditions
 \only<2>{
 \item ODE BVP
     \begin{itemize}
-    \item[$\circ$] \FM generates tridiagonal system, so usually methods are optimal
+    \item[$\circ$] \FM generate tridiagonal systems
+    \item[$\circ$] already optimal
     \end{itemize}
 }
 \only<3->{\item ODE BVP \hfill \alert{already optimal $\checkmark$}}
@@ -1014,7 +1011,7 @@ hyperbolic PDE IBVP
     \begin{itemize}
     \item[$\circ$] for example, wave equation with reaction: $u_t + a(u)\cdot \grad u = f(u)$
     \item[$\circ$] F$\begin{smallmatrix} \text{D} \\ \text{V} \end{smallmatrix}$Ms normally use explicit, CFL-limited time steps $\Delta t$
-    \item[$\circ$] if we define $N = \frac{T}{\Delta t}\,\frac{L}{\Delta x}$, all methods are already optimal
+    \item[$\circ$] if we define $N = \frac{T}{\Delta t}\,\frac{L}{\Delta x}$, these methods are already optimal
     \end{itemize}
 \end{minipage} \quad
 \begin{minipage}[t]{35mm}
@@ -1024,10 +1021,10 @@ hyperbolic PDE IBVP
 }
 \only<4->{
 \item hyperbolic PDE IBVP \hfill \alert{already optimal $\checkmark$}
-\item PDE BVP \hfill \alert{optimal requires work}
-\item other PDE IBVP \hfill \alert{optimal requires work}
+\item PDE BVP \hfill \alert{optimal requires effort}
+\item other PDE IBVP \hfill \alert{optimal requires effort}
     \begin{itemize}
-    \item[$\circ$] for example, advection-diffusion-reaction equation with reaction: $u_t + a(u)\cdot \grad u = \Div(D(u) \grad u) + f(u)$
+    \item[$\circ$] for example, advection-diffusion-reaction equation with reaction: $u_t + a(u)\cdot \grad u = \Div(D\grad u) + f(u)$
     \end{itemize}
 }
 \end{itemize}
@@ -1038,24 +1035,23 @@ hyperbolic PDE IBVP
 \begin{itemize}
 \item sometimes you have a big machine with $\hat P$ processors 
     \begin{itemize}
-    \item<1>[$\circ$] everything so far has been serial ($P=1$)
+    \item[$\circ$] everything so far has been serial ($P=1$)
     \item[$\circ$] on graph below, runtime is third axis
-    \item<3>[$\circ$] algorithms that show weak/strong scaling are often not optimal
     \end{itemize}
 \end{itemize}
 
 \begin{center}
 \only<1>{\hspace{0mm}}
-\includegraphics<1>[width=0.6\textwidth]{figs/NPplane}
-\includegraphics<2>[width=0.6\textwidth]{figs/NPplanestatic}
-\includegraphics<3>[width=0.6\textwidth]{figs/NPplaneweakstrong}
+\includegraphics<1>[width=0.65\textwidth]{figs/NPplane}
+\includegraphics<2>[width=0.65\textwidth]{figs/NPplanestatic}
+\includegraphics<3>[width=0.65\textwidth]{figs/NPplaneweakstrong}
 \end{center}
 \end{frame}
 
 
 \begin{frame}{conclusion}
 \begin{itemize}
-\item in approximately solving your PDE-type problem on a modern computer, as you head toward $N=\infty$ unknowns,
+\item in approximately solving your well-behaved PDE-type problem on a modern computer,
 
 \bigskip
 \begin{quote}
@@ -1063,20 +1059,15 @@ hyperbolic PDE IBVP
 \end{quote}
 
 \bigskip
-\item this is a good \emph{goal} for PDE BVPs
-\item \dots but you must exploit
+\noindent as you head toward $N=\infty$ unknowns
+\item this is a good \emph{goal}\only<2>{\footnote{for dense systems $A\bu=\bb$ the goal is $O(N^2)$ \dots an open problem}} for PDE BVPs
+\item to achieve it you must exploit
     \begin{itemize}
     \item[$\circ$] the locality (sparsity) of the problem, and
     \item[$\circ$] correlation (smoothness) of the solution
     \end{itemize}
 \item multigrid is the only real hope!?
 \item talk to me about PETSc \dots I am writing a book about that
-
-\bigskip
-\item for general dense systems $A\bu=\bb$ the goal is $O(N^2)$?
-    \begin{itemize}
-    \item[$\circ$] how to get there is an open problem
-    \end{itemize}
 \end{itemize}
 \end{frame}
 
