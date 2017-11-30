@@ -852,36 +852,44 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \end{frame}
 
 
-\section{nonlinear problems and unstructured grids}
-
 \begin{frame}{wider applicability of multigrid}
 
 \begin{columns}
 \begin{column}{0.8\textwidth}
 \begin{itemize}
 \item multigrid was invented for Poisson and linear elliptic equations by Federenko (1962, 1964)
-\item apparently, by 1975 optimism about multigrid was limited to one person: Achi Brandt
-\item faith in its wider applicability has been growing every since
+\item apparently, by 1975 optimism about multigrid was limited to one person, Achi Brandt, who
+    \begin{itemize}
+    \item[$\circ$] created a fully-nonlinear multigrid, the \emph{full approximation scheme}
+    \item[$\circ$] started calling optimality ``textbook multigrid efficiency,'' which isn't really helping
+    \end{itemize}
+
+\bigskip
+\item since then, multigrid has succeeded on more and more applications
+    \begin{itemize}
+    \footnotesize
+    \item[$\circ$] example: Brown et al.~(2013), \emph{Achieving textbook multigrid efficiency for hydrostatic
+ice flow}
+    \end{itemize}
 \end{itemize}
 \end{column}
 
-\begin{column}{0.15\textwidth}
+\begin{column}{0.2\textwidth}
 
 \includegraphics[width=\textwidth]{figs/starwars-achi-mashup.jpg}
+
+\tiny Achi Brandt is my hero
+
+\vspace{10mm}
+\includegraphics[width=\textwidth]{figs/jed.jpg}
+
+\tiny Jed Brown, UAF MS 2006
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}{FIXME}
-\begin{itemize}
-\item FIXME
-\end{itemize}
-\end{frame}
 
-
-
-\section{barriers}
-
+\section{extensions \& barriers}
 
 \begin{frame}{low regularity of solution}
 \begin{itemize}
@@ -902,9 +910,6 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \end{frame}
 
 
-\section{extensions}
-
-
 \begin{frame}{when is optimality the right concept?}
 \begin{itemize}
 \item so far the
@@ -913,13 +918,6 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
     \item[$\circ$] algorithms are serial
     \end{itemize}
 \item is the question of optimality useful more broadly?
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{hyperbolic PDE IBVPs}
-\begin{itemize}
-\item FIXME
 \end{itemize}
 \end{frame}
 
@@ -936,63 +934,6 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
     \item[$\circ$] evolution problem with states in some $\infty$-dimensional (Sobolev) space
     \end{itemize}
 \item what should ``optimal'' mean?
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{numerical parameters for IBVPs}
-
-\begin{itemize}
-\item assume structured spatial grid: $h=\Delta x = \Delta y=\Delta z$
-    \begin{itemize}
-    \item[$\circ$] $N=$ (spatial degrees of freedom) $=O(h^{-d})$
-    \end{itemize}
-\item time step is limited in some way \dots almost always:
-    $$\Delta t \le O(h^q)$$
-    \vspace{-5mm}
-    \begin{itemize}
-    \item[$\circ$] stability: $q=2$ for explicit schemes on diffusions
-	    \begin{itemize}
-	    \item explicit schemes clearly not optimal
-	    \end{itemize}
-    \item[$\circ$] accuracy: usually $q=1$
-	    \begin{itemize}
-	    \item e.g.~for $O(h^2+\Delta t^2)$ methods
-	    \end{itemize}
-    \item[$\circ$] movie: generate $M$ frames, so $\Delta t = T/M$
-    \item[$\circ$] ``total number of degrees of freedom'' $=M N$?
-    \end{itemize}
-\item (implicit) solution for one time step using NK:
-    \begin{itemize}
-    \item[$\circ$] $W(h)$ Newton iterations
-    \item[$\circ$] $K(h)$ preconditioned Krylov steps per Newton
-    \item[$\circ$] $W(h)=K(h)=1$ for explicit methods
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{optimality(?) for IBVPs}
-
-\begin{itemize}
-\item FIXME for hyperbolic where $\Delta t \sim \Delta x$, explicit schemes already optimal
-\item yields: a ``performance model'' for solving IBVPs on $\Omega \times [0,T]$
-\item cost of computation:
-\footnotesize
-\begin{align*}
-C &= (\text{number of steps}) \cdot (\text{iterations per step}) \cdot (\text{cost of 1 spatial residual}) \\
-  &= O(h^{-q}) \cdot W(h) \, K(h) \cdot O(h^{-d})
-\end{align*}
-\normalsize
-\item we define solver to be \emph{optimal} if work is $O(MN)$?
-    \begin{itemize}
-    \item[$\circ$] optimal movie-limited (implicit) steps:
-        $$C = M \cdot W \cdot O(1) \cdot O(h^{-d}) = O(MN)$$
-    \item[$\circ$] optimal accuracy-limited (implicit) steps:
-        $$C = O(h^{-1}) \cdot W \cdot O(1) \cdot O(h^{-d}) = O(N^{1+1/d})$$
-    \item[$\circ$] explicit:
-        $$C = O(h^{-2}) \cdot 1 \cdot 1 \cdot O(h^{-d}) = O(N^{1+2/d}) \hfill \alert{\leftarrow \text{ beat this!?}}$$
-    \end{itemize}
 \end{itemize}
 \end{frame}
 
