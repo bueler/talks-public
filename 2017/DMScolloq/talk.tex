@@ -786,21 +786,51 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \begin{center}
 \includegraphics[width=0.6\textwidth]{figs/optimal-timeperN}
 
-\small also (\emph{better than?}) constant amount of time per degree of freedom
+\small (almost) constant amount of time per degree of freedom
+\end{center}
+\end{frame}
+
+
+\begin{frame}{multigrid on MSE}
+\begin{itemize}
+\item recall the nonlinear MSE problem on $\Omega=[0,1]^2$:
+\small
+    $$- \grad\cdot \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0  \qquad \text{ with } u\big|_{\partial \Omega} = g.$$
+\normalsize
+    \vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] solved by Newton iteration
+    \item[$\circ$] how to \emph{find a convergent initial iterate} on a fine grid?
+    \end{itemize}
+\item multigrid solution is by nonlinear ``F-cycle''
+    \begin{itemize}
+    \item[$\circ$] a.k.a.~nested iteration with V-cycles
+    \item[$\circ$] start on coarse grid
+    \item[$\circ$] interpolating from coarse grid gives good initial iterate
+    \end{itemize}
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+\input{tikz/fullcycle.tex}
+\end{tikzpicture}
 \end{center}
 \end{frame}
 
 
 \begin{frame}{multigrid on MSE: evidence of optimality}
-\begin{itemize}
-\item the MSE problem  on $\Omega=[0,1]^2$
-\item FIXME  nonlinear F cycle
-\item V-cycle-preconditioned CG iterations on each Newton step
-\end{itemize}
 
 \begin{center}
 \includegraphics[width=0.6\textwidth]{figs/minoptimal}
 \end{center}
+\begin{itemize}
+\item on finest $2049\times 2049$ grid with $N=4\times 10^6$:
+    $$\text{total flops} = N \, \left(\frac{\text{flops}}{N}\right) = (4\times 10^6) (7 \times 10^3) \approx 3 \times 10^{10}$$
+    \vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] runtime about 5 minutes total
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
