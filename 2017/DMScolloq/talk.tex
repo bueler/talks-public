@@ -970,34 +970,6 @@ can demonstrate this with MSE for nonsmooth boundary conditions
 \end{frame}
 
 
-\begin{frame}{when is optimality the right concept?}
-\begin{itemize}
-\item so far the
-    \begin{itemize}
-    \item[$\circ$] problems are elliptic PDE BVPs
-    \item[$\circ$] algorithms are serial
-    \end{itemize}
-\item is the question of optimality useful more broadly?
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{initial/boundary value problems}
-
-\begin{itemize}
-\item consider a problem posed on $\Omega \times [0,T]$ where $\Omega \subset \RR^d$
-    \begin{itemize}
-    \item[$\circ$] hyperbolic example: nonlinear wave equation (system)
-      $$FIXME$$
-    \item[$\circ$] general example: nonlinear convection/diffusion/reaction equation
-      $$u_t = \Div(a(u) \grad u) - b(u)\cdot \grad u + f(u)$$
-    \item[$\circ$] evolution problem with states in some $\infty$-dimensional (Sobolev) space
-    \end{itemize}
-\item what should ``optimal'' mean?
-\end{itemize}
-\end{frame}
-
-
 \begin{frame}{contrast: numerical convergence, and spectral methods}
 \begin{itemize}
 \item for a PDE BVP, as $h\to 0$ and $N\to\infty$ we \alert{first want convergence to the continuum solution}
@@ -1011,6 +983,53 @@ can demonstrate this with MSE for nonsmooth boundary conditions
     \end{itemize}
 \item with such a spectral method, even $O(N^3)$ solution of the discrete equations is often acceptable
 \item spectral methods show that pursuit of optimality is \emph{not} the only good goal
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{optimality, by numerical DE subfield}
+\begin{itemize}
+\item for all DE problems, need to define $N$, the number of discrete degrees of freedom, before we can talk optimality
+\only<1>{
+\item ODE IVP
+    \begin{itemize}
+    \item[$\circ$] for $y'=f(t,y)$ and $y(t) \in \RR^q$
+    \item[$\circ$] on $[0,T]$ with $\Delta t$ spacing in time
+    \item[$\circ$] define:
+       $$N := \frac{T}{\Delta t}\,q$$
+    \item[$\circ$] with this $N$, all ODE IVP methods are already optimal
+    \end{itemize}
+}
+\only<2->{\item ODE IVP \hfill \alert{already optimal $\checkmark$}}
+\only<2>{
+\item ODE BVP
+    \begin{itemize}
+    \item[$\circ$] \FM generates tridiagonal system, so usually methods are optimal
+    \end{itemize}
+}
+\only<3->{\item ODE BVP \hfill \alert{already optimal $\checkmark$}}
+\only<3>{
+\item \begin{minipage}[t]{60mm}
+hyperbolic PDE IBVP
+    \begin{itemize}
+    \item[$\circ$] for example, wave equation with reaction: $u_t + a(u)\cdot \grad u = f(u)$
+    \item[$\circ$] F$\begin{smallmatrix} \text{D} \\ \text{V} \end{smallmatrix}$Ms normally use explicit, CFL-limited time steps $\Delta t$
+    \item[$\circ$] if we define $N = \frac{T}{\Delta t}\,\frac{L}{\Delta x}$, all methods are already optimal
+    \end{itemize}
+\end{minipage} \quad
+\begin{minipage}[t]{35mm}
+\vspace{0mm}
+\begin{tikzpicture}[scale=2.0] \input{tikz/spacetimegrid.tex} \end{tikzpicture}
+\end{minipage}
+}
+\only<4->{
+\item hyperbolic PDE IBVP \hfill \alert{already optimal $\checkmark$}
+\item PDE BVP \hfill \alert{optimal requires work}
+\item other PDE IBVP \hfill \alert{optimal requires work}
+    \begin{itemize}
+    \item[$\circ$] for example, advection-diffusion-reaction equation with reaction: $u_t + a(u)\cdot \grad u = \Div(D(u) \grad u) + f(u)$
+    \end{itemize}
+}
 \end{itemize}
 \end{frame}
 
