@@ -207,11 +207,7 @@
 	\end{itemize}
 
 \begin{center}
-\begin{tikzpicture}[scale=2.0]
-  \draw[->,gray,very thin] (0.0,0.0) -- (1.2,0.0) node[below] {$x$};
-  \draw[->,gray,very thin] (0.0,0.0) -- (-0.75,0.75) node[left] {$y$};
-  \draw[line width=1.0pt] (0.0,0.0) -- (1.0,0.0) -- (0.45,0.55) -- (-0.55,0.55) -- (-0.275,0.5) -- cycle;
-\end{tikzpicture}
+\begin{tikzpicture}[scale=2.0] \input{tikz/tent.tex} \end{tikzpicture}
 \end{center}
 \end{itemize}
 \end{frame}
@@ -836,18 +832,41 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 
 \begin{frame}{algebraic multigrid}
 \begin{itemize}
-\item FIXME   \includegraphics[width=0.2\textwidth]{figs/urschel}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{algebraic multigrid}
-\begin{itemize}
-\item FIXME   \includegraphics[width=0.3\textwidth]{figs/snowflake}
+\item what about multigrid on unstructured grids?
+    \begin{itemize}
+    \item[$\circ$] remember the snowflake fractal!
+    \item[$\circ$] for ``geometric'' multigrid (used so far) one need subgrids and grid-based restriction and interpolation operations
+    \end{itemize}
+\item new idea $\sim$1985 is \emph{algebraic multigrid}
+    \begin{itemize}
+    \item[$\circ$] can be applied to \emph{any} linear system $A\bu=\bb$
+    \item[$\circ$] extracts analogs of ``subgrid'' and ``smoother'' and ``interpolation'' from $A$ itself
+    \item[$\circ$] \dots but tends to need elliptic PDEish properties to actually work
+    \item[$\circ$] active research area for e.g.~spectral graph theory
+    \item<2>[$\circ$] by a new generation of applied mathematicians
+    \end{itemize}
 \end{itemize}
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{figs/gamgopt}
+\only<1>{\vspace{19mm}}
+\includegraphics<2>[width=0.2\textwidth]{figs/urschel}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{algebraic multigrid: evidence of optimality}
+\begin{itemize}
+\item \begin{minipage}[t]{65mm}
+recall unstructured mesh on a snowflake polygon; level 2 at right
+\end{minipage} \quad \begin{minipage}[t]{20mm}
+\begin{tikzpicture}[scale=0.7,baseline] \input{tikz/meshedsnowflake.tex} \end{tikzpicture}
+\end{minipage}
+\item now we generate level 5,6,7,8,9 approximations of the Koch fractal, and mesh them
+\item and test algebraic-multigrid-preconditioned CG method, on the Poisson equation $-\grad^2 u = 1$, for optimality
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.25\textwidth]{figs/snowflake} \qquad \includegraphics[width=0.55\textwidth]{figs/gamgopt}
 \end{center}
 \end{frame}
 
@@ -858,10 +877,11 @@ where $B>0$ is independent of $N$, then preconditioned CG is an optimal solver
 \begin{column}{0.8\textwidth}
 \begin{itemize}
 \item multigrid was invented for Poisson and linear elliptic equations by Federenko (1962, 1964)
-\item apparently, by 1975 optimism about multigrid was limited to one person, Achi Brandt, who
+\item apparently, in 1980 or so optimism about multigrid was limited to one person, Achi Brandt,
     \begin{itemize}
-    \item[$\circ$] created a fully-nonlinear multigrid, the \emph{full approximation scheme}
-    \item[$\circ$] started calling optimality ``textbook multigrid efficiency,'' which isn't really helping
+    \item[$\circ$] a creator of algebraic multigrid,
+    \item[$\circ$] and of a fully-nonlinear multigrid, the \emph{full approximation scheme} (not covered here),
+    \item[$\circ$] who started calling optimality ``textbook multigrid efficiency,'' which isn't really helping
     \end{itemize}
 
 \bigskip
@@ -889,24 +909,64 @@ ice flow}
 \end{frame}
 
 
-\section{extensions \& barriers}
+\section{barriers \& extensions to optimality}
 
 \begin{frame}{low regularity of solution}
 \begin{itemize}
-\item again assume solution of (nonlinear) BVP on $\Omega \subset \RR^d$
-\item $W(h)$ Newton iterations
-\item $K(h)$ preconditioned Krylov steps per Newton
-\item FIXME  in some case number of Newton steps (or Krylov steps) now grows as $h\to 0$
-\item can demo w MSE  \includegraphics[width=0.4\textwidth]{figs/rayleigh-taylor-instability}
+\item multigrid is not always easy to make optimal
+\item 
+\begin{minipage}[t]{60mm}
+consider nonlinear PDE BVP
+    \begin{itemize}
+    \item[$\circ$] or a PDE system like Stokes flow
+    \item[$\circ$] or an implicit time step of Navier-Stokes
+    \end{itemize}
+\end{minipage} \quad
+\begin{minipage}[t]{35mm}
+\vspace{0mm}
+\includegraphics[width=1.1\textwidth]{figs/rayleigh-taylor-instability}
+\end{minipage}
+
+\vspace{-3mm}
+\item try Newton-multigrid method
+    \begin{itemize}
+    \item[$\circ$] as we did with MSE
+    \end{itemize}
+\item \emph{problem}:  often \# of Newton steps \emph{and} Krylov steps grows as $h\to 0$ because of large gradients in the solution
+\item \begin{minipage}[t]{75mm}
+can demonstrate this with MSE for nonsmooth boundary conditions
+    \vspace{-2mm}
+    \begin{itemize}
+    \item[$\circ$] not shown
+    
+    \vspace{-2mm}
+    \item[$\circ$] Brandt suggests: combine multigrid \& AMR
+    \end{itemize}
+\end{minipage} \quad
+\begin{minipage}[t]{20mm}
+\vspace{0mm}
+\begin{tikzpicture}[scale=1.1] \input{tikz/tent.tex} \end{tikzpicture}
+\end{minipage}
 \end{itemize}
+
 \end{frame}
 
 
 \begin{frame}{constrained problems}
 \begin{itemize}
-\item FIXME  number of Newton steps proportional to $D/h$ where $D$ is distance-to-move free boundary
-\item Max working on it
+\item other problems are not quite PDEs because they have inequality constraints
+\item causes two difficulties for Newton-multigrid methods:
+    \begin{enumerate}
+    \item a free boundary implies low regularity (last slide)
+    \item \# of Newton steps is proportional to $D/h$ where $D$ is distance-to-move free boundary (from initial iterate)
+    \end{enumerate}
+\item but there's another Brandt invention: \emph{projected full approximation scheme}, a fully-nonlinear and constraint-adapted multigrid
+\item Max H.~is working on it
 \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.37\textwidth]{figs/classicalobs}
+\end{center}
 \end{frame}
 
 
@@ -938,17 +998,31 @@ ice flow}
 \end{frame}
 
 
-\begin{frame}{contrast: spectral methods}
+\begin{frame}{contrast: numerical convergence, and spectral methods}
 \begin{itemize}
-\item FIXME
+\item for a PDE BVP, as $h\to 0$ and $N\to\infty$ we \alert{first want convergence to the continuum solution}
+    \begin{itemize}
+    \item[$\circ$] I have been assuming that our methods are convergent!
+    \end{itemize}
+\item spectral methods get very close to the continuum solution for very small $N$
+    \begin{itemize}
+    \item[$\circ$] \emph{if} the geometry is simple (rectangle)
+    \item[$\circ$] \emph{and} the solution is smooth
+    \end{itemize}
+\item with such a spectral method, even $O(N^3)$ solution of the discrete equations is often acceptable
 \item spectral methods show that pursuit of optimality is \emph{not} the only good goal
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{goal of parallel scaling}
+\begin{frame}{conflicting goal: parallel scaling}
 \begin{itemize}
-\item FIXME not exactly a ``barrier'' but a conflict
+\item sometimes you have a big machine with $\hat P$ processors 
+    \begin{itemize}
+    \item<1>[$\circ$] everything so far has been serial ($P=1$)
+    \item[$\circ$] on graph below, runtime is third axis
+    \item<3>[$\circ$] algorithms that show weak/strong scaling are often not optimal
+    \end{itemize}
 \end{itemize}
 
 \begin{center}
@@ -976,7 +1050,8 @@ ice flow}
     \item[$\circ$] the locality (sparsity) of the problem, and
     \item[$\circ$] correlation (smoothness) of the solution
     \end{itemize}
-\item multigrid is the only hope!?
+\item multigrid is the only real hope!?
+\item talk to me about PETSc \dots I am writing a book about that
 
 \bigskip
 \item for general dense systems $A\bu=\bb$ the goal is $O(N^2)$?
