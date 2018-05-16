@@ -1,17 +1,25 @@
-\documentclass{beamer}
-%\documentclass[handout]{beamer}
+\documentclass[hide notes,intlimits]{beamer}
 
 \mode<presentation>
 {
+  \usetheme[footline]{PISMshade}
+  \setbeamercovered{transparent}
+}
+
+%\documentclass{beamer}
+%\documentclass[handout]{beamer}
+
+%\mode<presentation>
+%{
   %\usetheme{CambridgeUS}
   %\usetheme{Frankfurt}
-  \usetheme{Singapore}
+  %\usetheme{Singapore}
   %\usecolortheme{crane}
-  \usefonttheme{professionalfonts}
+  %\usefonttheme{professionalfonts}
   %\usefonttheme[onlymath]{serif}
   
-  \setbeamertemplate{blocks}[rounded][shadow=true]
-}
+  %\setbeamertemplate{blocks}[rounded][shadow=true]
+%}
 
 \usepackage{pgfpages}
 
@@ -19,6 +27,8 @@
 \usepackage{bm}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
+
+\usepackage{tikz}
 
 %\usepackage{times}
 %\usepackage[T1]{fontenc}
@@ -136,12 +146,12 @@
 
 
 
-\title[flowing ice sheets as applied math]{Flowing ice sheets \\ \dots as applied math}
+\title{Flowing ice in glaciers and ice sheets \\ (as applied math)}
 
 \author[Bueler]{Ed Bueler}
 
 \institute[UAF]{
-  \tiny Dept of Mathematics and Statistics and Geophysical Institute \\
+  \tiny Dept of Mathematics and Statistics \\
 
   University of Alaska Fairbanks
 }
@@ -166,7 +176,7 @@
 
 
 \begin{document}
-\graphicspath{{../../old/commonfigs/}}
+\graphicspath{{../../old/commonfigs/}{../../figures/}}
 
 \begin{frame}
   \titlepage
@@ -179,17 +189,37 @@
 
 % NO OUTLINE BECAUSE ONE APPEARS AT START OF EACH SECTION ?
 %\begin{comment}
-\begin{frame}
-  \frametitle{Outline}
-  \tableofcontents[hideallsubsections]
+%\begin{frame}
+  %\frametitle{Outline}
+  %\tableofcontents[hideallsubsections]
   % You might wish to add the option [pausesections]
-\end{frame}
+%\end{frame}
 %\end{comment}
 
 
+\section[the alien view]{the alien physicist view of Greenland}
+
+\setbeamertemplate{background canvas}{
+     \tikz{\node[inner sep=0pt,opacity=1] {\includegraphics[height=\paperheight,width=\paperwidth]{nasa-mapping-greenland-ice-sheet}};}
+} 
+
+% show:
+% (1) GRACE movie
+% (2) Andy PISM: observed versus modeled surface velocity
+
+\begin{frame}{}
+
+\only<2>{
+\includegraphics[width=0.3\textwidth]{grace-satellites}
+
+\vfill \hfill \includegraphics[width=0.3\textwidth]{TerraSAR_n}
+}
+\end{frame}
+
+\setbeamertemplate{background canvas}{}
+
 
 \begin{frame}{FIXME movies from GRACE and andy/PISM}
-
 \end{frame}
 
 
@@ -206,9 +236,13 @@
 \end{column}
 \end{columns}
 
-\bigskip\bigskip
+\bigskip
 \begin{itemize}
-\item \dots at least: glaciers are viscous flows at large scales
+\item glaciers and ice sheets are viscous flows at the large scale
+  \begin{itemize}
+  \item[$\circ$] at a smaller scale they are ice crystals
+  \item[$\circ$] at yet-smaller scale they are molecules \dots atoms \dots quarks
+  \end{itemize}
 \item \emph{usage}: ``ice sheets'' are big, shallow glaciers
 \end{itemize}
 \end{frame}
@@ -226,7 +260,10 @@
 \normalsize
 
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{greentrans}
+    \tikz{\draw[<->] (0.0,-2.9) -- node [midway, left] {3500 m} (0.0,2.7);}  \quad \includegraphics[width=0.7\textwidth]{greentransecttrimmed}
+    
+    \bigskip
+    \qquad\qquad\qquad \tikz{\draw[<->] (-4.1,0.0) -- node [midway, below] {750 km} (4.1,0.0);}
   \end{center}
 \end{frame}
 
@@ -331,17 +368,7 @@ where $A>0$ is the ice ``softness''
 \end{frame}
 
 
-\begin{comment}
-\begin{frame}{because ice is a slow fluid \dots}
-
-\begin{itemize}
-\item  geometry, boundary stress, and viscosity determine velocity field and pressure instantaneously (i.e.~in the Stokes model)
-
-\bigskip
-\item \emph{thus}: a time-stepping ice sheet code recomputes the velocity field at every time step, without requiring previous velocity \footnote{to be a weatherman you've got to know which way the wind blows \dots but not to be a glaciologist}
-\end{itemize}
-\end{frame}
-\end{comment}
+\section[big questions]{big picture questions for ice flow models}
 
 
 \contactslipslide
@@ -600,6 +627,10 @@ equal spaced in \emph{exponential} time
 
 \begin{frame}{FIXME slide about MMS}
 \end{frame}
+
+
+% SHOW Andy RCP runs
+
 
 
 \section*{conclusion}
