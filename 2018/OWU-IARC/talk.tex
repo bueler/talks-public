@@ -132,7 +132,8 @@
 \end{column}
 
 \begin{column}{0.65\textwidth}
-\includegraphics[width=1.1\textwidth]{siassacartoon-lambert}
+
+\hfill\includegraphics[width=0.95\textwidth]{siassacartoon-lambert}
 
 \begin{center}
 \vspace{-0.18in}
@@ -270,7 +271,8 @@
 
 \begin{frame}{what is a fluid?}
 
-\bigskip
+\begin{columns}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
 \item seriously
 \item<2-> is it just a collection of particles?
@@ -284,7 +286,16 @@
   \item<4->[$\circ$]   pressure $p(\bx,t)$
   \item<4->[$\circ$]   density $p(\bx,t)$
   \end{itemize}
+\item<4-> gases, liquids, and \alert{ice} are all fluids (at big enough scale)
 \end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics<1>[width=\textwidth]{liquid}
+\includegraphics<2>[width=\textwidth]{ivfluid}
+\includegraphics<3>[width=\textwidth]{lighterfluidalpha}
+\includegraphics<4>[width=\textwidth]{xinjiangglacier}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -317,8 +328,8 @@
 \begin{frame}{ice is a weird viscous fluid}
 
 \begin{itemize}
-\item \dots but glacier ice is not a typical fluid!
-\item for example, these are not relevant in glacier flow but they are a big deal for weather and climate models of the atmosphere and ocean:
+\item glacier ice is not a typical fluid!
+\item for example, these are \alert{not relevant in glacier flow}, but a big deal for weather and climate models of the atmosphere and ocean:
   \begin{itemize}
   \item[$\circ$] turbulence
   \item[$\circ$] convection
@@ -332,19 +343,26 @@
 \begin{frame}{ice is a slow, shear-thinning viscous fluid}
 
 \begin{itemize}
-\item our glacier fluid is
+\item glacier ice fluid is
   \begin{enumerate}
-  \item ``slow'' is a technical term:\footnote{the Froude number is approximately $10^{-15}$}
+  \item ``slow'' is a technical term:\footnote{the Froude number, the ratio of inertia to gravity, is approximately $10^{-15}$}
+
+\vspace{-3mm}
     $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
   \item non-Newtonian (shear-thinning):
+
+\vspace{-2mm}
     $$\text{viscosity $\nu$ is not constant}$$
   \end{enumerate}
 
-\medskip
-\item for ``shear-thinning'' there is a power law (``Glen law''):
-  $$(\text{strain rate}) = A (\text{shear stress})^n$$
-where $A>0$ is the ice ``softness''
-\item $1.8 < n < 4.0$ ?  \quad when in doubt: \alert{$n=3$}
+\item ``shear-thinning'' is a power law (Glen law):
+  $$(\text{strain rate}) = A\, (\text{shear stress})^n$$
+
+\vspace{-2mm}
+  \begin{itemize}
+  \item[$\circ$] where $A>0$ is the ice softness
+  \item[$\circ$] $1.8 < n < 4.0$ ?  \quad when in doubt: \alert{$n=3$}
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -352,21 +370,23 @@ where $A>0$ is the ice ``softness''
 \begin{frame}{ice is a slow, shear-thinning viscous fluid}
 
 \begin{itemize}
+\item the \alert{standard model for ice flow} is Glen-law Stokes:
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
+0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{stress balance}} \\
+\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
+\end{align*}
 \item notation:
   \begin{itemize}
   \item[$\circ$] $\tau_{ij}$ is deviatoric stress tensor
   \item[$\circ$] $\mathbf{D}u_{ij}$ is strain rate tensor
   \end{itemize}
-\smallskip
-\item the standard ice flow model is Glen-law Stokes:
-\begin{align*}
-\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
-0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{slow stress balance}} \\
-\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
-\end{align*}
 \end{itemize}
 \end{frame}
 
+\begin{frame}{wait too many equations}
+FIXME
+\end{frame}
 
 \section[big questions]{big picture questions for ice flow models}
 
