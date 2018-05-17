@@ -1,4 +1,4 @@
-\documentclass[hide notes,intlimits]{beamer}
+\documentclass[10pt,hyperref={pdfpagelabels=true}]{beamer}
 
 \mode<presentation>
 {
@@ -6,14 +6,11 @@
   \setbeamercovered{transparent}
 }
 
-\usepackage{pgfpages}
-
 \usepackage{verbatim,amsmath,empheq,times,bm}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 
 \usepackage{tikz}
-\usepackage{animate}
 \usepackage{hyperref}
 
 \definecolor{dark red}{HTML}{E41A1C}
@@ -593,30 +590,56 @@
 
 \begin{frame}{movie of time-dependent SIA}
 
-\begin{columns}
-\begin{column}{0.4\textwidth}
-\small
-\begin{itemize}
-\item at right is the Halfar similarity solution
-\item an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
-\item compare Barenblatt solution of porous medium equation
-\end{itemize}
-\end{column}
 
-\begin{column}{0.65\textwidth}
-\vspace{-0.25in}
+\begin{itemize}
+\item the Halfar similarity solution is an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
+\end{itemize}
 
 \begin{center}
-\animategraphics[autoplay,loop,height=4.7cm]{4}{../commonfigs/animhalfar/halfar}{0}{26}
+\includegraphics<1>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar0}
 
-\bigskip
-\tiny
-frames from $t=4$ months to $t = 10^6$ years,
+\includegraphics<2>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar1}
 
-equal spaced in \emph{exponential} time
+\includegraphics<3>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar2}
+
+\includegraphics<4>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar3}
+
+\includegraphics<5>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar4}
+
+\includegraphics<6>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar5}
+
+\includegraphics<7>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar6}
+
+\includegraphics<8>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar7}
+
+\includegraphics<9>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar8}
+
+\includegraphics<10>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar9}
+
+\includegraphics<11>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar10}
+
+\includegraphics<12>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar11}
+
+\includegraphics<13>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar12}
+
+\includegraphics<14>[width=0.75\textwidth]{../../old/commonfigs/animhalfar/halfar13}
 \end{center}
-\end{column}
-\end{columns}
+
+\vspace{-4mm}
+\only<1>{\texttt{t=0.3 years}}
+\only<2>{\texttt{t=1 year}}
+\only<3>{\texttt{t=3 years}}
+\only<4>{\texttt{t=10 years}}
+\only<5>{\texttt{t=30 years}}
+\only<6>{\texttt{t=100 years}}
+\only<7>{\texttt{t=300 years}}
+\only<8>{\texttt{t=1000 years}}
+\only<9>{\texttt{t=3000 years}}
+\only<10>{\texttt{t=10,000 years}}
+\only<11>{\texttt{t=30,000 years}}
+\only<12>{\texttt{t=100,000 years}}
+\only<13>{\texttt{t=300,000 years}}
+\only<14>{\texttt{t=1,000,000 years}}
 \end{frame}
 
 
