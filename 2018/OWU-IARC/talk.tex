@@ -6,43 +6,15 @@
   \setbeamercovered{transparent}
 }
 
-%\documentclass{beamer}
-%\documentclass[handout]{beamer}
-
-%\mode<presentation>
-%{
-  %\usetheme{CambridgeUS}
-  %\usetheme{Frankfurt}
-  %\usetheme{Singapore}
-  %\usecolortheme{crane}
-  %\usefonttheme{professionalfonts}
-  %\usefonttheme[onlymath]{serif}
-  
-  %\setbeamertemplate{blocks}[rounded][shadow=true]
-%}
-
 \usepackage{pgfpages}
 
-\usepackage{alltt,verbatim,amsmath,times,empheq}
-\usepackage{bm}
+\usepackage{verbatim,amsmath,empheq,times,bm}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 
 \usepackage{tikz}
-
-%\usepackage{times}
-%\usepackage[T1]{fontenc}
-% Or whatever. Note that the encoding and the font should match. If T1
-% does not look nice, try deleting the line with the fontenc.
-
-%\usepackage{hyperref}
-
-%\usepackage{pdfanim}
-%\usepackage{multimedia,xmpmulti}
-
-%\PDFAnimLoad[width=\textwidth,loop,interval=40]{exp3a}{exp3a/pic}{310}%
-
 \usepackage{animate}
+\usepackage{hyperref}
 
 \definecolor{dark red}{HTML}{E41A1C}
 \definecolor{dark green}{HTML}{4DAF4A}
@@ -68,7 +40,10 @@
 \newcommand{\bF}{\mathbf{F}}
 \newcommand{\bQ}{\mathbf{Q}}
 \newcommand{\bU}{\mathbf{U}}
+
 \newcommand{\bbU}{\bar{\bU}}
+
+\newcommand{\bb}{\mathbf{b}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
 \newcommand{\bx}{\mathbf{x}}
@@ -112,8 +87,9 @@
 \renewcommand{\L}{\emph{Left}}
 \newcommand{\R}{\emph{Right}}
 
+
 \newcommand{\contactslipslide}{
-\begin{frame}{sheets versus streams versus shelves}
+\begin{frame}{sheets vs.~streams vs.~shelves}
 
 \begin{columns}
 \begin{column}{0.35\textwidth}
@@ -123,10 +99,9 @@
 \item non-sliding portions of ice sheets flow by shear deformation
 \item ice streams slide: \alert{contact slip}
 \item ``ice shelves'' are floating thick ice
-\item ice shelves flow by extension
   \begin{itemize}
   \scriptsize
-  \item[$\circ$] ``membrane'' or ``plug'' flow
+  \item[$\circ$] also \alert{contact slip}
   \end{itemize}
 \end{itemize}
 \end{column}
@@ -143,7 +118,6 @@
 \end{columns}
 \end{frame}
 }
-
 
 
 
@@ -165,7 +139,6 @@
 \subject{ice sheets, glaciers, numerical analysis, applied mathematics}
 
 
-%\begin{comment}
 \AtBeginSection[]
 {
   \begin{frame}<beamer>
@@ -173,7 +146,6 @@
     \tableofcontents[currentsection,hideallsubsections]
   \end{frame}
 }
-%\end{comment}
 
 
 \begin{document}
@@ -189,13 +161,11 @@
 
 
 % NO OUTLINE BECAUSE ONE APPEARS AT START OF EACH SECTION ?
-%\begin{comment}
 %\begin{frame}
   %\frametitle{Outline}
   %\tableofcontents[hideallsubsections]
   % You might wish to add the option [pausesections]
 %\end{frame}
-%\end{comment}
 
 
 \section[the alien view]{the alien physicist view of Greenland}
@@ -203,10 +173,6 @@
 \setbeamertemplate{background canvas}{
      \tikz{\node[inner sep=0pt,opacity=1] {\includegraphics[height=\paperheight,width=\paperwidth]{nasa-mapping-greenland-ice-sheet}};}
 } 
-
-% show:
-% (1) GRACE movie
-% (2) Andy PISM: observed versus modeled surface velocity
 
 \begin{frame}{}
 
@@ -217,10 +183,23 @@
 }
 \end{frame}
 
+
 \setbeamertemplate{background canvas}{}
 
+\begin{frame}{the view from space}
 
-\begin{frame}{FIXME movies from GRACE and andy/PISM}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item satellites can measure gravity changes \hfill \alert{\dots show GRACE movie}
+\item satellites can measure movement of earth surface through \emph{synthetic aperture radar} (SAR) \hfill \alert{\dots at right}
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+
+\hfill \includegraphics[width=0.95\textwidth]{greenland-overview-obsonly}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -274,17 +253,18 @@
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item seriously
+\item seriously, what is a fluid?
 \item<2-> is it just a collection of particles?
 \item<3-> a fluid is a mathematical abstraction
   \begin{itemize}
-  \item<3->[$\circ$]   a continuous function $y=f(x)$ is also an abstraction
+  \item<3->[$\circ$]   each smaller piece remains a fluid
+  \item<3->[$\circ$]   a continuous function $y=f(x)$ is also such an abstraction
   \end{itemize}
-\item<4-> primary variables:
+\item<3-> a fluid is a \alert{model}
+\item<4-> with primary variables:
   \begin{itemize}
   \item<4->[$\circ$]   velocity $\mathbf{u}(\bx,t)$
   \item<4->[$\circ$]   pressure $p(\bx,t)$
-  \item<4->[$\circ$]   density $p(\bx,t)$
   \end{itemize}
 \item<4-> gases, liquids, and \alert{ice} are all fluids (at big enough scale)
 \end{itemize}
@@ -299,8 +279,7 @@
 \end{frame}
 
 
-
-\begin{frame}{ice in glaciers is a viscous fluid}
+\begin{frame}{ice is a viscous fluid}
 
 \begin{itemize}
 \item these are fluids:
@@ -310,26 +289,28 @@
   \item[$\circ$] syrup
   \item[$\circ$] glacier ice
   \end{itemize}
-\item they are are all modeled as \alert{incompressible viscous fluids}
-\item if a glacier was a ``typical'' incompressible viscous fluid we would describe it with Navier-Stokes equations:
+\item are usually modeled as \alert{incompressible viscous fluids}
+\item a typical incompressible viscous fluid is described by Navier-Stokes equations:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\qquad \text{\emph{incompressibility}} \\
 \rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\qquad \text{\emph{stress balance}}
 \end{align*}
-\item in 3D these equations are known to be hard
+
+\small
+\item these equations are known to be hard
   \begin{itemize}
-  \item[$\circ$] \$1 million Clay Institute prize \dots unclaimed for 18 years \dots for proving there are solutions
+  \item[$\circ$] \$1 million Clay Institute prize for proving there are solutions in 3D \dots unclaimed for 18 years
+  \item[$\circ$] but you've flown here on plane designed assuming we adequately understand them
   \end{itemize}
 \end{itemize}
 \end{frame}
-
 
 
 \begin{frame}{ice is a weird viscous fluid}
 
 \begin{itemize}
 \item glacier ice is not a typical fluid!
-\item for example, these are \alert{not relevant in glacier flow}, but a big deal for weather and climate models of the atmosphere and ocean:
+\item for example, these are \alert{irrelevant in glacier flow}, but a big deal for weather and climate models of the atmosphere and ocean:
   \begin{itemize}
   \item[$\circ$] turbulence
   \item[$\circ$] convection
@@ -340,9 +321,16 @@
 \end{frame}
 
 
-\begin{frame}{ice is a slow, shear-thinning viscous fluid}
+\begin{frame}{ice is a slow, shear-thinning fluid}
 
 \begin{itemize}
+\item recall Navier-Stokes:
+\small
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\qquad \text{\emph{incompressibility}} \\
+\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\qquad \text{\emph{stress balance}}
+\end{align*}
+\normalsize
 \item glacier ice fluid is
   \begin{enumerate}
   \item ``slow'' is a technical term:\footnote{the Froude number, the ratio of inertia to gravity, is approximately $10^{-15}$}
@@ -351,26 +339,23 @@
     $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
   \item non-Newtonian (shear-thinning):
 
-\vspace{-2mm}
-    $$\text{viscosity $\nu$ is not constant}$$
+    \begin{itemize}
+    \item[$\circ$] viscosity $\nu$ is not constant
+    \item[$\circ$] ``shear-thinning'' is a power law (Glen law):
+        $$(\text{strain rate}) = A\, (\text{shear stress})^n$$
+    \item[$\circ$] $1.8 < n < 4.0$ ?  \quad when in doubt: \alert{$n=3$}
+    \end{itemize}
   \end{enumerate}
-
-\item ``shear-thinning'' is a power law (Glen law):
-  $$(\text{strain rate}) = A\, (\text{shear stress})^n$$
-
-\vspace{-2mm}
-  \begin{itemize}
-  \item[$\circ$] where $A>0$ is the ice softness
-  \item[$\circ$] $1.8 < n < 4.0$ ?  \quad when in doubt: \alert{$n=3$}
-  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{ice is a slow, shear-thinning viscous fluid}
+\begin{frame}{equations for ice flow}
 
+\begin{columns}
+\begin{column}{0.65\textwidth}
 \begin{itemize}
-\item the \alert{standard model for ice flow} is Glen-law Stokes:
+\item the \alert{standard model for ice flow} is Glen-Stokes:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{stress balance}} \\
@@ -382,34 +367,77 @@
   \item[$\circ$] $\mathbf{D}u_{ij}$ is strain rate tensor
   \end{itemize}
 \end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+
+\hfill\includegraphics[width=0.9\textwidth]{polaris}
+
+\bigskip\bigskip
+
+\hfill\includegraphics[width=0.9\textwidth]{xinjiangglacier}
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}{wait too many equations}
-FIXME
-\end{frame}
 
-\section[big questions]{big picture questions for ice flow models}
-
-
-\contactslipslide
-
-
-\begin{frame}{outstanding viscous flows}
+\begin{frame}{wait \dots too many equations!}
 
 \begin{itemize}
-\item ice sheets have four outstanding properties \emph{as viscous flows}:
-  \begin{enumerate}
-  \item \alert{slow}
-  \item \alert{shear-thinning}
-  \item \alert{shallow}
-  \item \alert{contact slip}
-  \end{enumerate}
+\item too many equations!
+    \begin{itemize}
+    \item[$\circ$] I know
+    \end{itemize}
+\item what math is needed for numerical models of fluids like glaciers?
+    \begin{itemize}
+    \item[$\circ$] calc III \hfill (\emph{partial derivatives, surface integrals, \dots})
+    \item[$\circ$] linear algebra
+        \begin{itemize}
+        \item because pretty much the fanciest trick you can program on a computer is to solve a linear system $A\bx = \bb$
+        \end{itemize}
+    \item[$\circ$] differential equations \hfill (\emph{ODEs \emph{and} PDEs})
+    \item[$\circ$] some computer programming
+        \begin{itemize}
+        \item Matlab or Python
+        \item a course in numerical analysis is nice
+        \end{itemize}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
+\section[big picture questions]{big picture questions for ice flow models}
+
 \begin{frame}
-  \frametitle{big picture: ice sheet flow interacts with climate}
+  \frametitle{how much can sea level rise if ice sheets melt?}
+  \framesubtitle{(big picture question 1)}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item ice sheets are big masses of frozen water (mostly) sitting above the sea level
+    \begin{itemize}
+    \item[$\circ$] Greenland ice sheet mass is $2.9 \times 10^6$ Gt \quad $(\approx \text{km}^3)$ % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
+    \end{itemize}
+\item if \emph{all} ice melts:
+    \begin{itemize}
+    \item[$\circ$] Antarctica: 61 m of sea level rise
+    \item[$\circ$] Greenland: 7 m of sea level rise
+    \item[$\circ$] all other glaciers: 35 cm of sea level rise
+    \end{itemize}
+\item so it would be good to know mechanisms of melt
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+
+\includegraphics[width=0.95\textwidth]{southeastern_us_3m}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{how does flowing ice interact with climate?}
+  \framesubtitle{(big picture question 2)}
 
 \medskip
 \small
@@ -424,24 +452,44 @@ FIXME
 \end{frame}
 
 
+\contactslipslide
+
+
 \begin{frame}
-  \frametitle{big picture: ice sheets are meltable ice sitting above sea level}
+  \frametitle{how to understand these viscous flows?}
+  \framesubtitle{(big picture question 3)}
 
-\small
+\begin{columns}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
-\item Greenland ice sheet mass is $2.7 \times 10^9$ Gt \quad $(\approx \text{km}^3)$ % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
-\item if \emph{all} Greenland ice melts: 7 m of sea level rise
-\item if \emph{all} Antarctic ice melts: 61 m of sea level rise
+\item ice sheets are a separate category of fluid problems, worth studying
+\item they have four outstanding properties \emph{as viscous flows}:
+  \begin{enumerate}
+  \item \alert{slow}
+  \item \alert{shear-thinning}
+  \item \alert{shallow}
+  \item \alert{contact slip}
+  \end{enumerate}
+\item other fluids in same category:
+  \begin{itemize}
+  \item[$\circ$] salad dressing (\emph{look for ``xanthan gum'' as ingredient})
+  \item[$\circ$] blood (\emph{except not shallow})
+  \end{itemize}
 \end{itemize}
-\end{frame}
+\end{column}
+\begin{column}{0.4\textwidth}
 
+\hfill \includegraphics[width=0.95\textwidth]{greenland-overview-obsonly}
+\end{column}
+\end{columns}
+\end{frame}
 
 
 \section[numerical models]{numerical models of ice sheets}
 
 
 \begin{frame}
-  \frametitle{the main variables}
+  \frametitle{the main variables in a model}
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{groundedscheme}
@@ -452,17 +500,18 @@ FIXME
 \item $s=$ ice surface elevation
 \item $b=$ bedrock elevation
 \item $h=$ ice thickness $ = s-b$
-\item ${\bf U}=$ horizontal velocity field
+\item ${\bf u}=$ velocity field
 \item $a=$ surface mass balance (accumulation)
+
+\bigskip
+\item obvious(?) idea: ice surface $s$ is always above the bedrock $b$
 \end{itemize}
 
-\begin{alertblock}{obvious idea: ice surface $s$ is always above the bedrock $b$}
-\end{alertblock}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{ice sheets: a mathematical modeling analogy}
+  \frametitle{a mathematical modeling analogy}
 
 \begin{columns}
 \begin{column}{0.35\textwidth}
@@ -490,17 +539,31 @@ FIXME
   \frametitle{shallow ice approximation (SIA)}
 
 \begin{itemize}
-\item SIA = lubrication approximation of Glen-law Stokes model earlier
-\item good approximation when:
+\item recall standard Glen-Stokes model:
+\small
+\begin{align*}
+\nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
+0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{stress balance}} \\
+\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
+\end{align*}
+\normalsize
+\item SIA is good approximation of standard model when
   \begin{itemize}
   \item[$\circ$] sliding is small or zero
   \item[$\circ$] bedrock slope is modest
   \end{itemize}
-\item derive SIA equations by scaling Stokes:
+\item derive SIA equations by scaling Stokes based on shallowness:
   \begin{itemize}
-  \item[$\circ$] $[h]$ is a typical thickness scale
-  \item[$\circ$] $[x]$ is a typical width scale
+  \item[$\circ$] $[h]$ is a typical thickness, $[x]$ is a typical width
   \item[$\circ$] small parameter is $\eps = [h] / [x]$
+  \end{itemize}
+\item horizontal ice velocity is given by ($n=3$): 
+  $${\bf U}  =  - \frac{2 A}{4} (\rho g)^{3} \left[ (s-b)^4 - (s - z)^4  \right] 
+|\nabla s |^{2} \nabla s$$
+
+\vspace{-2mm}
+  \begin{itemize}
+  \item[$\circ$] no PDE to solve for velocity
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -508,33 +571,22 @@ FIXME
 
 
 \begin{frame}
-  \frametitle{SIA: velocity}
- 
-\begin{itemize}
-\item horizontal ice velocity is given by: 
-  $${\bf U}  =  - \frac{2 A}{4} (\rho g)^{3} \left[ (s-b)^4 - (s - z)^4  \right] 
-|\nabla s |^{2} \nabla s$$
-\item no PDE needs to be solved to compute velocity!
-\end{itemize}
-\end{frame}
-
-
-
-\begin{frame}
-  \frametitle{SIA: steady state}
+  \frametitle{steady state}
 
 \begin{itemize}
 \item mass conservation in steady state: 
   $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
 \item shallow ice approximation + (steady) mass conservation:
-  $$- \Div \left(\Gamma (s-b)^5 | \nabla s |^2 \nabla s  \right) =  a$$
+\begin{equation}
+- \Div \left(\Gamma (s-b)^5 | \nabla s |^2 \nabla s  \right) =  a  \tag{$\ast$}
+\end{equation}
   \begin{itemize}
   \vspace{-0.2in}
-  \item[$\circ$] this is the major SIA equation (\dots a PDE?)
-  \item[$\circ$] computes ice surface $s$
-  \item[$\circ$] constant $\Gamma > 0$ combines $\rho,g,A$
-  \item[$\circ$] coefficient $(s-b)^5 \to 0$ at margins
+  \item[$\circ$] this is the major SIA equation \dots a PDE
+  \item[$\circ$] the unknown is ice surface elevation $s(x,y)$
+  \item[$\circ$] like Poisson equation $-\Div (\nabla u) = f$ except nonlinear and singular
   \end{itemize}
+\item the most basic numerical ice sheet model is a program which approximately solves ($\ast$) for $s(x,y)$ given steady climate inputs $a(x,y)$ and bed elevation $b(x,y)$
 \end{itemize}
 \end{frame}
 
@@ -624,6 +676,11 @@ equal spaced in \emph{exponential} time
 \end{columns}
 \end{frame}
 
+\begin{frame}{numerical model results}
+
+FIXME show Andy RPC greenland results movie
+\end{frame}
+
 
 \section[on being right]{how do we know the numerical models are right?}
 
@@ -647,9 +704,6 @@ equal spaced in \emph{exponential} time
 
 \begin{frame}{FIXME slide about MMS}
 \end{frame}
-
-
-% SHOW Andy RCP runs
 
 
 
