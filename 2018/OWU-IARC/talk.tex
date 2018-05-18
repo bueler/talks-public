@@ -85,8 +85,8 @@
 \newcommand{\R}{\emph{Right}}
 
 
-\newcommand{\contactslipslide}{
-\begin{frame}{sheets vs.~streams vs.~shelves}
+\newcommand{\contactslipslide}[1]{
+\begin{frame}{#1 sheets vs.~streams vs.~shelves}
 
 \begin{columns}
 \begin{column}{0.35\textwidth}
@@ -454,8 +454,8 @@
 \medskip
 \small
 \begin{itemize}
-\item \emph{mass and energy inputs}: (1) snow adds, (2) sun heats, (3) ocean heats, (4) earth heats
-\item \emph{mass outputs}: (1) surface meltwater, (2) basal meltwater, (3) ice discharge
+\item \emph{mass and energy inputs}: snow adds, sun heats, ocean heats
+\item \emph{mass outputs}: surface melts, base melts, ice flows out (discharges)
 \end{itemize}
 
 \begin{center}
@@ -464,7 +464,21 @@
 \end{frame}
 
 
-\contactslipslide
+\contactslipslide{}
+
+
+\begin{frame}
+  \frametitle{ice shelf versus sea ice}
+
+\begin{center}
+\vspace{-0.2in}
+
+\includegraphics[width=1.0\textwidth]{supp4rignot-small}
+
+\medskip
+\tiny [ice shelf at Thwaites Glacier, Antarctic]
+\end{center}
+\end{frame}
 
 
 \begin{frame}
@@ -474,8 +488,8 @@
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item ice sheets are a separate category of fluid problems, worth studying
-\item they have four outstanding properties \emph{as viscous flows}:
+\item ice sheets are worth studying as fluids
+\item they have four outstanding properties as viscous flow problems:
   \begin{enumerate}
   \item \alert{slow}
   \item \alert{shear-thinning}
@@ -501,7 +515,7 @@
 
 
 \begin{frame}
-  \frametitle{the main variables in a model}
+  \frametitle{the major variables}
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{groundedscheme}
@@ -523,31 +537,6 @@
 
 
 \begin{frame}
-  \frametitle{a mathematical modeling analogy}
-
-\begin{columns}
-\begin{column}{0.35\textwidth}
-\begin{itemize}
-\item ice sheet surface \\ = \alert{membrane}
-\item bedrock = \alert{obstacle}
-\end{itemize}
-\vfill
-\begin{center}
-\includegraphics[width=1.1\textwidth]{classicalobs}
-\end{center}
-\end{column}
-\begin{column}{0.65\textwidth}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{polaris} \\
-\includegraphics[width=\textwidth]{capnonflatobs}
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-\begin{frame}
   \frametitle{shallow ice approximation (SIA)}
 
 \begin{itemize}
@@ -559,12 +548,8 @@
 \mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
 \end{align*}
 \normalsize
-\item SIA is good approximation of standard model when
-  \begin{itemize}
-  \item[$\circ$] sliding is small or zero
-  \item[$\circ$] bedrock slope is modest
-  \end{itemize}
-\item derive SIA equations by scaling Stokes based on shallowness:
+\item \alert{most models don't solve it because it is too expensive}
+\item derive SIA equations by scaling based on shallowness:
   \begin{itemize}
   \item[$\circ$] $[h]$ is a typical thickness, $[x]$ is a typical width
   \item[$\circ$] small parameter is $\eps = [h] / [x]$
@@ -577,13 +562,18 @@
   \begin{itemize}
   \item[$\circ$] no PDE to solve for velocity
   \end{itemize}
+\item SIA is good approximation when
+  \begin{itemize}
+  \item[$\circ$] sliding is small or zero
+  \item[$\circ$] bedrock slope is modest
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 
 \begin{frame}
-  \frametitle{steady state}
+  \frametitle{steady state ice sheet geometry}
 
 \begin{itemize}
 \item mass conservation in steady state: 
@@ -598,10 +588,124 @@
   \item[$\circ$] the unknown is ice surface elevation $s(x,y)$
   \item[$\circ$] like Poisson equation $-\Div (\nabla u) = f$ except nonlinear and singular
   \end{itemize}
-\item the most basic numerical ice sheet model is a program which approximately solves ($\ast$) for $s(x,y)$ given steady climate inputs $a(x,y)$ and bed elevation $b(x,y)$
+\item the \alert{minimal useful numerical ice sheet model} is a program which approximately solves ($\ast$) for $s(x,y)$ given steady climate inputs $a(x,y)$ and bed elevation $b(x,y)$
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{obstacle problem: a mathematical analogy}
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+\item ice sheet surface \\ $\sim$ \alert{membrane}
+\item bedrock $\sim$ \alert{obstacle}
+\item ice sheet shape solves this kind of \alert{free boundary problem}
+\end{itemize}
+\vfill
+\begin{center}
+\includegraphics[width=1.0\textwidth]{classicalobs}
+\end{center}
+\end{column}
+\begin{column}{0.65\textwidth}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{polaris} \\
+\includegraphics[width=\textwidth]{capnonflatobs}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\contactslipslide{recall this slide:}
+
+
+\begin{frame}
+  \frametitle{ice streams: another analogy}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item ice streams emerge where basal resistance is low enough
+\item basal resistance is low if there is pressurized liquid water at the ice base
+\item the ice is a membrane which connects sliding parts to non-sliding parts
+
+\bigskip
+\item<2> note: ice \emph{shelves} have zero basal resistance
+\item<2> the equations for ice streams and shelves are similar \dots more PDEs \dots which I'll skip
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[width=\textwidth]{siple}
+
+\vspace{0.3in}
+
+\includegraphics[width=1.1\textwidth]{schoof-sliders}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{numerical model results}
+
+FIXME show Andy RPC greenland results movie
+\end{frame}
+
+
+\section[on being right]{how to know if numerical models are right?}
+
+
+\begin{frame}{how to know if numerical models are right?}
+
+\begin{itemize}
+\item they are \emph{never} ``correct'' in the sense of ``exact match to reality'' \emph{or even} ``exact match to continuum equations''
+\item the \alert{goal} is: \alert{close to exact, with knowable maximum errors, and rapidly converging with increasing computational effort}
+
+\bigskip
+\item<2> there are three basic strategies to be right:
+    \begin{enumerate}
+    \item proofs that a scheme converges or is stable (\emph{a priori} proofs)
+    \item \alert{verification}: using known exact solutions of the equations to measure numerical error
+    \item \alert{validation}: using well-measured real systems to measure numerical and model error
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{models of ice shelves: they work}
+
+\begin{itemize}
+\item Ross ice shelf (Antarctica) velocity below
+  \begin{itemize}
+  \item[$\circ$] observed versus computed by SSA model in PISM
+  \item[$\circ$] tuned: single, constant $A$
+  \end{itemize}
+\end{itemize}
+\vspace{-0.3in}
+
+\begin{center}
+  \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
+\end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{moving grounding line in the lab}
+  \framesubtitle{by Pegler et al.~(2014)}
+
+\begin{center}
+
+\includegraphics[width=0.7\textwidth]{pegler2014-grounding-line-schematic}
+
+\vspace{1.0in}
+[show movie]
+\end{center}
+\end{frame}
+
+
+\begin{frame}{FIXME slide about exact solutions}
+\end{frame}
 
 \begin{frame}{movie of time-dependent SIA}
 
@@ -655,88 +759,6 @@
 \only<12>{\texttt{t=100,000 years}}
 \only<13>{\texttt{t=300,000 years}}
 \only<14>{\texttt{t=1,000,000 years}}
-\end{frame}
-
-
-\contactslipslide
-
-
-\begin{frame}
-  \frametitle{ice shelf versus sea ice}
-
-\begin{center}
-\vspace{-0.2in}
-
-\includegraphics[width=1.0\textwidth]{supp4rignot-small}
-
-\medskip
-\tiny [ice shelf at Thwaites Glacier, Antarctic]
-\end{center}
-\end{frame}
-
-
-\begin{frame}{models of ice shelves: they work}
-
-\begin{itemize}
-\item Ross ice shelf (Antarctica) velocity below
-  \begin{itemize}
-  \item[$\circ$] observed versus computed by SSA model in PISM
-  \item[$\circ$] tuned: single, constant $A$
-  \end{itemize}
-\end{itemize}
-\vspace{-0.3in}
-
-\begin{center}
-  \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
-\end{center}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{ice streams: an analogy}
-
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{itemize}
-\item ice shelves have zero basal resistance
-\item ice streams emerge where basal resistance is low enough
-\item basal resistance is low if there is pressurized liquid water underneath the ice sheet
-\item ice sheet is a membrane which connect sliding ice to upstream and/or lateral non-sliding ice
-\end{itemize}
-\end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{siple}
-
-\vspace{0.3in}
-
-\includegraphics[width=1.1\textwidth]{schoof-sliders}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}{numerical model results}
-
-FIXME show Andy RPC greenland results movie
-\end{frame}
-
-
-\section[on being right]{how do we know the numerical models are right?}
-
-\begin{frame}
-  \frametitle{moving grounding line in the lab}
-  \framesubtitle{by Pegler et al.~(2014)}
-
-\begin{center}
-
-\includegraphics[width=0.7\textwidth]{pegler2014-grounding-line-schematic}
-
-\vspace{1.0in}
-[show movie]
-\end{center}
-\end{frame}
-
-
-\begin{frame}{FIXME slide about exact solutions}
 \end{frame}
 
 
