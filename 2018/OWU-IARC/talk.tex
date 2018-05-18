@@ -188,21 +188,25 @@
 \begin{columns}
 \begin{column}{0.55\textwidth}
 \begin{itemize}
-\item one can measure gravity changes \only<1>{\alert{\dots show GRACE movie}} \only<2->{\phantom{\dots show GRACE movie}}
+\item one can measure gravity changes \phantom{foo bar}
+\hfill \only<1>{\alert{show GRACE movie}}
 \item<2-> one can measure surface movement (through \emph{synthetic aperture radar}) \phantom{foo bar baz} \hfill \only<2>{\alert{\dots at right}}
 \item<3-> one can observe changes in ice extent \hfill \only<3>{\alert{\dots at right}}
 
 \bigskip
-\item<4>regardless of the causes, as a newly-arrived physicist observing Greenland, you would observe in the last decades:
+\item<4> as a newly-arrived physicist observing Greenland, you would observe in the last decades:
     \begin{itemize}
     \item[$\circ$] the ice sheet has been losing mass
     \item[$\circ$] the flow pattern and ice extent around the outlet glaciers has changed
     \end{itemize}
+
+\bigskip
+\item<4> \dots whether or not you care about the causes
 \end{itemize}
 \end{column}
 \begin{column}{0.45\textwidth}
 
-\hfill \includegraphics<2>[width=0.8\textwidth]{greenland-overview-obsonly}
+\hfill \includegraphics<2>[width=0.78\textwidth]{greenland-overview-obsonly}
 \hfill \includegraphics<3->[width=0.8\textwidth]{jib-front-1990-2005-change}
 \end{column}
 \end{columns}
@@ -648,14 +652,33 @@
 \end{frame}
 
 
-\begin{frame}{numerical model results}
+\begin{frame}{numerical model results: Greenland scenarios}
 
-FIXME show Andy RPC greenland results movie
+\begin{itemize}
+\item for thinking about climate possibilities the IPCC proposed \emph{representative concentration pathways} for greenhouse gases in the next century
+    \begin{itemize}
+    \item[$\circ$] RCP 2.6 assumes least greenhouse gases
+    \item[$\circ$] RCP 8.5 assumes most (``business as usual'')
+    \item[$\circ$] consensus in 2014: mean sea level projected to rise by 0.26--0.82 m by 2100
+    \item[$\circ$] even for 100 years, ice sheet behavior is the largest uncertainty
+        \begin{itemize}
+        \item uncertainty increases greatly thereafter
+        \end{itemize}
+    \end{itemize}
+\item \alert{the following movie} is unpublished, new results
+    \begin{itemize}
+    \item[$\circ$] by Andy Aschwanden, a glaciologist here at UAF
+    \item[$\circ$] using the Parallel Ice Sheet Model (PISM), developed here at UAF
+        \begin{itemize}
+        \item \url{www.pism-docs.org}
+        \end{itemize}
+    \item[$\circ$] shows next 1000 years for Greenland
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
 \section[on being right]{how to know if numerical models are right?}
-
 
 \begin{frame}{how to know if numerical models are right?}
 
@@ -674,41 +697,25 @@ FIXME show Andy RPC greenland results movie
 \end{frame}
 
 
-\begin{frame}{models of ice shelves: they work}
+\begin{frame}{need for exact solutions}
 
 \begin{itemize}
-\item Ross ice shelf (Antarctica) velocity below
-  \begin{itemize}
-  \item[$\circ$] observed versus computed by SSA model in PISM
-  \item[$\circ$] tuned: single, constant $A$
-  \end{itemize}
+\item verification is key tool to assist development of complex models
+\item \alert{but requires exact solutions}
+\item these come from:
+    \begin{itemize}
+    \item[$\circ$] exploiting symmetries and special configurations
+        \begin{itemize}
+        \item \alert{movie on nex slide} shows an example
+        \end{itemize}
+    \item[$\circ$] ``manufacturing'' solutions to differential equations by deriving inputs (source terms) using assumed formulas for solutions
+    \end{itemize}
+\item job security for applied mathematicians
 \end{itemize}
-\vspace{-0.3in}
-
-\begin{center}
-  \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
-\end{center}
 \end{frame}
 
-\begin{frame}
-  \frametitle{moving grounding line in the lab}
-  \framesubtitle{by Pegler et al.~(2014)}
-
-\begin{center}
-
-\includegraphics[width=0.7\textwidth]{pegler2014-grounding-line-schematic}
-
-\vspace{1.0in}
-[show movie]
-\end{center}
-\end{frame}
-
-
-\begin{frame}{FIXME slide about exact solutions}
-\end{frame}
 
 \begin{frame}{movie of time-dependent SIA}
-
 
 \begin{itemize}
 \item the Halfar similarity solution is an exact, time-dependent, zero mass balance solution where the $t\to 0^+$ limit is a delta function
@@ -762,9 +769,34 @@ FIXME show Andy RPC greenland results movie
 \end{frame}
 
 
-\begin{frame}{FIXME slide about MMS}
+\begin{frame}{models of ice shelves: they work}
+
+\begin{itemize}
+\item Ross ice shelf (Antarctica) velocity below
+  \begin{itemize}
+  \item[$\circ$] observed versus computed by SSA model in PISM
+  \item[$\circ$] tuned: single, constant $A$
+  \end{itemize}
+\end{itemize}
+\vspace{-0.3in}
+
+\begin{center}
+  \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
+\end{center}
 \end{frame}
 
+\begin{frame}
+  \frametitle{moving grounding line in the lab}
+  \framesubtitle{by Pegler et al.~(2014)}
+
+\begin{center}
+
+\includegraphics[width=0.7\textwidth]{pegler2014-grounding-line-schematic}
+
+\vspace{1.0in}
+[show movie]
+\end{center}
+\end{frame}
 
 
 \section*{conclusion}
@@ -773,10 +805,16 @@ FIXME show Andy RPC greenland results movie
   \frametitle{conclusion}
   \framesubtitle{thanks for listening!}
 
-\begin{center}
-FIXME
-\end{center}
+\begin{itemize}
+\item ice sheets are fluid problems
+\item \dots for which the equations are systems of nonlinear PDEs
+\item \dots so numerical models are needed in practice
+\item \dots so it's a good field in which to work as an applied mathematician
+\end{itemize}
 
+\begin{center}
+\includegraphics[width=0.6\textwidth]{polaris}
+\end{center}
 \end{frame}
 
 
