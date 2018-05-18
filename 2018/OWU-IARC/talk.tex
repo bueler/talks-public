@@ -151,7 +151,7 @@
 \begin{frame}
   \titlepage
   \begin{center}
-  \tiny supported by NASA grants NNX13AM16G, NNX16AQ40G, NNX17AG65G 
+  \tiny with assistance from Andy Aschwanden and Constantine Khroulev, and supported by NASA grants NNX13AM16G, NNX16AQ40G, NNX17AG65G 
   \end{center}
 \end{frame}
 
@@ -173,11 +173,9 @@
 
 \begin{frame}{}
 
-\only<2>{
-\includegraphics[width=0.3\textwidth]{grace-satellites}
+\only<2>{\includegraphics[width=0.3\textwidth]{grace-satellites}}
 
-\vfill \hfill \includegraphics[width=0.3\textwidth]{TerraSAR_n}
-}
+\only<2>{\vfill \hfill \includegraphics[width=0.3\textwidth]{TerraSAR_n}}
 \end{frame}
 
 
@@ -194,14 +192,15 @@
 \item<3-> one can observe changes in ice extent \hfill \only<3>{\alert{\dots at right}}
 
 \bigskip
-\item<4> as a newly-arrived physicist observing Greenland, you would observe in the last decades:
+\item<4> so, as a newly-arrived physicist, you would observe in Greenland for the last decades:
     \begin{itemize}
     \item[$\circ$] the ice sheet has been losing mass
     \item[$\circ$] the flow pattern and ice extent around the outlet glaciers has changed
     \end{itemize}
 
 \bigskip
-\item<4> \dots whether or not you care about the causes
+\item<4> whether or not you care about causes
+\item<4> you wonder: what will happen next?
 \end{itemize}
 \end{column}
 \begin{column}{0.45\textwidth}
@@ -242,6 +241,10 @@
 
 \begin{itemize}
 \item cross section of Greenland ice sheet at $71^\circ$ N
+
+\vspace{-5mm} \hfill \includegraphics[width=0.1\textwidth]{cutgreenland}
+
+\vspace{-15mm}
   \begin{itemize}
   \item[$\circ$] {\color{dark green}{green}} and {\color{dark blue}{blue}}: vertically-exaggerated version
   \item[$\circ$] in {\color{dark red}{red}}: without vertical exaggeration
@@ -300,7 +303,7 @@
   \item[$\circ$] glacier ice
   \end{itemize}
 \item are usually modeled as \alert{incompressible viscous fluids}
-\item a typical incompressible viscous fluid is described by Navier-Stokes equations:
+\item \dots typically described by Navier-Stokes equations:
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\qquad \text{\emph{incompressibility}} \\
 \rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) &= -\nabla p + \nu \nabla^2 \mathbf{u} + \rho \mathbf{g} &&\qquad \text{\emph{stress balance}}
@@ -320,13 +323,14 @@
 
 \begin{itemize}
 \item glacier ice is not a typical fluid!
-\item for example, these are \alert{irrelevant in glacier flow}, but a big deal for weather and climate models of the atmosphere and ocean:
+\item for example, these fluid features are a big deal for weather and climate models of the atmosphere and ocean:
   \begin{itemize}
   \item[$\circ$] turbulence
   \item[$\circ$] convection
   \item[$\circ$] coriolis force
   \item[$\circ$] density variations
   \end{itemize}
+\item they are \alert{irrelevant in glacier flow}
 \end{itemize}
 \end{frame}
 
@@ -343,7 +347,7 @@
 \normalsize
 \item glacier ice fluid is
   \begin{enumerate}
-  \item ``slow'' is a technical term:\footnote{the Froude number, the ratio of inertia to gravity, is approximately $10^{-15}$}
+  \item ``slow,'' a technical term\footnote{the Froude number, the ratio of inertia to gravity forces, is approximately $10^{-15}$} meaning that
 
 \vspace{-3mm}
     $$\rho \left(\mathbf{u}_t + \mathbf{u}\cdot\nabla \mathbf{u}\right) \approx 0 \qquad \iff \qquad \begin{pmatrix} \text{forces of inertia} \\ \text{are negligible} \end{pmatrix}$$
@@ -369,7 +373,7 @@
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{stress balance}} \\
-\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
+\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{flow law}}
 \end{align*}
 \item notation:
   \begin{itemize}
@@ -397,15 +401,19 @@
     \begin{itemize}
     \item[$\circ$] I know
     \end{itemize}
-\item<2> what math is needed for numerical models of fluids like glaciers?
+\item<2> what courses are needed for modeling fluids like glaciers?
     \begin{itemize}
     \item[$\circ$] calc III
         \begin{itemize}
         \item partial derivatives, surface integrals, \dots
         \end{itemize}
+    \item[$\circ$] physics
+        \begin{itemize}
+        \item ideally some continuum mechanics
+        \end{itemize}
     \item[$\circ$] linear algebra
         \begin{itemize}
-        \item pretty much the fanciest trick you can program on a computer is to solve a linear system $A\bx = \bb$
+        \item pretty much the fanciest trick you can really do on a computer is to solve a linear system $A\bx = \bb$
         \end{itemize}
     \item[$\circ$] differential equations
         \begin{itemize}
@@ -432,7 +440,8 @@
 \begin{itemize}
 \item ice sheets are big masses of frozen water (mostly) sitting above the sea level
     \begin{itemize}
-    \item[$\circ$] Greenland ice sheet mass is $2.9 \times 10^6$ Gt \quad $(\approx \text{km}^3)$ % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
+    \item[$\circ$] Greenland ice sheet mass is $2.9 \times 10^6$ Gt % = 2.93466 10^6 km^3  volume, from SeaRISE-Greenland 5km data
+    \item[$\circ$] Gt $=$ gigatonne $\approx \text{km}^3$
     \end{itemize}
 \item if \emph{all} ice melts:
     \begin{itemize}
@@ -440,7 +449,7 @@
     \item[$\circ$] Greenland: 7 m of sea level rise
     \item[$\circ$] all other glaciers: 35 cm of sea level rise
     \end{itemize}
-\item so it would be good to know mechanisms of melt
+\item it would be good to know melt mechanisms
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
@@ -458,8 +467,8 @@
 \medskip
 \small
 \begin{itemize}
-\item \emph{mass and energy inputs}: snow adds, sun heats, ocean heats
-\item \emph{mass outputs}: surface melts, base melts, ice flows out (discharges)
+\item \emph{mass and energy inputs}: snow adds, sun/ocean/earth heat
+\item \emph{mass outputs}: surface/base melt, ice flows out (discharges)
 \end{itemize}
 
 \begin{center}
@@ -475,12 +484,11 @@
   \frametitle{ice shelf versus sea ice}
 
 \begin{center}
-\vspace{-0.2in}
 
 \includegraphics[width=1.0\textwidth]{supp4rignot-small}
 
 \medskip
-\tiny [ice shelf at Thwaites Glacier, Antarctic]
+\tiny ice shelf at Thwaites Glacier, Antarctic; E.~Rignot
 \end{center}
 \end{frame}
 
@@ -549,25 +557,22 @@
 \begin{align*}
 \nabla \cdot \mathbf{u} &= 0 &&\text{\emph{incompressibility}} \\
 0 &= - \nabla p + \nabla \cdot \tau_{ij} + \rho \mathbf{g} &&\text{\emph{stress balance}} \\
-\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{Glen flow law}}
+\mathbf{D}u_{ij} &= A \left|\tau_{ij}\right|^2 \tau_{ij} &&\text{\emph{flow law}}
 \end{align*}
 \normalsize
 \item \alert{most models don't solve it because it is too expensive}
-\item derive SIA equations by scaling based on shallowness:
+\item instead: derive SIA equations by scaling based on shallowness
   \begin{itemize}
   \item[$\circ$] $[h]$ is a typical thickness, $[x]$ is a typical width
   \item[$\circ$] small parameter is $\eps = [h] / [x]$
-  \end{itemize}
-\item horizontal ice velocity is given by ($n=3$): 
+  \item[$\circ$] horizontal ice velocity is given by 
   $${\bf U}  =  - \frac{2 A}{4} (\rho g)^{3} \left[ (s-b)^4 - (s - z)^4  \right] 
 |\nabla s |^{2} \nabla s$$
-
-\vspace{-2mm}
-  \begin{itemize}
   \item[$\circ$] no PDE to solve for velocity
   \end{itemize}
 \item SIA is good approximation when
   \begin{itemize}
+  \item[$\circ$] ice sheet is big, thus shallow
   \item[$\circ$] sliding is small or zero
   \item[$\circ$] bedrock slope is modest
   \end{itemize}
@@ -582,17 +587,18 @@
 \begin{itemize}
 \item mass conservation in steady state: 
   $$\Div \left(  \int_b^s {\bf U}\, dz \right)  =  a$$
-\item shallow ice approximation + (steady) mass conservation:
+\item SIA + (steady mass conservation) is the equation
 \begin{equation}
 - \Div \left(\Gamma (s-b)^5 | \nabla s |^2 \nabla s  \right) =  a  \tag{$\ast$}
 \end{equation}
   \begin{itemize}
   \vspace{-0.2in}
-  \item[$\circ$] this is the major SIA equation \dots a PDE
+  \item[$\circ$] this is the main SIA equation \dots a PDE
   \item[$\circ$] the unknown is ice surface elevation $s(x,y)$
   \item[$\circ$] like Poisson equation $-\Div (\nabla u) = f$ except nonlinear and singular
   \end{itemize}
-\item the \alert{minimal useful numerical ice sheet model} is a program which approximately solves ($\ast$) for $s(x,y)$ given steady climate inputs $a(x,y)$ and bed elevation $b(x,y)$
+\item the \alert{minimal useful numerical ice sheet model} is a program which approximately solves ($\ast$), for $s(x,y)$, given steady climate inputs $a(x,y)$ and bed elevation $b(x,y)$
+\item \dots but it's a free boundary problem
 \end{itemize}
 \end{frame}
 
@@ -605,7 +611,7 @@
 \begin{itemize}
 \item ice sheet surface \\ $\sim$ \alert{membrane}
 \item bedrock $\sim$ \alert{obstacle}
-\item ice sheet shape solves this kind of \alert{free boundary problem}
+\item ice sheet shape solves such a \alert{free boundary problem}
 \end{itemize}
 \vfill
 \begin{center}
@@ -637,8 +643,8 @@
 \item the ice is a membrane which connects sliding parts to non-sliding parts
 
 \bigskip
-\item<2> note: ice \emph{shelves} have zero basal resistance
-\item<2> the equations for ice streams and shelves are similar \dots more PDEs \dots which I'll skip
+\item<2> ice \emph{shelves} have zero basal resistance
+\item<2> the equations for ice streams and shelves are similar \dots skipped
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
@@ -655,14 +661,14 @@
 \begin{frame}{numerical model results: Greenland scenarios}
 
 \begin{itemize}
-\item for thinking about climate possibilities the IPCC proposed \emph{representative concentration pathways} for greenhouse gases in the next century
+\item for climate scenarios the IPCC proposed \emph{representative concentration pathways} for greenhouse gases in the next century
     \begin{itemize}
     \item[$\circ$] RCP 2.6 assumes least greenhouse gases
     \item[$\circ$] RCP 8.5 assumes most (``business as usual'')
     \item[$\circ$] consensus in 2014: mean sea level projected to rise by 0.26--0.82 m by 2100
     \item[$\circ$] even for 100 years, ice sheet behavior is the largest uncertainty
         \begin{itemize}
-        \item uncertainty increases greatly thereafter
+        \item uncertainty increases fast thereafter
         \end{itemize}
     \end{itemize}
 \item \alert{the following movie} is unpublished, new results
@@ -680,14 +686,14 @@
 
 \section[on being right]{how to know if numerical models are right?}
 
-\begin{frame}{how to know if numerical models are right?}
+\begin{frame}{how to know if numerical models are correct?}
 
 \begin{itemize}
 \item they are \emph{never} ``correct'' in the sense of ``exact match to reality'' \emph{or even} ``exact match to continuum equations''
-\item the \alert{goal} is: \alert{close to exact, with knowable maximum errors, and rapidly converging with increasing computational effort}
 
 \bigskip
-\item<2> there are three basic strategies to be right:
+\item the \alert{goal} is: \emph{close to exact, with knowable maximum errors, and rapidly converging with increasing computational effort}
+\item there are three basic strategies to achieve this goal:
     \begin{enumerate}
     \item proofs that a scheme converges or is stable (\emph{a priori} proofs)
     \item \alert{verification}: using known exact solutions of the equations to measure numerical error
@@ -701,16 +707,27 @@
 
 \begin{itemize}
 \item verification is key tool to assist development of complex models
-\item \alert{but requires exact solutions}
+\item \alert{requires exact solutions}
 \item these come from:
     \begin{itemize}
     \item[$\circ$] exploiting symmetries and special configurations
         \begin{itemize}
-        \item \alert{movie on nex slide} shows an example
+        \item \alert{movie on next slide} shows an example
         \end{itemize}
-    \item[$\circ$] ``manufacturing'' solutions to differential equations by deriving inputs (source terms) using assumed formulas for solutions
+    \item[$\circ$] ``manufacturing'' solutions to differential equations
+        \begin{itemize}
+        \item by deriving inputs (source terms) using assumed formulas for solutions
+        \end{itemize}
     \end{itemize}
-\item job security for applied mathematicians
+
+\bigskip
+\item the main equation:
+   $$\left(\begin{matrix}
+   \text{concerns about} \\ \text{numerical model quality}
+   \end{matrix}\right)
+   = \left(\begin{matrix}
+      \text{job security for} \\ \text{applied mathematicians}
+   \end{matrix} \right)$$
 \end{itemize}
 \end{frame}
 
@@ -769,7 +786,7 @@
 \end{frame}
 
 
-\begin{frame}{models of ice shelves: they work}
+\begin{frame}{models of ice shelves at current time: they work}
 
 \begin{itemize}
 \item Ross ice shelf (Antarctica) velocity below
@@ -784,6 +801,13 @@
   \mbox{\includegraphics[width=0.58\textwidth]{rossquiver} \, \includegraphics[width=0.48\textwidth]{rossscatter}}
 \end{center}
 \end{frame}
+
+
+\begin{frame}{models of Greenland at current time: also work}
+
+FIXME
+\end{frame}
+
 
 \begin{frame}
   \frametitle{moving grounding line in the lab}
@@ -807,9 +831,9 @@
 
 \begin{itemize}
 \item ice sheets are fluid problems
-\item \dots for which the equations are systems of nonlinear PDEs
-\item \dots so numerical models are needed in practice
-\item \dots so it's a good field in which to work as an applied mathematician
+\item \dots equations are systems of nonlinear PDEs
+\item \dots so numerical models are needed
+\item \dots a good field to work in as an applied mathematician
 \end{itemize}
 
 \begin{center}
