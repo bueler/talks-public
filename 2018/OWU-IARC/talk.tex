@@ -118,7 +118,7 @@
 
 
 
-\title{Flowing ice in glaciers and ice sheets \\ (as applied math)}
+\title{Modeling flowing ice sheets \\ \dots as applied math}
 
 \author[Bueler]{Ed Bueler}
 
@@ -183,18 +183,27 @@
 
 \setbeamertemplate{background canvas}{}
 
-\begin{frame}{the view from space}
+\begin{frame}{from space \dots}
 
 \begin{columns}
-\begin{column}{0.6\textwidth}
+\begin{column}{0.55\textwidth}
 \begin{itemize}
-\item satellites can measure gravity changes \hfill \alert{\dots show GRACE movie}
-\item satellites can measure movement of earth surface through \emph{synthetic aperture radar} (SAR) \hfill \alert{\dots at right}
+\item one can measure gravity changes \only<1>{\alert{\dots show GRACE movie}} \only<2->{\phantom{\dots show GRACE movie}}
+\item<2-> one can measure surface movement (through \emph{synthetic aperture radar}) \phantom{foo bar baz} \hfill \only<2>{\alert{\dots at right}}
+\item<3-> one can observe changes in ice extent \hfill \only<3>{\alert{\dots at right}}
+
+\bigskip
+\item<4>regardless of the causes, as a newly-arrived physicist observing Greenland, you would observe in the last decades:
+    \begin{itemize}
+    \item[$\circ$] the ice sheet has been losing mass
+    \item[$\circ$] the flow pattern and ice extent around the outlet glaciers has changed
+    \end{itemize}
 \end{itemize}
 \end{column}
-\begin{column}{0.4\textwidth}
+\begin{column}{0.45\textwidth}
 
-\hfill \includegraphics[width=0.95\textwidth]{greenland-overview-obsonly}
+\hfill \includegraphics<2>[width=0.8\textwidth]{greenland-overview-obsonly}
+\hfill \includegraphics<3->[width=0.8\textwidth]{jib-front-1990-2005-change}
 \end{column}
 \end{columns}
 \end{frame}
@@ -384,14 +393,20 @@
     \begin{itemize}
     \item[$\circ$] I know
     \end{itemize}
-\item what math is needed for numerical models of fluids like glaciers?
+\item<2> what math is needed for numerical models of fluids like glaciers?
     \begin{itemize}
-    \item[$\circ$] calc III \hfill (\emph{partial derivatives, surface integrals, \dots})
+    \item[$\circ$] calc III
+        \begin{itemize}
+        \item partial derivatives, surface integrals, \dots
+        \end{itemize}
     \item[$\circ$] linear algebra
         \begin{itemize}
-        \item because pretty much the fanciest trick you can program on a computer is to solve a linear system $A\bx = \bb$
+        \item pretty much the fanciest trick you can program on a computer is to solve a linear system $A\bx = \bb$
         \end{itemize}
-    \item[$\circ$] differential equations \hfill (\emph{ODEs \emph{and} PDEs})
+    \item[$\circ$] differential equations
+        \begin{itemize}
+        \item ODEs \emph{and} PDEs
+        \end{itemize}
     \item[$\circ$] some computer programming
         \begin{itemize}
         \item Matlab or Python
