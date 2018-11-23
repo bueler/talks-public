@@ -90,6 +90,7 @@
 
 \newcommand{\ip}[2]{\ensuremath{\left<#1,#2\right>}}
 
+\newcommand{\Span}{\operatorname{span}}
 
 \newenvironment{transbox}[1][]{%
 \begin{tikzpicture}
@@ -148,18 +149,20 @@
 
 \begin{frame}{general Poisson problem}
 \begin{itemize}
-\item everything today is in 2D
-\item consider a generalization of our usual ``$\triangle u = f$, $u=0$ on $\partial\Omega$'' problem:
-\begin{align}
-- \Div \left(a(u) \grad u\right) &= f(u)  &&\text{ on } \Omega, \label{eq:un:poissonstrong} \\
+\item $\Omega \subset \RR^2$ % with disjoint decomposition $\partial \Omega = \partial_D \Omega \cup \partial_N \Omega$
+\item generalize our usual ``$\triangle u = f$, $u=0$ on $\partial\Omega$'' problem:
+\begin{align*}
+- \Div \left(a(u) \grad u\right) &= f(u)  &&\text{ on } \Omega, \\
 u &= g_D &&\text{ on } \partial_D \Omega, \notag \\
 \frac{\partial u}{\partial n} &= g_N &&\text{ on } \partial_N \Omega. \notag
-\end{align}
-\item we assume \emph{uniform ellipticity}
-\begin{equation}
-a(u,x,y) \ge \eps > 0, \label{eq:un:uniformelliptic}
-\end{equation}
-\item and that $f(u,x,y)$ and $g_N(x,y)$ and $g_D(x,y)$ are given continuous (or at least $L^2$) functions
+\end{align*}
+\item $a(u,x,y)$, $f(u,x,y)$, $g_N(x,y)$, $g_D(x,y)$ are given (data)
+%\item for well-posedness:
+%    \begin{itemize}
+%    \item[$\circ$] assume $a,f,g_N,g_D$ at least $L^2$ in $x,y$
+%    \item[$\circ$] expect $f$ to be Lipschitz in $u$
+%    \item[$\circ$] assume \emph{uniform ellipticity}: $a(u,x,y) \ge \eps > 0$
+%    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -169,16 +172,96 @@ a(u,x,y) \ge \eps > 0, \label{eq:un:uniformelliptic}
 \end{center}
 \end{frame}
 
-\begin{frame}{X}
-X
+\begin{frame}{weak form}
+\begin{itemize}
+\item $u\in H_g^1(\Omega) = \{u\in H^1(\Omega)\,:\,u=g_D \text{ on } \partial_D\Omega\}$
+\item test functions: $H_0^1(\Omega) = \{v\in H^1(\Omega)\,:\,v=0 \text{ on } \partial_D\Omega\}$
+\item for $v\in H^1_0(\Omega)$, multiply PDE by $v$ and integrate by parts:
+\begin{equation*}
+\int_\Omega a(u) \grad u \cdot \grad v - \int_{\partial\Omega} \frac{\partial u}{\partial n} v = \int_\Omega f(u) v
+\end{equation*}
+\item apply boundary conditions:
+\begin{equation*}
+\int_\Omega a(u) \grad u \cdot \grad v = \int_\Omega f(u) v + \int_{\partial_N\Omega} g_N v \tag{WF}
+\end{equation*}
+\item seek $u \in H^1_g(\Omega)$ satisfying weak form (WF)
+\item Neumann data $g_N$ appears in (WF)
+\item Dirichlet data $g_D$ is used in defining $H^1_g(\Omega)$
+\end{itemize}
 \end{frame}
 
-\begin{frame}{X}
-X
+\begin{frame}{examples of such PDEs}
+\begin{itemize}
+\item Poisson equation:
+    $$-\triangle u=f(x,y), \quad u=0 \text{ on } \partial \Omega$$
+\item Liouville-Bratu equation:
+    $$-\triangle u = \lambda e^u$$
+
+\vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] critical $\lambda$ for well-posedness
+    \end{itemize}
+\item porous-medium equation:
+    $$-\Div\left((u^{m-1} + \eps)\grad u\right) = f$$
+
+\vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] regularized with $\eps>0$ for uniform ellipticity
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{X}
-X
+\begin{frame}{triangulation and numbering}
+\mbox{\input{blob1elenum.tex} \quad \input{blob1nodenum.tex}}
+
+\begin{itemize}
+\item triangulation $\mathcal{T}_h$ of a polygon $\Omega$
+\item numbering:
+    \begin{itemize}
+    \item[$\circ$] $K=21$ elements (left)
+    \item[$\circ$] $N=17$ nodes (right)
+    \item[$\circ$] $P=7$ segments in Neumann boundary (bold)
+    \item[$\circ$] $n_D=5$ nodes in Dirichlet boundary
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{FEM spaces}
+\vspace{4mm}
+
+\begin{itemize}
+\item hat functions satisfy $\psi_j(\bx_i)=\delta_{ij}$
+
+\vspace{-10mm}
+
+\hfill \input{hatfunction.tex}
+\item use hat functions to approximate $g_D(\bx)$:
+\begin{equation*}
+\hat g_D(x,y) = \sum_{l=0}^{n_D-1} g_D(\bx_{j_l}) \psi_{j_l}(x,y) \quad \in C(\overline\Omega)
+\end{equation*}
+\item use hat functions to define test functions:
+\begin{equation*}
+S_{0}^h = \Span\left<\psi_j \,:\, \bx_j \notin \partial_D \Omega\right> \subset H_0^1(\Omega)
+\end{equation*}
+\item and trial functions
+\begin{equation*}
+S_{g}^h = \left\{\hat g_D + w \,:\, w \in S_{0}^h\right\} \subset H_g^1(\Omega)
+\end{equation*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{FEM spaces}
+\begin{itemize}
+\item expand the trial function $u^h$:
+\begin{equation*}
+u^h(x,y) = \hat g_D(x,y) + \sum_{\bx_j \notin \partial_D \Omega} u_j\, \psi_j(x,y)
+\end{equation*}
+\item for all $i$ such that $\bx_i \notin \partial_D \Omega$,
+\begin{equation*}
+\int_\Omega a(u^h) \grad u^h \cdot \grad \psi_i = \int_\Omega f(u^h) \psi_i + \int_{\partial_N\Omega} g_N \psi_i
+\end{equation*}
+\item $\dim(S_{0}^h)=\dim(S_{g}^h)=N-n_D$
+\end{itemize}
 \end{frame}
 
 \section{solving the equations}
