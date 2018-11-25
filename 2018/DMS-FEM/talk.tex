@@ -76,7 +76,10 @@
 \newcommand{\bU}{\mathbf{U}}
 \newcommand{\bX}{\mathbf{X}}
 
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bc}{\mathbf{c}}
 \newcommand{\bn}{\mathbf{n}}
+\newcommand{\bp}{\mathbf{p}}
 \newcommand{\bq}{\mathbf{q}}
 \newcommand{\bs}{\mathbf{s}}
 \newcommand{\bu}{\mathbf{u}}
@@ -342,7 +345,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 
 \begin{frame}{nonlinear residual}
 \begin{itemize}
-\item summary so far: the result of FEM assembly is a nonlinear system:
+\item the result of FEM assembly is a nonlinear system:
 \begin{equation*}
 \bF(\bu)=0  \tag{$\ast$}
 \end{equation*}
@@ -350,16 +353,22 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
     \begin{itemize}
     \item[$\circ$] continuous and differentiable if $a,f$ are
     \end{itemize}
-\item solve ($\ast$) by Newton method (or similar):
+\item solve ($\ast$) by Newton method:
 \begin{align*}
-    J_\bF(\bu_k) \bs &= - \bF(\bu_k)  \\
-    \bu_{k+1} &= \bu_k + \bs
+    J_\bF(\bu_k) \bp &= - \bF(\bu_k)  \\
+    \bu_{k+1} &= \bu_k + \alpha_k \bp
 \end{align*}
+
+\vspace{-2mm}
+    \begin{itemize}
+    \item[$\circ$] Newton method should be implemented with line search to get $\alpha_k$ using merit function like $\Phi(\bu)=\frac{1}{2}\|\bF(\bu)\|^2$
+    \item[$\circ$] Newton method converges in one step if $a=a(x,y)$ and $f=f(x,y)$ \dots i.e.~in the linear case
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{the FEM stiffness matrix}
+\begin{frame}{the Jacobian is the FEM stiffness matrix}
 \begin{itemize}
 \item $J_\bF(\bu)$ is the FEM ``stiffness matrix''
 \item sparsity patterns for cases with $N=7,18,55$ nodes
@@ -376,27 +385,36 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{frame}
 
 
-\begin{frame}{X}
-X
+\begin{frame}{the Newton step is a sparse linear system}
+\begin{itemize}
+\item the Newton step $J_\bF(\bu_k) \bp = - \bF(\bu_k)$ is a linear system for $p$:
+    $$A \bp = \bb$$
+
+\vspace{-3mm}
+    \begin{itemize}
+    \item[$\circ$] if PDE is well-posed then $A=J_\bF(\bu_k)$ is invertible
+    \item[$\circ$] often $A=J_\bF(\bu_k)$ is symmetric positive-definite
+    \item[$\circ$] always $A=J_\bF(\bu_k)$ is sparse $N\times N$ matrix
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{X}
-X
-\end{frame}
-
-
-\begin{frame}{X}
-X
-\end{frame}
-
-
-\begin{frame}{X}
-X
-\end{frame}
-
-\begin{frame}{X}
-X
+\begin{frame}{solving sparse linear systems}
+\begin{itemize}
+\item the Newton step is $A \bp = \bb$ where $A=J_\bF(\bu_k)$ is sparse and $N\times N$
+\item $O(N^3)$ dense algorithms works on small examples but struggle for big $N$
+    \begin{itemize}
+    \item[$\circ$] Gaussian elimination (LU decomposition)
+    \item[$\circ$] Cholesky decomposition
+    \end{itemize}
+\item modern expectation: solve $A\bp=\bb$ by preconditioned Krylov method
+    \begin{itemize}
+    \item[$\circ$] define \emph{Krylov space} as $\left<\bb,A\bb,A^2\bb,\dots,A^{k-1}\bb\right>$
+    \item[$\circ$] CG and GMRES are best-known Krylov methods
+    \item[$\circ$] a \emph{preconditioner} is a way of rapidly solving $M\bp=\bc$ where $M$ is spectrally-equivalent to $A$
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{X}
@@ -405,6 +423,51 @@ X
 
 
 \section{modern software: Python/Firedrake/PETSc}
+
+\begin{frame}{modern FEM software}
+
+\begin{itemize}
+\item modern FEM software should make this easy
+\item application packages (I don't know much about these!):
+    \begin{itemize}
+    \item[$\circ$] COMSOL Multiphysics  \hfill $\leftarrow$ grew out of Matlab toolbox
+    \item[$\circ$] ABACUS
+    \item[$\circ$] Autodesk Simulation
+    \end{itemize}
+\item open source libraries [language]:
+    \begin{itemize}
+    \item[$\circ$] deal.II [C++]
+    \item[$\circ$] libmesh [C++]
+    \item[$\circ$] Elmer [Fortran90]
+    \item[$\circ$] FEniCS [Python]
+    \item[$\circ$] Firedrake [Python]
+    \end{itemize}
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{X}
+X
+\end{frame}
+
+
+\begin{frame}{X}
+X
+\end{frame}
+
+
+\begin{frame}{X}
+X
+\end{frame}
+
+\begin{frame}{X}
+X
+\end{frame}
+
+\begin{frame}{X}
+X
+\end{frame}
 
 \begin{frame}{X}
 X
