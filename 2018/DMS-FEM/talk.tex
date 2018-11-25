@@ -78,6 +78,7 @@
 
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bq}{\mathbf{q}}
+\newcommand{\bs}{\mathbf{s}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
 \newcommand{\bx}{\mathbf{x}}
@@ -99,9 +100,9 @@
 \egroup;\end{tikzpicture}}
 
 
-\title{A practical view of the FEM}
+\title{A practical view of the classical FEM}
 
-\subtitle{with some software}
+\subtitle{(and some software)}
 
 \author[Bueler]{Ed Bueler}
 
@@ -120,12 +121,7 @@
 \date{}
 
 \AtBeginSection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Outline}
-    %\tableofcontents[currentsection,hideallsubsections]
-    \tableofcontents[currentsection]
-  \end{frame}
+{%
 }
 
 
@@ -140,23 +136,26 @@
 \end{frame}
 
 
-%\begin{frame}
-%    \frametitle{Outline}
-%    \tableofcontents
-%\end{frame}
+\begin{frame}
+    \frametitle{Outline}
+    \tableofcontents
+\end{frame}
+
 
 \section{assembly of FEM system for nonlinear Poisson problems}
 
-\begin{frame}{general Poisson problem}
+\begin{frame}{general, nonlinear Poisson problem}
 \begin{itemize}
 \item $\Omega \subset \RR^2$ % with disjoint decomposition $\partial \Omega = \partial_D \Omega \cup \partial_N \Omega$
-\item generalize our usual ``$\triangle u = f$, $u=0$ on $\partial\Omega$'' problem:
+\item recall our usual problem: $\triangle u = f$, $u=0$ on $\partial\Omega$
+\item these slides cover a nonlinear version with general boundary conditions:
 \begin{align*}
 - \Div \left(a(u) \grad u\right) &= f(u)  &&\text{ on } \Omega, \\
 u &= g_D &&\text{ on } \partial_D \Omega, \notag \\
 \frac{\partial u}{\partial n} &= g_N &&\text{ on } \partial_N \Omega. \notag
 \end{align*}
 \item $a(u,x,y)$, $f(u,x,y)$, $g_N(x,y)$, $g_D(x,y)$ are given (data)
+\item nonlinear because $a=a(u)$ and/or $f=f(u)$ is allowed
 %\item for well-posedness:
 %    \begin{itemize}
 %    \item[$\circ$] assume $a,f,g_N,g_D$ at least $L^2$ in $x,y$
@@ -166,11 +165,13 @@ u &= g_D &&\text{ on } \partial_D \Omega, \notag \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{general Poisson problem}
+
+\begin{frame}{general, nonlinear Poisson problem}
 \begin{center}
 \input{generalpoissondomain.tex}
 \end{center}
 \end{frame}
+
 
 \begin{frame}{weak form}
 \begin{itemize}
@@ -195,6 +196,7 @@ u &= g_D &&\text{ on } \partial_D \Omega, \notag \\
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}{examples}
 some examples of $- \Div \left(a(u) \grad u\right) = f(u)$:
 \begin{itemize}
@@ -218,27 +220,29 @@ some examples of $- \Div \left(a(u) \grad u\right) = f(u)$:
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}{meshes and numbering}
 \mbox{\input{blob1elenum.tex} \quad \input{blob1nodenum.tex}}
 
 \begin{itemize}
-\item triangulation $\mathcal{T}_h$ of a polygon $\Omega$
-\item numbering for the example above:
+\item triangulation $\mathcal{T}_h$ of a polygonal domain $\Omega$
+\item numbering:
     \begin{itemize}
-    \item[$\circ$] $K=21$ elements (left)
-    \item[$\circ$] $N=17$ nodes (right)
-    \item[$\circ$] $P=7$ segments in Neumann boundary (bold)
-    \item[$\circ$] $n_D=5$ nodes in Dirichlet boundary
+    \item[$\circ$] $K$ elements ($=21$ above; left)
+    \item[$\circ$] $N$ nodes ($=17$ above; right)
+    \item[$\circ$] $P$ segments in Neumann boundary ($=7$ above; bold)
+    \item[$\circ$] $n_D$ nodes in Dirichlet boundary ($=5$ above)
     \end{itemize}
-\item need node locations $\bx_i=(x_i,y_i)$
+\item to fully describe mesh, also need node locations $\bx_i=(x_i,y_i)$
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}{FEM spaces}
 \vspace{4mm}
 
 \begin{itemize}
-\item hat functions satisfy (classical $P_1$):
+\item hat functions satisfy:
     \begin{itemize}
     \item[$\circ$] $\psi_j(\bx)$ continuous
     \item[$\circ$] $\psi_j \in P_1$ on each element
@@ -252,23 +256,20 @@ some examples of $- \Div \left(a(u) \grad u\right) = f(u)$:
 \begin{equation*}
 \hat g_D(\bx) = \sum_{l=0}^{n_D-1} g_D(\bx_{j_l}) \psi_{j_l}(\bx) \quad \in C(\overline\Omega)
 \end{equation*}
-\item use hat functions to define test functions:
+\item use hat functions to define test function space:
 \begin{equation*}
 S_{0}^h = \Span\left<\psi_j \,:\, \bx_j \notin \partial_D \Omega\right> \subset H_0^1(\Omega)
 \end{equation*}
-\item and trial functions
+\item \dots and trial function space:
 \begin{equation*}
 S_{g}^h = \left\{\hat g_D + w \,:\, w \in S_{0}^h\right\} \stackrel{?}{\subset} H_g^1(\Omega)
 \end{equation*}
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}{FEM spaces}
 \begin{itemize}
-\item $\dim(S_{0}^h)=\dim(S_{g}^h)=N-n_D$
-    \begin{itemize}
-    \item[$\circ$] so we can assemble a square system
-    \end{itemize}
 \item expand the FEM solution $u^h$:
 \begin{equation*}
 u^h(\bx) = \hat g_D(\bx) + \sum_{\bx_j \notin \partial_D \Omega} u_j\, \psi_j(\bx)
@@ -277,8 +278,14 @@ u^h(\bx) = \hat g_D(\bx) + \sum_{\bx_j \notin \partial_D \Omega} u_j\, \psi_j(\b
 \begin{equation*}
 \int_\Omega a(u^h) \grad u^h \cdot \grad \psi_i = \int_\Omega f(u^h) \psi_i + \int_{\partial_N\Omega} g_N \psi_i  \tag{DWF}
 \end{equation*}
+\item $\dim(S_{0}^h)=\dim(S_{g}^h)=N-n_D$
+\item however, it is easier to also make Dirichlet boundary nodes into degrees of freedom
+    \begin{itemize}
+    \item[$\circ$] we assemble a nonlinear system of $N$ equations in $N$ unknowns
+    \end{itemize}
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}{element residuals}
 \begin{itemize}
@@ -292,11 +299,11 @@ F_i^k(\bu) = \int_{\triangle_k} a(u^h) \grad u^h \cdot \grad \psi_i - f(u^h) \ps
 \end{equation*}
 
 \vspace{-2mm}
-\item for $\bx_i \notin \partial_D\Omega$, (DWF) becomes:
+\item (DWF) becomes:
 \begin{equation*}
-F_i(\bu) = \sum_{k=0}^{K-1} F_i^k(\bu) - \sum_{\nu=0}^{P-1} \varphi_i^\nu = 0
+F_i(\bu) = \sum_{k=0}^{K-1} F_i^k(\bu) - \sum_{\nu=0}^{P-1} \varphi_i^\nu = 0 \qquad \text{ for } \bx_i \notin \partial_D\Omega
 \end{equation*}
-\item Dirichlet boundary nodes are degrees of freedom (easier!):
+\item for Dirichlet boundary nodes have easy equation:
 \begin{equation*}
 F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{equation*}
@@ -304,33 +311,85 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{frame}
 
 
+\begin{frame}{summary: the system of equations from the FEM}
+\begin{itemize}
+\item recall: $N$ is number of nodes in mesh
+\item (DWF) is an algebraic system of $N$ equations in $N$ unknowns
+\begin{equation*}
+\bF(\bu)=0  \tag{$\ast$}
+\end{equation*}
+    \begin{itemize}
+    \item[$\circ$] one equation $F_i(\bu)=0$ per node
+    \item[$\circ$] one unknown $u_i$ per node
+    \item[$\circ$] nonlinear system if $\partial a/\partial u \ne 0$ and/or $\partial f/\partial u \ne 0$
+    \item[$\circ$] sparse because support of a hat function $\psi_i$ only overlaps with a few triangles $\triangle_k$, and thus only a few nodal values $\bu=\{u_j\}$ enter into a given $F_i^k(\bu)$
+    \item[$\circ$] $J_{\bF} = (\partial \bF_i/\partial u_j)$ is the \emph{Jacobian}, a sparse matrix
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    %\tableofcontents[currentsection,hideallsubsections]
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
 \section{solving the equations}
 
 \begin{frame}{nonlinear residual}
 \begin{itemize}
-\item result of assembly is nonlinear system:
+\item summary so far: the result of FEM assembly is a nonlinear system:
 \begin{equation*}
 \bF(\bu)=0  \tag{$\ast$}
 \end{equation*}
-\item \emph{residual} $\bF:\RR^N \to \RR^N$ is continuous and differentiable
-\item solve ($\ast$) by Newton method etc.
-
-\bigskip
-\item question: where did the FEM stiffness matrix go?
+\item the function $\bF:\RR^N \to \RR^N$ is called the  \emph{residual}
+    \begin{itemize}
+    \item[$\circ$] continuous and differentiable if $a,f$ are
+    \end{itemize}
+\item solve ($\ast$) by Newton method (or similar):
+\begin{align*}
+    J_\bF(\bu_k) \bs &= - \bF(\bu_k)  \\
+    \bu_{k+1} &= \bu_k + \bs
+\end{align*}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{X}
-X
+
+\begin{frame}{the FEM stiffness matrix}
+\begin{itemize}
+\item $J_\bF(\bu)$ is the FEM ``stiffness matrix''
+\item sparsity patterns for cases with $N=7,18,55$ nodes
+
+\bigskip\bigskip
+\mbox{\includegraphics[width=0.25\textwidth]{trap1mat} \, \includegraphics[width=0.25\textwidth]{trap2mat} \, \includegraphics[width=0.25\textwidth]{trapsmat}}
+
+\medskip
+\item $N=7$ and $N=55$ meshes for the above matrices:
+
+\bigskip\bigskip
+\input{trap1.tex} \hfill \input{traps.tex}
+\end{itemize}
 \end{frame}
+
 
 \begin{frame}{X}
 X
 \end{frame}
 
+
 \begin{frame}{X}
 X
 \end{frame}
+
+
+\begin{frame}{X}
+X
+\end{frame}
+
 
 \begin{frame}{X}
 X
