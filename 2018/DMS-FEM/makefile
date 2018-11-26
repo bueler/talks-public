@@ -1,8 +1,10 @@
 all: talk.pdf
 
-TIKZFIGURES=
+FIGURES=
 
-talk.pdf: talk.tex ${TIKZFIGURES}
+TIKZ=
+
+talk.pdf: talk.tex ${FIGURES} ${TIKZ}
 	pdflatex talk
 	pdflatex talk
 
