@@ -15,14 +15,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[multidot]{grffile}
-\usepackage{verbatim,empheq}
+\usepackage{amsmath,verbatim,fancyvrb,empheq}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,shadows}
 \usetikzlibrary{decorations.pathreplacing}
 
-\usepackage{animate}
-\usepackage{amsmath,verbatim}
 
 % see http://tex.stackexchange.com/questions/86188/labelling-with-arrows-in-an-automated-way
 
@@ -96,11 +94,14 @@
 
 \newcommand{\Span}{\operatorname{span}}
 
-\newenvironment{transbox}[1][]{%
-\begin{tikzpicture}
-\node[drop shadow,rounded corners,text width=\textwidth,fill=white, fill opacity=#1,text opacity=1] \bgroup
-}{
-\egroup;\end{tikzpicture}}
+\DefineVerbatimEnvironment{cline}{Verbatim}
+{fontsize=\small,frame=leftline,framerule=0.3mm,framesep=2.0mm}
+
+\DefineVerbatimEnvironment{code}{Verbatim}
+{fontsize=\small,xleftmargin=5mm}
+
+\DefineVerbatimEnvironment{scode}{Verbatim}
+{fontsize=\footnotesize,xleftmargin=5mm}
 
 
 \title{A practical view of the classical FEM}
@@ -462,7 +463,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{frame}
 
 
-\section{modern software: Python/Firedrake/PETSc}
+\section{modern software: Gmsh, Firedrake, PETSc}
 
 \begin{frame}{modern FEM software}
 
@@ -511,7 +512,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 
 \begin{frame}{mesh generation}
 \begin{itemize}
-\item start with mesh generation using Gmsh (\href{http://gmsh.info/}{\alert{\texttt{gmsh.info}}})
+\item start with mesh generation using Gmsh (\href{http://gmsh.info/}{\color{blue} \texttt{gmsh.info}})
 \item different meshers have different quality:
 
 \medskip
@@ -521,7 +522,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 
     \vspace{-1mm}
     \begin{itemize}
-    \item[$\circ$] 2004 FEM seminar used \href{https://popersson.github.io/distmesh/}{\alert{DistMesh}} in Matlab
+    \item[$\circ$] 2004 FEM seminar used \href{https://popersson.github.io/distmesh/}{\color{blue} DistMesh} in Matlab
     \end{itemize}
 
 \item Gmsh is a standard choice for ``real'' applications \dots
@@ -533,10 +534,44 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{frame}
 
 
-\begin{frame}{X}
-X
+\begin{frame}[fragile]
+\frametitle{a fractal Poisson example}
+\begin{itemize}
+\item problem:
+    $$-\triangle u = 1, \qquad u=0 \text{ on } \partial\Omega$$
+\item generate polygon $\Omega$ (left figure) and ask Gmsh to triangulate it (right figure):
+\end{itemize}
 
+\begin{cline}
+$ ./domain.py -l 2 -o koch2.geo
+$ gmsh -2 koch2.geo
+\end{cline}
+
+\begin{center}
 \input{koch.tex} \qquad \input{koch1.tex}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{solving the problem: what it looks like}
+
+in fact I wrote three codes:
+\begin{itemize}
+\item \texttt{domain.py} generates the boundary polygon
+\item \texttt{msh2petsc.py} converts Gmsh output to binary
+\item \texttt{unfem.c} uses PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) to assemble the FEM residual
+\item \dots then it calls a nonlinear solver (SNES) in PETSc
+\end{itemize}
+
+this run uses algebraic multigrid-preconditioned CG on the level-6 fractal domain:
+\begin{cline}
+$ domain.py -l 6 -o koch6.geo
+$ gmsh -2 koch6.geo
+$ msh2petsc.py koch6
+$ unfem -un_mesh koch6 -un_case 4 \
+    -snes_type ksponly -ksp_type cg -pc_type gamg
+\end{cline}
 \end{frame}
 
 
@@ -546,6 +581,62 @@ X
 \end{center}
 \end{frame}
 
+
+\begin{frame}{using better tools}
+\begin{itemize}
+\item the last example requires too much hand-coding
+\item recall the second stack:
+\begin{center}
+Gmsh $\to$ Firedrake [Python] $\to$ PETSc $\to$ \href{https://www.paraview.org/}{\color{blue} Paraview}
+\end{center}
+\item Firedrake: \quad \href{https://www.firedrakeproject.org/}{\color{blue}\texttt{www.firedrakeproject.org}}
+\item what is it?:
+\begin{quote}
+Firedrake is an automated system for the solution of partial differential equations using the finite element method (FEM) \dots uses sophisticated code generation \dots Expressive specification of any PDE using the Unified Form Language from the \href{https://fenicsproject.org/}{\color{blue} FEniCS Project}.  Sophisticated, programmable solvers through seamless coupling with PETSc.
+\end{quote}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Unified Form Language example}
+
+\begin{itemize}
+\item UFL is \emph{expressive} language for weak forms
+\item consider problem $-\triangle u = f$ with $u=g$ on $\partial\Omega$, and weak form
+    $$\int_\Omega \grad u \cdot \grad v - f v = 0$$
+\item Python/UFL code:
+\end{itemize}
+\begin{code}
+Vh = FunctionSpace(mesh,'CG',degree=k)      # V_h = P^k
+u = Function(Vh)
+v = TestFunction(Vh)
+F = (dot(grad(u), grad(v)) - f * v) * dx    # weak form
+bc = DirichletBC(Vh, g, bdry_ids)
+solve(F == 0, u, bcs=[bc], ...)
+\end{code}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Unified Form Language example II}
+
+\begin{scode}
+V = VectorFunctionSpace(mesh, 'CG', degree=k+2)  # velocity space
+W = FunctionSpace(mesh, 'CG', degree=k)          # pressure space
+Z = V * W
+up = Function(Z)
+u,p = split(up)
+v,q = TestFunctions(Z)
+F = (mu * dot(grad(u), grad(v)) - p * div(v) - div(u) * q \
+     - dot(f_body,v)) * dx
+bc = ...
+solve(F == 0, up, bcs=bc, ...)
+\end{scode}
+\end{frame}
+
+%\section{runtime choices}
+\begin{comment}
 \begin{frame}{X}
 X
 \end{frame}
@@ -558,9 +649,6 @@ X
 X
 \end{frame}
 
-
-\section{runtime choices}
-
 \begin{frame}{X}
 X
 \end{frame}
@@ -572,18 +660,6 @@ X
 \begin{frame}{X}
 X
 \end{frame}
-
-\begin{frame}{X}
-X
-\end{frame}
-
-\begin{frame}{X}
-X
-\end{frame}
-
-\begin{frame}{X}
-X
-\end{frame}
-
+\end{comment}
 
 \end{document}
