@@ -488,12 +488,48 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{frame}
 
 
+\begin{frame}{tool stacks I have used}
+
+\begin{itemize}
+\item one needs a stack of four levels of tools:
+    $$(\text{mesh generation}) \to (\text{FEM assembly})$$
+    $$\qquad\qquad \to (\text{solver library}) \to (\text{visualization})$$
+
+    \vspace{-1mm}
+    \begin{itemize}
+    \item[$\circ$] commercial packages may hide this stack
+    \end{itemize}
+\item the two stacks I have used
+    \begin{enumerate}
+    \item Gmsh $\to$ (my own C code) $\to$ PETSc $\to$ (my own tools)
+    \item Gmsh $\to$ Firedrake [Python] $\to$ PETSc $\to$ Paraview
+    \end{enumerate}
+\item I will show examples of each
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{mesh generation}
-X
+\begin{itemize}
+\item start with mesh generation using Gmsh (\href{http://gmsh.info/}{\alert{\texttt{gmsh.info}}})
+\item different meshers have different quality:
 
-\includegraphics[width=0.65\textwidth]{meshcomparison}
+\medskip
+\begin{center}
+\includegraphics[width=0.45\textwidth]{meshcomparison}
+\end{center}
 
-\includegraphics[width=0.65\textwidth]{hipjoint}
+    \vspace{-1mm}
+    \begin{itemize}
+    \item[$\circ$] 2004 FEM seminar used \href{https://popersson.github.io/distmesh/}{\alert{DistMesh}} in Matlab
+    \end{itemize}
+
+\item Gmsh is a standard choice for ``real'' applications \dots
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{hipjoint}
+\end{center}
 \end{frame}
 
 
