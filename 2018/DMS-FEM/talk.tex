@@ -382,7 +382,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \begin{frame}{the Jacobian is the FEM stiffness matrix}
 \begin{itemize}
 \item $J_\bF(\bu)$ is the FEM ``stiffness matrix''
-\item \textbf{Example:} meshes with $N=7,18,55$ nodes
+\item example: meshes with $N=7,18,55$ nodes
 
 \bigskip
 \input{trap1.tex} \hfill \input{traps.tex}
@@ -432,17 +432,33 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
     \item[$\circ$] Cholesky decomposition
     \end{itemize}
 \item \dots but they struggle for big $N$
-\item modern expectation: preconditioned Krylov methods
+    \begin{itemize}
+    \item[$\circ$] variable reordering (minimum degree, nested dissection) helps a lot \dots but is still slow
+    \end{itemize}
+\item modern expectation: use Krylov methods
     \begin{itemize}
     \item[$\circ$] $\mathcal{K}_m(A,\bb) = \left<\bb,A\bb,A^2\bb,\dots,A^{m-1}\bb\right>$ is \emph{Krylov space}
     \item[$\circ$] CG and GMRES are best-known Krylov methods
     \end{itemize}
-\item a \emph{preconditioner} is a way of rapidly solving $M\bp=\bc$ where $M$ is spectrally-equivalent to $A$
 \end{itemize}
 \end{frame}
 
-\begin{frame}{X}
-X
+\begin{frame}{solving sparse linear systems}
+\begin{itemize}
+\item actually one uses \emph{preconditioned} Krylov methods
+\item a \emph{preconditioner} is an $M$ which is spectrally-equivalent to $A$ and such that $M\bp=\bc$ can be rapidly solved
+\item for $A\bp=\bb$ the preconditioned system is $M^{-1} A \bp = M^{-1} \bb$
+    \begin{itemize}
+    \item[$\circ$] $\mathcal{K}_m(M^{-1} A,M^{-1} \bb)$ contains good approximation of $\bp$
+    \end{itemize}
+\item preconditioners include:
+    \begin{itemize}
+    \item[$\circ$] diagonal of $A$ \hfill \emph{Jacobi}
+    \item[$\circ$] incomplete factorization \hfill \emph{ILU,IC}
+    \item[$\circ$] approximate block inverse \hfill \emph{ASM}
+    \item[$\circ$] application of multigrid cycles \hfill \emph{GMG,AMG}
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
@@ -452,11 +468,12 @@ X
 
 \begin{itemize}
 \item modern FEM software should make this easy
-\item application packages (I don't know much about these!):
+\item application packages:
     \begin{itemize}
-    \item[$\circ$] COMSOL Multiphysics  \hfill $\leftarrow$ grew out of Matlab toolbox
+    \item[$\circ$] COMSOL Multiphysics  \hfill $\leftarrow$ grew out of a Matlab toolbox
     \item[$\circ$] ABACUS
     \item[$\circ$] Autodesk Simulation
+    \item[$\circ$] I don't actually know much about these \dots
     \end{itemize}
 \item open source libraries [language]:
     \begin{itemize}
