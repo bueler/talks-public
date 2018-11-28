@@ -468,15 +468,15 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \begin{frame}{modern FEM software}
 
 \begin{itemize}
-\item modern FEM software should make this easy
+\item modern FEM software should make FEM easy
 \item application packages:
     \begin{itemize}
     \item[$\circ$] COMSOL Multiphysics  \hfill $\leftarrow$ grew out of a Matlab toolbox
     \item[$\circ$] ABACUS
     \item[$\circ$] Autodesk Simulation
-    \item[$\circ$] I don't actually know much about these \dots
+    \item[$\circ$] \emph{I don't actually know much about these packages} \dots
     \end{itemize}
-\item open source libraries [language]:
+\item open source libraries:
     \begin{itemize}
     \item[$\circ$] deal.II [C++]
     \item[$\circ$] libmesh [C++]
@@ -498,14 +498,14 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 
     \vspace{-1mm}
     \begin{itemize}
-    \item[$\circ$] commercial packages may hide this stack
+    \item[$\circ$] commercial packages hide this stack
     \end{itemize}
 \item the two stacks I have used
     \begin{enumerate}
     \item Gmsh $\to$ (my own C code) $\to$ PETSc $\to$ (my own tools)
-    \item Gmsh $\to$ Firedrake [Python] $\to$ PETSc $\to$ Paraview
+    \item Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview
     \end{enumerate}
-\item I will show examples of each
+\item I will show examples of using each stack
 \end{itemize}
 \end{frame}
 
@@ -513,7 +513,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \begin{frame}{mesh generation}
 \begin{itemize}
 \item start with mesh generation using Gmsh (\href{http://gmsh.info/}{\color{blue} \texttt{gmsh.info}})
-\item different meshers have different quality:
+\item mesh generation varies:
 
 \medskip
 \begin{center}
@@ -560,16 +560,16 @@ in fact I wrote three codes:
 \begin{itemize}
 \item \texttt{domain.py} generates the boundary polygon
 \item \texttt{msh2petsc.py} converts Gmsh output to binary
-\item \texttt{unfem.c} uses PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) to assemble the FEM residual
-\item \dots then it calls a nonlinear solver (SNES) in PETSc
+\item \texttt{unfem.c} assemble the FEM residual; it uses PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) structures and then it calls a nonlinear solver (SNES) in PETSc
 \end{itemize}
 
-this run uses algebraic multigrid-preconditioned CG on the level-6 fractal domain:
+\medskip
+following run uses algebraic multigrid-preconditioned CG on the level-6 fractal domain:
 \begin{cline}
 $ domain.py -l 6 -o koch6.geo
 $ gmsh -2 koch6.geo
 $ msh2petsc.py koch6
-$ unfem -un_mesh koch6 -un_case 4 \
+$ unfem -un_mesh koch6 \
     -snes_type ksponly -ksp_type cg -pc_type gamg
 \end{cline}
 \end{frame}
@@ -582,38 +582,37 @@ $ unfem -un_mesh koch6 -un_case 4 \
 \end{frame}
 
 
-\begin{frame}{using better tools}
+\begin{frame}{better tools}
 \begin{itemize}
 \item the last example requires too much hand-coding
 \item recall the second stack:
 \begin{center}
-Gmsh $\to$ Firedrake [Python] $\to$ PETSc $\to$ \href{https://www.paraview.org/}{\color{blue} Paraview}
+Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview % \href{https://www.paraview.org/}{\color{blue} Paraview}
 \end{center}
 \item Firedrake: \quad \href{https://www.firedrakeproject.org/}{\color{blue}\texttt{www.firedrakeproject.org}}
-\item what is it?:
 \begin{quote}
-Firedrake is an automated system for the solution of partial differential equations using the finite element method (FEM) \dots uses sophisticated code generation \dots Expressive specification of any PDE using the Unified Form Language from the \href{https://fenicsproject.org/}{\color{blue} FEniCS Project}.  Sophisticated, programmable solvers through seamless coupling with PETSc.
+\dots is an automated system for the solution of partial differential equations using the finite element method (FEM) \dots uses sophisticated code generation \dots Expressive specification of any PDE using the Unified Form Language from the \href{https://fenicsproject.org/}{\color{blue} FEniCS Project}.  Sophisticated, programmable solvers through seamless coupling with PETSc.
 \end{quote}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}[fragile]
-\frametitle{Unified Form Language example}
+\frametitle{Unified Form Language (UFL) example}
 
 \begin{itemize}
-\item UFL is \emph{expressive} language for weak forms
-\item consider problem $-\triangle u = f$ with $u=g$ on $\partial\Omega$, and weak form
+\item UFL is an \emph{expressive} language for weak forms
+\item consider Poisson problem $-\triangle u = f$ with $u=g$ on $\partial\Omega$, with function space $S_0^h = P^1$ and weak form
     $$\int_\Omega \grad u \cdot \grad v - f v = 0$$
-\item Python/UFL code:
+\item Python UFL Firedrake code:
 \end{itemize}
 \begin{code}
-Vh = FunctionSpace(mesh,'CG',degree=k)      # V_h = P^k
-u = Function(Vh)
-v = TestFunction(Vh)
+Sh = FunctionSpace(mesh,'CG',degree=k)      # Sh = P^k
+u = Function(Sh)
+v = TestFunction(Sh)
 F = (dot(grad(u), grad(v)) - f * v) * dx    # weak form
-bc = DirichletBC(Vh, g, bdry_ids)
-solve(F == 0, u, bcs=[bc], ...)
+bc = DirichletBC(Sh, g, bdry_ids)
+solve(F == 0, u, bcs=bc, ...)
 \end{code}
 \end{frame}
 
