@@ -106,7 +106,7 @@
 
 \title{A practical view of the classical FEM}
 
-\subtitle{(and some software)}
+\subtitle{(and some FEM software)}
 
 \author[Bueler]{Ed Bueler}
 
@@ -493,12 +493,12 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 
 \begin{itemize}
 \item one needs 4 levels of tools:
-    $$\begin{matrix} \text{mesh generation} \\ \downarrow \\ \text{FEM assembly$^1$} \\ \downarrow \\ \text{solver library$^2$} \\ \downarrow \\ \text{visualization} \end{matrix}$$
+    $$\begin{matrix} \text{mesh generation} \\ \downarrow \\ \text{FEM assembly$^a$} \\ \downarrow \\ \text{solver library$^b$} \\ \downarrow \\ \text{visualization} \end{matrix}$$
 \item commercial packages may partially hide this structure, but libraries always separate these levels
 \item notes:
     \begin{enumerate}
-    \item includes weak form implementation, element definitions, and actual assembly
-    \item includes both nonlinear solvers (e.g.~Newton method) and linear solvers (e.g.~CG and preconditioners too)
+    \item[$a$] includes weak form declaration/implementation, element definitions, and actual assembly
+    \item[$b$] includes both nonlinear solvers (e.g.~Newton method) and linear solvers (e.g.~CG and preconditioners too)
     \end{enumerate}
 \end{itemize}
 \end{frame}
@@ -507,11 +507,15 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \begin{frame}{tool stacks I have actually used}
 
 \begin{itemize}
-\item the two stacks {\color{Magenta} I have actually used}:
+\item stacks {\color{Magenta} I have actually used}:
+\small
     $$\begin{matrix} \\ \text{mesh generation} \\ \downarrow \\ \text{FEM assembly} \\ \downarrow \\ \text{solver library} \\ \downarrow \\ \text{visualization} \end{matrix}
-    \qquad {\color{Magenta} \begin{matrix} \text{1.} \\ \text{Gmsh} \\ \downarrow \\ \text{my own C code} \\ \downarrow \\ \text{PETSc \scriptsize [from C] \normalsize} \\ \downarrow \\ \text{my own tools} \end{matrix}}
-    \quad {\color{Magenta} \begin{matrix} \text{2.} \\ \text{Gmsh} \\ \downarrow \\ \text{Firedrake} \\ \downarrow \\ \text{PETSc \scriptsize [through Firedrake] \normalsize} \\ \downarrow \\ \text{Paraview} \end{matrix}}$$
-\item I will show examples using {\color{Magenta} 1.} and {\color{Magenta} 2.}
+    \qquad {\color{Magenta} \begin{matrix} \text{1.} \\ \text{Distmesh} \\ \downarrow \\ \text{Matlab code}^* \\ \downarrow \\ \text{Matlab} \\ \downarrow \\ \text{Matlab} \end{matrix}}
+    \quad {\color{Magenta} \begin{matrix} \text{2.} \\ \text{Gmsh} \\ \downarrow \\ \text{C code}^* \\ \downarrow \\ \text{PETSc} \\ \downarrow \\ \text{my own tools} \end{matrix}}
+    \quad {\color{Magenta} \begin{matrix} \text{3.} \\ \text{Gmsh} \\ \downarrow \\ \text{Firedrake} \\ \downarrow \\ \text{PETSc} \\ \downarrow \\ \text{Paraview} \end{matrix}}$$
+\normalsize
+\item {\color{Magenta} $*$} $=$ (hand-coded FEM assembly)
+\item I will show examples using {\color{Magenta} 2.} and {\color{Magenta} 3.}
 \end{itemize}
 \end{frame}
 
@@ -597,7 +601,7 @@ $ unfem -un_mesh koch6 \
 
 \begin{itemize}
 \item the result was pretty but the code was ugly
-\item even though I used PETSc, \texttt{unfem.c} was 900 lines of C code
+\item even using PETSc, \texttt{unfem.c} was 900 lines of C code
 \end{itemize}
 \begin{scode}
 for (k = 0; k < user->mesh->K; k++) {
@@ -623,7 +627,7 @@ for (k = 0; k < user->mesh->K; k++) {
 
 \begin{frame}{better tools}
 \begin{itemize}
-\item the last example requires too much hand-coding
+\item previous tool stack requires too much hand-coding
 \item want better tools for FEM assembly stage
 \item recall the second stack:
 \begin{center} \color{Magenta}
@@ -645,7 +649,7 @@ Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview % \href{https://www.paraview.org
     \begin{itemize}
     \item[$\circ$] I will demonstrate with Poisson and Stokes equations
     \end{itemize}
-\item consider Poisson problem $-\triangle u = f$ on $\Omega$ with $u=g$ on $\partial\Omega$, function space $S_0^h = P^1$, and weak form
+\item consider Poisson problem $-\triangle u = f$ on $\Omega$ with $u=g$ on $\partial\Omega$, function space $S_0^h = P^k$ (arbitrary degree $k$), and weak form
     $$\int_\Omega \grad u \cdot \grad v - f v = 0$$
 \item Python UFL Firedrake code:
 \end{itemize}
@@ -699,20 +703,5 @@ solve(F == 0, up, bcs=bc, ...)
 X
 \end{frame}
 
-\begin{frame}{X}
-X
-\end{frame}
-
-\begin{frame}{X}
-X
-\end{frame}
-
-\begin{frame}{X}
-X
-\end{frame}
-
-\begin{frame}{X}
-X
-\end{frame}
 
 \end{document}
