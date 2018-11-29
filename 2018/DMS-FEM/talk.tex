@@ -468,7 +468,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \begin{frame}{modern FEM software}
 
 \begin{itemize}
-\item modern FEM software should make FEM easy
+\item slogan: \alert{modern FEM software should make FEM easy}
 \item application packages:
     \begin{itemize}
     \item[$\circ$] COMSOL Multiphysics  \hfill $\leftarrow$ grew out of a Matlab toolbox
@@ -489,30 +489,35 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \end{frame}
 
 
-\begin{frame}{tool stacks I have used}
+\begin{frame}{tool stacks}
 
 \begin{itemize}
-\item one needs a stack of four levels of tools:
-    $$(\text{mesh generation}) \to (\text{FEM assembly})$$
-    $$\qquad\qquad \to (\text{solver library}) \to (\text{visualization})$$
-
-    \vspace{-1mm}
-    \begin{itemize}
-    \item[$\circ$] commercial packages hide this stack
-    \end{itemize}
-\item the two stacks I have used
+\item one needs 4 levels of tools:
+    $$\begin{matrix} \text{mesh generation} \\ \downarrow \\ \text{FEM assembly$^1$} \\ \downarrow \\ \text{solver library$^2$} \\ \downarrow \\ \text{visualization} \end{matrix}$$
+\item commercial packages may partially hide this structure, but libraries always separate these levels
+\item notes:
     \begin{enumerate}
-    \item Gmsh $\to$ (my own C code) $\to$ PETSc $\to$ (my own tools)
-    \item Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview
+    \item includes weak form implementation, element definitions, and actual assembly
+    \item includes both nonlinear solvers (e.g.~Newton method) and linear solvers (e.g.~CG and preconditioners too)
     \end{enumerate}
-\item I will show examples of using each stack
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{tool stacks I have actually used}
+
+\begin{itemize}
+\item the two stacks {\color{Magenta} I have actually used}:
+    $$\begin{matrix} \\ \text{mesh generation} \\ \downarrow \\ \text{FEM assembly} \\ \downarrow \\ \text{solver library} \\ \downarrow \\ \text{visualization} \end{matrix}
+    \qquad {\color{Magenta} \begin{matrix} \text{1.} \\ \text{Gmsh} \\ \downarrow \\ \text{my own C code} \\ \downarrow \\ \text{PETSc \scriptsize [from C] \normalsize} \\ \downarrow \\ \text{my own tools} \end{matrix}}
+    \quad {\color{Magenta} \begin{matrix} \text{2.} \\ \text{Gmsh} \\ \downarrow \\ \text{Firedrake} \\ \downarrow \\ \text{PETSc \scriptsize [through Firedrake] \normalsize} \\ \downarrow \\ \text{Paraview} \end{matrix}}$$
+\item I will show examples using {\color{Magenta} 1.} and {\color{Magenta} 2.}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{mesh generation}
 \begin{itemize}
-\item start with mesh generation using Gmsh (\href{http://gmsh.info/}{\color{blue} \texttt{gmsh.info}})
 \item mesh generation varies:
 
 \medskip
@@ -525,7 +530,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
     \item[$\circ$] 2004 FEM seminar used \href{https://popersson.github.io/distmesh/}{\color{blue} DistMesh} in Matlab
     \end{itemize}
 
-\item Gmsh is a standard choice for ``real'' applications \dots
+\item I'll demonstrate Gmsh (\href{http://gmsh.info/}{\color{blue} \texttt{gmsh.info}}), a standard choice for ``real'' applications \dots
 \end{itemize}
 
 \begin{center}
@@ -535,7 +540,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 
 
 \begin{frame}[fragile]
-\frametitle{a fractal Poisson example}
+\frametitle{fractal Poisson: mesh generation}
 \begin{itemize}
 \item problem:
     $$-\triangle u = 1, \qquad u=0 \text{ on } \partial\Omega$$
@@ -554,17 +559,22 @@ $ gmsh -2 koch2.geo
 
 
 \begin{frame}[fragile]
-\frametitle{solving the problem: what it looks like}
+\frametitle{fractal Poisson: solving the PDE}
 
-in fact I wrote three codes:
+\setlength{\leftmarginii}{50pt}
+
 \begin{itemize}
-\item \texttt{domain.py} generates the boundary polygon
-\item \texttt{msh2petsc.py} converts Gmsh output to binary
-\item \texttt{unfem.c} assemble the FEM residual; it uses PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) structures and then it calls a nonlinear solver (SNES) in PETSc
-\end{itemize}
+\item in fact I wrote three codes:
+	\begin{itemize}
+	\item[\texttt{domain.py}] generates the boundary polygon
+	\item[\texttt{msh2petsc.py}] converts Gmsh output to binary format
+	\item[\texttt{unfem.c}] assemble the FEM residual; it uses PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) structures, including parallelization, and then it calls a nonlinear solver (SNES) in PETSc
+	\end{itemize}
 
 \medskip
-following run uses algebraic multigrid-preconditioned CG on the level-6 fractal domain:
+\item use algebraic multigrid-preconditioned CG on the level-6 fractal domain:
+\end{itemize}
+
 \begin{cline}
 $ domain.py -l 6 -o koch6.geo
 $ gmsh -2 koch6.geo
@@ -582,11 +592,41 @@ $ unfem -un_mesh koch6 \
 \end{frame}
 
 
+\begin{frame}[fragile]
+\frametitle{ugly code}
+
+\begin{itemize}
+\item the result was pretty but the code was ugly
+\item even though I used PETSc, \texttt{unfem.c} was 900 lines of C code
+\end{itemize}
+\begin{scode}
+for (k = 0; k < user->mesh->K; k++) {
+    ...
+    for (l = 0; l < 3; l++) {
+        if (abf[en[l]] == 2) {
+            xx = aloc[en[l]].x;   yy = aloc[en[l]].y;
+            aF[en[l]] = au[en[l]] - user->gD_fcn(xx,yy);
+        } else {
+            sum = 0.0;
+            for (r = 0; r < q.n; r++) {
+                psi = chi(l,q.xi[r],q.eta[r]);
+                ip  = InnerProd(gradu,gradpsi[l]);
+                sum += q.w[r] * ( ... );
+            }
+            aF[en[l]] += fabs(detJ) * sum;
+        }
+    }
+}
+\end{scode}
+\end{frame}
+
+
 \begin{frame}{better tools}
 \begin{itemize}
 \item the last example requires too much hand-coding
+\item want better tools for FEM assembly stage
 \item recall the second stack:
-\begin{center}
+\begin{center} \color{Magenta}
 Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview % \href{https://www.paraview.org/}{\color{blue} Paraview}
 \end{center}
 \item Firedrake: \quad \href{https://www.firedrakeproject.org/}{\color{blue}\texttt{www.firedrakeproject.org}}
@@ -602,7 +642,10 @@ Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview % \href{https://www.paraview.org
 
 \begin{itemize}
 \item UFL is an \emph{expressive} language for weak forms
-\item consider Poisson problem $-\triangle u = f$ with $u=g$ on $\partial\Omega$, with function space $S_0^h = P^1$ and weak form
+    \begin{itemize}
+    \item[$\circ$] I will demonstrate with Poisson and Stokes equations
+    \end{itemize}
+\item consider Poisson problem $-\triangle u = f$ on $\Omega$ with $u=g$ on $\partial\Omega$, function space $S_0^h = P^1$, and weak form
     $$\int_\Omega \grad u \cdot \grad v - f v = 0$$
 \item Python UFL Firedrake code:
 \end{itemize}
@@ -618,8 +661,24 @@ solve(F == 0, u, bcs=bc, ...)
 
 
 \begin{frame}[fragile]
+\frametitle{solving the whole PDE problem}
+
+\begin{itemize}
+\item FIXME:  state Poisson problem on unit square
+\item this time I wrote one code:
+	\begin{itemize}
+	\item[\texttt{fish.py}] FIXME
+	\end{itemize}
+\item FIXME: show run and $p$-refinement results
+\item FIXME: show DG results?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
 \frametitle{Unified Form Language example II}
 
+FIXME: state Stokes problem and weak form
 \begin{scode}
 V = VectorFunctionSpace(mesh, 'CG', degree=k+2)  # velocity space
 W = FunctionSpace(mesh, 'CG', degree=k)          # pressure space
@@ -635,10 +694,6 @@ solve(F == 0, up, bcs=bc, ...)
 \end{frame}
 
 %\section{runtime choices}
-\begin{comment}
-\begin{frame}{X}
-X
-\end{frame}
 
 \begin{frame}{X}
 X
@@ -659,6 +714,5 @@ X
 \begin{frame}{X}
 X
 \end{frame}
-\end{comment}
 
 \end{document}
