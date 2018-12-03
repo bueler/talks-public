@@ -103,6 +103,9 @@
 \DefineVerbatimEnvironment{scode}{Verbatim}
 {fontsize=\footnotesize,xleftmargin=5mm}
 
+\DefineVerbatimEnvironment{tinycode}{Verbatim}
+{fontsize=\scriptsize,xleftmargin=5mm}
+
 
 \title{A practical view of the classical FEM}
 
@@ -494,7 +497,7 @@ F_i(\bu) = u_i - g_D(\bx_i) \qquad \text{ for } \bx_i \in \partial_D\Omega
 \begin{itemize}
 \item one needs 4 levels of tools:
     $$\begin{matrix} \text{mesh generation} \\ \downarrow \\ \text{FEM assembly$^a$} \\ \downarrow \\ \text{solver library$^b$} \\ \downarrow \\ \text{visualization} \end{matrix}$$
-\item commercial packages may partially hide this structure, but libraries always separate these levels
+\item commercial packages may partially hide this structure, but libraries always allow separate control of these levels
 \item notes:
     \begin{enumerate}
     \item[$a$] includes weak form declaration/implementation, element definitions, and actual assembly
@@ -572,11 +575,11 @@ $ gmsh -2 koch2.geo
 	\begin{itemize}
 	\item[\texttt{domain.py}] generates the boundary polygon
 	\item[\texttt{msh2petsc.py}] converts Gmsh output to binary format
-	\item[\texttt{unfem.c}] assemble the FEM residual; it uses PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) structures, including parallelization, and then it calls a nonlinear solver (SNES) in PETSc
+	\item[\texttt{unfem.c}] assemble the FEM residual using PETSc (\href{https://www.mcs.anl.gov/petsc/}{\color{blue} \texttt{www.mcs.anl.gov/petsc}}) data structures, including parallelization; then it calls a PETSc solver
 	\end{itemize}
 
 \medskip
-\item use algebraic multigrid-preconditioned CG on the level-6 fractal domain:
+\item PDE solution by algebraic multigrid-preconditioned CG on the level-6 fractal domain:
 \end{itemize}
 
 \begin{cline}
@@ -608,7 +611,7 @@ for (k = 0; k < user->mesh->K; k++) {
     ...
     for (l = 0; l < 3; l++) {
         if (abf[en[l]] == 2) {
-            xx = aloc[en[l]].x;   yy = aloc[en[l]].y;
+            ...
             aF[en[l]] = au[en[l]] - user->gD_fcn(xx,yy);
         } else {
             sum = 0.0;
@@ -646,19 +649,20 @@ Gmsh $\to$ Firedrake $\to$ PETSc $\to$ Paraview % \href{https://www.paraview.org
 
 \begin{itemize}
 \item UFL is an \emph{expressive} language for weak forms
-    \begin{itemize}
-    \item[$\circ$] I will demonstrate with Poisson and Stokes equations
-    \end{itemize}
-\item consider Poisson problem $-\triangle u = f$ on $\Omega$ with $u=g$ on $\partial\Omega$, function space $S_0^h = P^k$ (arbitrary degree $k$), and weak form
+\item choose function space $S^h = P^k$ for arbitrary degree $k$:
+
+\smallskip
+\hfill \input{tikz/smallPk.tex}
+\item Poisson problem ($-\triangle u = f$ on $\Omega$) has b.c.s $u=g$ on $\partial\Omega$
+\item weak form:
     $$\int_\Omega \grad u \cdot \grad v - f v = 0$$
-\item Python UFL Firedrake code:
+\item Python UFL Firedrake code for above:
 \end{itemize}
 \begin{code}
 Sh = FunctionSpace(mesh,'CG',degree=k)      # Sh = P^k
-u = Function(Sh)
-v = TestFunction(Sh)
-F = (dot(grad(u), grad(v)) - f * v) * dx    # weak form
 bc = DirichletBC(Sh, g, bdry_ids)
+u, v = Function(Sh), TestFunction(Sh)
+F = (dot(grad(u), grad(v)) - f * v) * dx    # weak form
 solve(F == 0, u, bcs=bc, ...)
 \end{code}
 \end{frame}
@@ -668,13 +672,85 @@ solve(F == 0, u, bcs=bc, ...)
 \frametitle{solving the whole PDE problem}
 
 \begin{itemize}
-\item FIXME:  state Poisson problem on unit square
-\item this time I wrote one code:
+\item \begin{minipage}[t]{0.58\textwidth}
+for convergence analysis, use unit square $\Omega = (0,1)^2$ and consider regular triangulations only
+\end{minipage} \hfill
+\begin{minipage}[t]{0.25\textwidth}
+\vspace{0mm}
+
+\input{tikz/squaremesh1.tex}
+\end{minipage}
+
+\medskip
+\item this time I wrote one code of only 70 lines:
 	\begin{itemize}
-	\item[\texttt{fish.py}] FIXME
+	\item[\texttt{fish.py}] uses UFL to define function space, boundary conditions, and weak form, and calls the Firedrake (PETSc) nonlinear solver \dots  only a few important lines as before:
+
+\medskip
+\begin{tinycode}
+Sh = FunctionSpace(mesh,'CG',degree=k)
+bc = DirichletBC(Sh, g, bdry_ids)
+u, v = Function(Sh), TestFunction(Sh)
+F = (dot(grad(u), grad(v)) - f * v) * dx
+solve(F == 0, u, bcs=bc, ...)
+\end{tinycode}
 	\end{itemize}
-\item FIXME: show run and $p$-refinement results
-\item FIXME: show DG results?
+\item test problem: $u(x,y)=-xe^y$ is exact solution
+    \begin{itemize}
+    \item[$\circ$] very smooth solution
+    \item[$\circ$] $f$ is computed from $u$ \hfill $\longleftarrow$ \emph{manufactured exact solution}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{refine and measure convergence}
+\begin{itemize}
+\item one can approximate the continuum solution by either
+    \begin{itemize}
+    \item[$\circ$] $h$-refinement: make the triangles in \texttt{mesh} smaller
+    \item[$\circ$] $p$-refinement: increase the polynomial degree \texttt{k}
+    \end{itemize}
+\item $h$-refinement chooses $m\times m$ grid where $m=2^{\text{\texttt{X}}+1}+1$:
+\begin{cline}
+$ ./fish.py -refine X
+\end{cline}
+%$
+\item $p$-refinement chooses $P^{\text{\texttt{K}}}$ on each element:
+\begin{cline}
+$ ./fish.py -k K
+\end{cline}
+%$
+    \begin{itemize}
+    \item[$\circ$] for example \dots
+    \item[$\circ$] fix \texttt{X} $=1$ for $m=5$
+    \item[$\circ$] vary $k$
+
+\vspace{-13mm}
+
+\hfill\includegraphics[width=0.45\textwidth]{hprefine-Linf-order}
+    \end{itemize}
+
+\smallskip
+\item combine options for $h/p$-refinement: \,\texttt{-refine X -k K}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{measure performance}
+\begin{itemize}
+\item how to do a fair comparison of refinement modes?
+\item by error-vs-flops (left figure)
+    \begin{itemize}
+    \item[$\circ$] $h$-refinement runs use CG plus multigrid preconditioning
+    \item[$\circ$] $p$-refinement runs use Cholesky
+    \end{itemize}
+\item by number of nonzeros in matrix (right figure)
+
+\medskip
+\mbox{\includegraphics[width=0.46\textwidth]{hprefine-Linf-flops}\quad\includegraphics[width=0.45\textwidth]{hprefine-Linf-nnz}}
 \end{itemize}
 \end{frame}
 
