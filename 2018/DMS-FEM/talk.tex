@@ -756,6 +756,8 @@ $ ./fish.py -k K
 \end{frame}
 
 
+\section{fluid flow example}
+
 \begin{frame}[fragile]
 \frametitle{Stokes equations}
 
@@ -777,7 +779,81 @@ solve(F == 0, up, bcs=bc, ...)
 \end{scode}
 \end{frame}
 
-%\section{runtime choices}
+
+\begin{frame}{mesh and pressure}
+
+\begin{itemize}
+\item non-uniform mesh: $N=394$ nodes, $K=686$ elements
+\item coloring by pressure
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{lidbox-pressure-mesh}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{velocity vector field}
+
+\begin{itemize}
+\item refined mesh: $N=350,\!000$ nodes, $K=700,\!000$ elements
+\item coloring by velocity magnitude
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{lidbox-velocity}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{streamlines}
+
+\begin{itemize}
+\item another view: streamlines
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.65\textwidth]{lidbox-streamlines}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{zoom to Moffat eddy}
+
+\begin{itemize}
+\item zoom to show eddy in corner; add streamlines \dots
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.65\textwidth]{lidbox-streamlines-zoom1}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{3 levels of Moffat eddies}
+
+\begin{itemize}
+\item zoom again; third appears!
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.65\textwidth]{lidbox-streamlines-zoom2}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{regarding Moffatt eddies}
+
+\begin{itemize}
+\item Moffatt (1964): beautiful similarity solution analysis
+\item Acheson (1990), \emph{Elementary Fluid Mechanics}:
+    \begin{quote}
+    Why do these low Reynolds number eddies occur?  The answer appears to lie in the \emph{corners}; if the internal angle \dots falls below 146.3$^\circ$ \dots then a simple flow \dots is not possible and corner eddies occur instead.  Indeed, as we probe deeper and deeper into each corner we find, in [Moffatt's] theory, not just one eddy but an infinite sequence of nested, alternately rotating eddies \dots each eddy is 1000 times weaker than the next; even with a 90 minute exposure time [an experiment with real fluid] failed to detect the third eddy.
+    \end{quote}
+\end{itemize}
+
+\end{frame}
+
 
 \begin{frame}{X}
 X
