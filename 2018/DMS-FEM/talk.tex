@@ -76,12 +76,15 @@
 
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bc}{\mathbf{c}}
+\newcommand{\bbf}{\mathbf{f}}
+\newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bp}{\mathbf{p}}
 \newcommand{\bq}{\mathbf{q}}
 \newcommand{\bs}{\mathbf{s}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
 \newcommand{\bx}{\mathbf{x}}
 
 \newcommand{\Div}{\nabla\cdot}
@@ -758,13 +761,59 @@ $ ./fish.py -k K
 
 \section{fluid flow example}
 
+\begin{frame}{Stokes equations for viscous, incompressible fluids}
+
+\begin{itemize}
+\item the model for very-viscous fluids with viscosity $\mu>0$
+    \begin{itemize}
+    \item[$\circ$] ``very viscous'' $=$ (Reynold's number $\to$ 0)
+    \item[$\circ$] e.g.~honey, motor oil, glacier ice
+    \end{itemize}
+\item solve for velocity $\bu$ and pressure $p$ on domain $\Omega$:
+\begin{align*}
+- \mu \triangle \bu + \grad p &= 0 \\
+\Div \bu &= 0
+\end{align*}
+\item here only consider Dirichlet boundary conditions:
+    $$\bu = \bg \quad \text{ on } \partial \Omega$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Stokes weak form}
+
+\begin{itemize}
+\item weak form from multiplying by test functions $\bv$, $q$:
+\begin{equation*}
+\int_\Omega \mu \grad \bu : \grad \bv - p \Div \bv = 0, \qquad \int_\Omega q \Div \bu = 0
+\end{equation*}
+\item can write this as one bilinear form,
+\begin{equation*}
+    k(\bu,p;\bv,q) = \mu\, a(\bu,\bv) + b(\bv,p) + b(\bu,q)
+\end{equation*}
+where
+\begin{equation*}
+    a(\bw,\bv) = \int_\Omega \grad \bw : \grad \bv, \qquad b(\bv,q) = - \int_\Omega q \Div \bv
+\end{equation*}
+\item so $\bu$, $p$ satisfy: \qquad $k(\bu,p;\bv,q) = \ell(\bv)$ for all $\bv, q$
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}[fragile]
-\frametitle{Stokes equations}
+\frametitle{second UFL example}
 
-FIXME: state Stokes problem and weak form
+\begin{itemize}
+\item suppose we choose $\bu\in P^{k+2}$ and $p\in P^k$
+    \begin{itemize}
+    \item[$\circ$] ``mixed'' FEM for an incompressible fluid
+    \item[$\circ$] nontrivial fact: these are a stable element choice
+    \item[$\circ$] ``Taylor-Hood''
+    \end{itemize}
+\item but Firedrake/UFL makes it easy to put into code \dots
+\end{itemize}
 
-FIXME Taylor-Hood
-
+\bigskip
 \begin{scode}
 V = VectorFunctionSpace(mesh, 'CG', degree=k+2)  # velocity space
 W = FunctionSpace(mesh, 'CG', degree=k)          # pressure space
@@ -772,11 +821,33 @@ Z = V * W
 up = Function(Z)
 u,p = split(up)
 v,q = TestFunctions(Z)
-F = (mu * dot(grad(u), grad(v)) - p * div(v) - div(u) * q \
-     - dot(f_body,v)) * dx
+F = (mu * dot(grad(u), grad(v)) - p * div(v) - div(u) * q) * dx
 bc = ...
 solve(F == 0, up, bcs=bc, ...)
 \end{scode}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{lid-driven cavity problem}
+
+\begin{itemize}
+\item choose a particular problem: lid-driven cavity
+    \begin{itemize}
+    \item[$\circ$] standard test problem
+    \item[$\circ$] Dirichlet boundary conditions
+    \item[$\circ$] $\Omega=(0,1)^2$
+    \end{itemize}
+
+\vspace{-10mm}
+\hfill \includegraphics[width=0.45\textwidth]{lid-driven-cartoon}
+\item boundary conditions code:
+
+\begin{scode}
+bc = [ DirichletBC(Z.sub(0), u_noslip, other),
+       DirichletBC(Z.sub(0), u_lid,    lid)   ]
+\end{scode}
+\end{itemize}
 \end{frame}
 
 
@@ -848,15 +919,9 @@ solve(F == 0, up, bcs=bc, ...)
 \item Moffatt (1964): beautiful similarity solution analysis
 \item Acheson (1990), \emph{Elementary Fluid Mechanics}:
     \begin{quote}
-    Why do these low Reynolds number eddies occur?  The answer appears to lie in the \emph{corners}; if the internal angle \dots falls below 146.3$^\circ$ \dots then a simple flow \dots is not possible and corner eddies occur instead.  Indeed, as we probe deeper and deeper into each corner we find, in [Moffatt's] theory, not just one eddy but an infinite sequence of nested, alternately rotating eddies \dots each eddy is 1000 times weaker than the next; even with a 90 minute exposure time [an experiment with real fluid] failed to detect the third eddy.
+    [if the corner angle is] below 146.3$^\circ$ \dots then a simple flow \dots is not possible and corner eddies occur instead.  Indeed, as we probe deeper and deeper into each corner we find, in [Moffatt's] theory, not just one eddy but an infinite sequence of nested, alternately rotating eddies \dots each eddy is 1000 times weaker than the next; even with a 90 minute exposure time [a laboratory experiment] failed to detect the third eddy.
     \end{quote}
 \end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{X}
-X
 \end{frame}
 
 
