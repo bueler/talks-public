@@ -145,7 +145,7 @@
 \vspace{10mm}
   \titlepage
   \begin{center}
-  \tiny DMS \hfill 27 November 2018
+  \tiny DMS FEM Seminar \hfill 4 December 2018
   \end{center}
 \end{frame}
 
@@ -579,7 +579,7 @@ $ gmsh -2 koch2.geo
 	\end{itemize}
 
 \medskip
-\item PDE solution by algebraic multigrid-preconditioned CG on the level-6 fractal domain:
+\item PDE solution by algebraic multigrid-preconditioned CG on the level-6 fractal domain with $N\approx 480,\!000$ nodes:
 \end{itemize}
 
 \begin{cline}
@@ -717,7 +717,7 @@ solve(F == 0, u, bcs=bc, ...)
 $ ./fish.py -refine X
 \end{cline}
 %$
-\item $p$-refinement chooses $P^{\text{\texttt{K}}}$ on each element:
+\item $p$-refinement (\emph{spectral method}) chooses $P^{\text{\texttt{K}}}$ on each element:
 \begin{cline}
 $ ./fish.py -k K
 \end{cline}
@@ -741,13 +741,14 @@ $ ./fish.py -k K
 \begin{frame}[fragile]
 \frametitle{measure performance}
 \begin{itemize}
-\item how to do a fair comparison of refinement modes?
-\item by error-vs-flops (left figure)
+\item performance runs use different solvers (educated choices!)
     \begin{itemize}
-    \item[$\circ$] $h$-refinement runs use CG plus multigrid preconditioning
+    \item[$\circ$] $h$-refinement runs use CG $+$ (geometric multigrid)
     \item[$\circ$] $p$-refinement runs use Cholesky
     \end{itemize}
-\item by number of nonzeros in matrix (right figure)
+\item how to do a fair comparison of refinement modes?
+\item by error-vs-flops (left figure)
+\item by number of nonzeros in Jacobian matrix (right figure)
 
 \medskip
 \mbox{\includegraphics[width=0.46\textwidth]{hprefine-Linf-flops}\quad\includegraphics[width=0.45\textwidth]{hprefine-Linf-nnz}}
