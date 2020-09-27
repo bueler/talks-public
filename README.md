@@ -1,9 +1,12 @@
 talks-public
 ============
 
-My presentations for which materials are all open.
+Some of my presentations, for which materials are all open.
 
 Here are some of my other public repos which contain talks which I have given:
+
+  * https://github.com/bueler/slide-teach/fvolume
+      * Alexei Rybkin's REU group
 
   * https://github.com/bueler/sia-fve
       * 14th Copper Mountain Conference on Iterative Methods, March 2016
