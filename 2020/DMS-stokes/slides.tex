@@ -86,24 +86,24 @@
       \usebeamertemplate{enumerate item} \,}}
 
 
-\title{Fast solvers for the Stokes equations}
+\title{New Tools for Slow Flows}
 
 \author{Ed Bueler}
 
 \institute[UAF]{University of Alaska Fairbanks}
 
-\date{October 2020}
+\date{November 2020}
 
-% this nonsense needed to start section counter at 0; see
-% https://tex.stackexchange.com/questions/170222/change-the-numbering-in-beamers-table-of-content
-\makeatletter
-\patchcmd{\beamer@sectionintoc}
-  {\ifnum\beamer@tempcount>0}
-  {\ifnum\beamer@tempcount>-1}
-  {}
-  {}
-\beamer@tocsectionnumber=-1
-\makeatother
+%% this nonsense needed to start section counter at 0; see
+%% https://tex.stackexchange.com/questions/170222/change-the-numbering-in-beamers-table-of-content
+%\makeatletter
+%\patchcmd{\beamer@sectionintoc}
+%  {\ifnum\beamer@tempcount>0}
+%  {\ifnum\beamer@tempcount>-1}
+%  {}
+%  {}
+%\beamer@tocsectionnumber=-1
+%\makeatother
 
 
 \begin{document}
@@ -119,11 +119,197 @@
 \end{frame}
 
 
-\section{overview}
+\section{a slow flow example}
 
-\begin{frame}[fragile]
-\frametitle{overview}
+\begin{frame}{the lid-driven cavity}
 
+\begin{itemize}
+\item FIXME
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/eddies1.png}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{fluid equations}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{the Stokes equations}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/gstokes.jpg}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{about the eddies}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/hkmoffatt.png}
+
+%\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/eddies1.png} \includegraphics[width=0.25\textwidth]{figs/cylindereddies.pdf}
+\end{frame}
+
+
+\section{discretization, matrices, and solvers}
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{mesh for Stokes}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\input{figs/gradedcorners.tikz}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{matrix for Stokes}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/Kstokes.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{eigenvalues for Stokes}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/stokesmueigs.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{iterative linear methods}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/akrylov.jpg}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{lid-driven cavity convergence}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/stokesconv-uerr.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\section{waves of salad dressing}
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{iterative nonlinear methods}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/inewton.jpg}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{solver performance}
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{multigrid}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/abrandt.jpg}
+
+%\vspace{-20mm}
+\begin{itemize}
+\item stalling numerical processes must be wrong (\emph{Achi Brandt})
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{lid-driven cavity optimality}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/stokesopt-work.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{resolution results}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.25\textwidth]{figs/eddies1.png} \qquad \includegraphics[width=0.25\textwidth]{figs/eddies2.png} \qquad \includegraphics[width=0.25\textwidth]{figs/eddies3.png}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+ 
+\section{ice sheets}
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{medium flows}
+
+\begin{frame}{Navier-Stokes}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/oladyzhenskaya.jpg}
+
+\vspace{-20mm}
 \begin{itemize}
 \item FIXME
 \end{itemize}
