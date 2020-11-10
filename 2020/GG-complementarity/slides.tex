@@ -28,10 +28,6 @@
 
 \usepackage{hyperref}
 
-% If you wish to uncover everything in a step-wise fashion, uncomment
-% the following command: 
-%\beamerdefaultoverlayspecification{<+->}
-
 \newcommand{\ba}{\mathbf{a}}
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bc}{\mathbf{c}}
@@ -49,6 +45,7 @@
 \newcommand{\bF}{\mathbf{F}}
 \newcommand{\bG}{\mathbf{G}}
 \newcommand{\bQ}{\mathbf{Q}}
+\newcommand{\bU}{\mathbf{U}}
 
 \newcommand{\grad}{\nabla}
 \newcommand{\Div}{\nabla\cdot}
@@ -110,29 +107,154 @@
 \end{frame}
 
 
-\section{glaciologist A}
+\section{two precise glaciologists}
 
-\begin{frame}{xx}
+\begin{frame}{W}
 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=0.8\textwidth]{figs/Will-by-Truffer.jpg}
+%\url{https://news.uaf.edu/goodbye-to-a-raffish-glacier-scientist/}
+
+\hfill \tiny \emph{photo by Martin Truffer} \phantom{dklfj asdlfj dslfaj}
+\end{column}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item two familiar fluids
-\item what would happen if you turned off gravity?
-\item \alert{faucet at left}: inertia matters
-\item \alert{honey at right}: comes to a halt
-\item both are free-surface flows (more going on than just bulk fluid)
+\item W is a glaciologist
+\invisible<1>{\item he is happy because he is standing on a glacier}
+\invisible<1-2>{\item he can say two \emph{precise} things about his patch of the world}
+\invisible<1-3>{\item one inequality and one equality}
+\invisible<1-4>{\item<5>[($>$)] the glacier thickness is positive
+    $$H>0$$}
+
+\vspace{-5mm}
+\invisible<1-4>{\item<5>[($=$)] the mass of ice is conserved
+    $$\frac{\partial H}{\partial t} + \Div \left(\bU H\right) = a$$}
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{A}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=0.8\textwidth]{figs/Iken_front_crop.jpg}
+%\url{https://www.igsoc.org/awards/seligman/ikenseligman.html}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item A is a glaciologist
+\invisible<1>{\item she is not on a glacier, but happy to be hiking in the mountains}
+\invisible<1-2>{\item she can say two \emph{precise} things about her patch of the world}
+\invisible<1-3>{\item one equality and one inequality}
+\invisible<1-4>{\item<5>[($=$)] the glacier thickness is zero
+    $$H=0$$}
+
+\vspace{-5mm}
+\invisible<1-4>{\item<5>[($>$)] the mean annual surface mass balance is negative
+    $$-a > 0$$}
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{two views in different patches}
+
+\begin{columns}
+\begin{column}{0.25\textwidth}
+\includegraphics[width=0.75\textwidth]{figs/Will-by-Truffer.jpg}
+
+\vspace{5mm}
+\includegraphics[width=0.75\textwidth]{figs/Iken_front_crop.jpg}
+\end{column}
+\begin{column}{0.75\textwidth}
+\begin{itemize}
+\item W says:
+    \begin{itemize}
+    \item[($>$)] the glacier thickness is positive
+        $$H>0$$
+    \item[($=$)] the mean annual surface mass balance is negative
+        $$\frac{\partial H}{\partial t} + \Div \left(\bU H\right) = a$$
+    \end{itemize}
+\item A says:
+    \begin{itemize}
+    \item[($=$)] the glacier thickness is zero
+        $$H=0$$
+    \item[($>$)] the mean annual surface mass balance is negative
+        $$-a > 0$$
+    \end{itemize}
+\item<2> so what?  the world looks different in different places!
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{define your terms}
+\begin{itemize}
+\item definitions!  please ask if you are unclear on some dumb symbol!
+
+\bigskip
+\item $\bx = (x,y)$ is map-plane location
+\item $t$ is time \dots but much of this talk is about steady state
+
+\medskip
+\item $H(t,\bx)$ is glacier thickness
+\item $b(\bx)$ is bed elevation
+\item $s(t,\bx)$ is glacier surface elevation
+\item $a(t,\bx)$ is annual surface (climatic) mass balance
+\item $\bU = \bU(t,\bx)$ is vertically-averaged horizontal ice velocity
+\item $\bu = \bu(t,x,y,z)$ is ice velocity \emph{in 3D}
 \end{itemize}
 \end{frame}
 
 
+\begin{frame}{both views in one set of equations}
+\begin{itemize}
+\item xx
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{xx}
+\begin{itemize}
+\item xx
+\end{itemize}
+\end{frame}
+
+
+\section{complementarity for glaciers}
+
+\begin{frame}{xx}
+\begin{itemize}
+\item xx
+\end{itemize}
+\end{frame}
+
+
+\section{language from optimization}
+
+\begin{frame}{xx}
+\begin{itemize}
+\item xx
+\end{itemize}
+\end{frame}
+
+
+\section{consequences (for modelers and real scientists)}
+
+\begin{frame}{xx}
+\begin{itemize}
+\item xx
+\end{itemize}
+\end{frame}
+
 \begin{frame}{last}
 \begin{itemize}
-\item possible Iken photo
-
-\url{https://www.igsoc.org/awards/seligman/ikenseligman.html}
-\item possible Will photo: first one at
-
-\url{https://news.uaf.edu/goodbye-to-a-raffish-glacier-scientist/}
-\item in memory of Almut Iken (1933--2018) and Will Harrison (???--2020)
+\item 
+\item remembering Almut Iken (1933--2018) and Will Harrison (1936--2020)
 \end{itemize}
 \end{frame}
 
