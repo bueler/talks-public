@@ -84,7 +84,6 @@
 
 
 \title{Complementarity for glaciers}
-
 \subtitle{How to apply equations for where equations apply}
 
 \author{Ed Bueler}
@@ -124,11 +123,11 @@
 \invisible<1>{\item he is happy because he is standing on a glacier}
 \invisible<1-2>{\item he can say two \emph{precise} things about his patch of the world}
 \invisible<1-3>{\item one inequality and one equality}
-\invisible<1-4>{\item<5>[($>$)] the glacier thickness is positive
+\invisible<1-4>{\item<5>[$>$] the glacier thickness is positive
     $$H>0$$}
 
 \vspace{-5mm}
-\invisible<1-4>{\item<5>[($=$)] the mass of ice is conserved
+\invisible<1-4>{\item<5>[$=$] the mass of ice is conserved
     $$\frac{\partial H}{\partial t} + \Div \left(\bU H\right) = a$$}
 \end{itemize}
 \end{column}
@@ -148,11 +147,11 @@
 \invisible<1>{\item she is not on a glacier, but happy to be hiking in the mountains}
 \invisible<1-2>{\item she can say two \emph{precise} things about her patch of the world}
 \invisible<1-3>{\item one equality and one inequality}
-\invisible<1-4>{\item<5>[($=$)] the glacier thickness is zero
+\invisible<1-4>{\item<5>[$=$] the glacier thickness is zero
     $$H=0$$}
 
 \vspace{-5mm}
-\invisible<1-4>{\item<5>[($>$)] the mean annual surface mass balance is negative
+\invisible<1-4>{\item<5>[$>$] the mean annual surface mass balance is negative
     $$-a > 0$$}
 \end{itemize}
 \end{column}
@@ -173,16 +172,16 @@
 \begin{itemize}
 \item W says:
     \begin{itemize}
-    \item[($>$)] the glacier thickness is positive
+    \item[$>$] the glacier thickness is positive
         $$H>0$$
-    \item[($=$)] the mean annual surface mass balance is negative
+    \item[$=$] the mean annual surface mass balance is negative
         $$\frac{\partial H}{\partial t} + \Div \left(\bU H\right) = a$$
     \end{itemize}
 \item A says:
     \begin{itemize}
-    \item[($=$)] the glacier thickness is zero
+    \item[$=$] the glacier thickness is zero
         $$H=0$$
-    \item[($>$)] the mean annual surface mass balance is negative
+    \item[$>$] the mean annual surface mass balance is negative
         $$-a > 0$$
     \end{itemize}
 \item<2> so what?  the world looks different in different places!
@@ -211,21 +210,112 @@
 \end{frame}
 
 
-\begin{frame}{both views in one set of equations}
+\begin{frame}{both views at once}
 \begin{itemize}
-\item xx
+\item both views fit into one set of equations:\footnote{``equations'' in this talk means ``set of equations and inequalities''}
+\begin{align*}
+H &\ge 0 \\
+\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a &\ge 0 \\
+H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
+\end{align*}
+\invisible<1>{
+\begin{itemize}
+\item[$\circ$]<2> \emph{consider}: W is standing on a glacier
+\item[$\circ$]<3> \emph{consider}: A is walking on a dirt trail
+\end{itemize}
+}
+\invisible<1-3>{
+
+\bigskip
+\item<4> the third equation is \alert{complementarity}
+\item<4> the set of three equations is a \alert{(nonlinear) complementarity problem}
+}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{xx}
+\begin{frame}{what is true at a glacier margin?}
+
+\begin{center}
+\includegraphics[width=0.4\textwidth]{figs/margin.png}
+\end{center}
+
 \begin{itemize}
-\item xx
+\item the view switches at a glacier margin
+\invisible<1>{
+\item an extra equality holds at a margin:
+\only<1-2>{
+   $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a = 0$$
+}
+\only<3-4>{
+   $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a \alert{\stackrel{?}{=}} 0$$
+}
+\invisible<1-3>{
+\item<4> useful to think about \emph{open sets}:
+    \begin{itemize}
+    \item[$\circ$] ``W is on a glacier'' means there is a neighborhood of glacier
+    \item[$\circ$] ``A is on land'' means there is a neighborhood of dirt
+    \item[$\circ$] neighborhood $=$ open set in the map-plane
+
+    \medskip
+    \item[$\circ$] derivative expressions in a complementarity problem must be interpreted as applying in an open set around the location
+    \item[$\circ$] a glacier margin is \emph{neither}
+    \end{itemize}
+}
+}
 \end{itemize}
 \end{frame}
 
 
 \section{complementarity for glaciers}
+
+\begin{frame}{applying everywhere, including where the glacier is}
+\begin{itemize}
+\item the complementarity problem applies \emph{everywhere on Earth}:
+\begin{align*}
+H &\ge 0 \\
+\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a &\ge 0 \\
+H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
+\end{align*}
+\invisible<1>{
+    \begin{itemize}
+    \item[$\circ$] at the South Pole 1000 years ago
+    \item[$\circ$] 1000 years from now in the middle of Death Valley
+    \item[$\circ$] outside my door right now
+    \end{itemize}
+
+\bigskip
+\invisible<2>{
+\item<3> ``where is there a glacier?'' is a first-class problem in glaciology!
+    \begin{itemize}
+    \item[$\circ$] \emph{problem}: determine glacier (ice sheet) extent in various climates
+    \end{itemize}
+\item<4> so we want our models (and theory) to apply everywhere, \emph{so that we may answer this first-class problem in the model}
+}
+}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{dynamical viewpoint 1}
+\begin{itemize}
+\item you might be worried about the zen question:
+
+\emph{what is the velocity $\bU$ of a glacier that isn't there?}
+\item $\bq = \bU H$ is \emph{mass flux}, and it \emph{is} defined everywhere
+\item so mass conservation equation says: $\frac{\partial H}{\partial t} + \Div \bq = a$
+\item dynamics determines flow from geometry: $\bq=\bq(H)$
+\item we can agree: $\bq(0)=0$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{dynamical viewpoint 2}
+\begin{itemize}
+\item FIXME SKE more fundamental? applies even without incompressibility
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{xx}
 \begin{itemize}
@@ -236,7 +326,13 @@
 
 \section{language from optimization}
 
-\begin{frame}{xx}
+\begin{frame}{abstract inequality-constrained optimization}
+\begin{itemize}
+\item xx
+\end{itemize}
+\end{frame}
+
+\begin{frame}{example: obstacle problem}
 \begin{itemize}
 \item xx
 \end{itemize}
@@ -251,9 +347,37 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{surface mass balance should be modeled (almost) everywhere}
+\begin{itemize}
+\item FIXME for implicit time steps, its essential
+\item FIXME thought experiment: need ice-surface case [piston of ice cartoon], need snow-surface case [ditto]
+\end{itemize}
+\end{frame}
+
+
+\section{concluding?}
+
+\begin{frame}{are there big ideas in glaciology?}
+\begin{itemize}
+\item I am not sure most glaciologists have an opinion on this
+\item I disagree
+
+\bigskip
+\item<2-3> some ``big idea'' possibilities:
+    \begin{itemize}
+    \item[$\circ$] hysteresis of glacier volume and extent in changing climates
+    \item[$\circ$] volume-area scaling
+    \item[$\circ$] the tidewater glacier cycle
+    \item[$\circ$] ``glaciology is a 1 bar subject''
+    \item<3>[$\circ$] mass/energy/momentum conservation
+    \item<3>[$\circ$] complementarity determines glacier extent and margins in climates
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{last}
 \begin{itemize}
-\item 
+\item some of you may have noticed my lack of precision: ``equations'' in this talk means a collection of equalities and \emph{in}equalities
 \item remembering Almut Iken (1933--2018) and Will Harrison (1936--2020)
 \end{itemize}
 \end{frame}
