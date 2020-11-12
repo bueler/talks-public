@@ -106,7 +106,7 @@
 \end{frame}
 
 
-\section{two precise glaciologists}
+\section{the views of two precise glaciologists}
 
 \begin{frame}{W}
 
@@ -191,13 +191,13 @@
 \end{frame}
 
 
-\begin{frame}{define your terms}
+\begin{frame}{but first \dots define your terms}
 \begin{itemize}
-\item definitions!  please ask if you are unclear on some dumb symbol!
+\item definitions.\footnote{Voltaire: \emph{If you wish to converse with me, define your terms.}}  \emph{please ask if you are unclear on some dumb symbol!}
 
 \bigskip
 \item $\bx = (x,y)$ is map-plane location
-\item $t$ is time \dots but much of this talk is about steady state
+\item $t$ is time \dots \emph{but much of this talk is about steady state}
 
 \medskip
 \item $H(t,\bx)$ is glacier thickness
@@ -205,23 +205,28 @@
 \item $s(t,\bx)$ is glacier surface elevation
 \item $a(t,\bx)$ is annual surface (climatic) mass balance
 \item $\bU = \bU(t,\bx)$ is vertically-averaged horizontal ice velocity
-\item $\bu = \bu(t,x,y,z)$ is ice velocity \emph{in 3D}
+\item $\bu = \bu(t,x,y,z)$ is ice velocity in 3D
 \end{itemize}
 \end{frame}
 
 
+\section{complementarity for glaciers}
+
 \begin{frame}{both views at once}
 \begin{itemize}
-\item both views fit into one set of equations:\footnote{``equations'' in this talk means ``set of equations and inequalities''}
+\item both W's view and A's view fit into one set of equations:
 \begin{align*}
 H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a &\ge 0 \\
 H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{align*}
+\begin{itemize}
+\item[$\circ$] ``equations'' in this talk means ``set of equations and inequalities''
+\end{itemize}
 \invisible<1>{
 \begin{itemize}
-\item[$\circ$]<2> \emph{consider}: W is standing on a glacier
-\item[$\circ$]<3> \emph{consider}: A is walking on a dirt trail
+\item[$\circ$]<2,4> \emph{consider}: W is standing on a glacier
+\item[$\circ$]<3,4> \emph{consider}: A is walking on a dirt trail
 \end{itemize}
 }
 \invisible<1-3>{
@@ -243,41 +248,80 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \begin{itemize}
 \item the view switches at a glacier margin
 \invisible<1>{
-\item an extra equality holds at a margin:
 \only<1-2>{
+\item<1-2> an extra equality holds at a margin:
    $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a = 0$$
 }
-\only<3-4>{
+\only<3>{
+\item<3> \alert{an extra equality holds at a margin?}
    $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a \alert{\stackrel{?}{=}} 0$$
-}
-\invisible<1-3>{
-\item<4> useful to think about \emph{open sets}:
-    \begin{itemize}
-    \item[$\circ$] ``W is on a glacier'' means there is a neighborhood of glacier
-    \item[$\circ$] ``A is on land'' means there is a neighborhood of dirt
-    \item[$\circ$] neighborhood $=$ open set in the map-plane
-
-    \medskip
-    \item[$\circ$] derivative expressions in a complementarity problem must be interpreted as applying in an open set around the location
-    \item[$\circ$] a glacier margin is \emph{neither}
-    \end{itemize}
 }
 }
 \end{itemize}
 \end{frame}
 
 
-\section{complementarity for glaciers}
+\begin{frame}{useful to think about \emph{open sets}}
 
-\begin{frame}{applying everywhere, including where the glacier is}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{figs/opensets.png}
+\end{center}
+
+\begin{itemize}
+\item ``W is on a glacier'' means there is a neighborhood of glacier
+\item ``A is on a trail'' means there is a neighborhood of dirt
+\item ``neighborhood'' $=$ open set in the map-plane
+
+\medskip
+\item \emph{main idea}:  a complementarity problem using derivatives, or any strong-form PDE, only makes sense in open sets around locations
+
+\medskip
+\item a glacier margin has no neighborhood of differentiability of $H$ or $\bU$, etc.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{two everywhere-continuous quantities}
+\begin{itemize}
+\item \dots and you might be worried about the zen question:
+
+\begin{center}
+\emph{what is the velocity $\bU$ of a glacier that isn't there?}
+\end{center}
+
+\vspace{5mm}
+\item<2-4> $\bq$ is \emph{mass flux}, and it \emph{is} defined everywhere
+    \begin{itemize}
+    \item[$\circ$] $\bq = \bU H$ on a glacier
+    \item[$\circ$] mass conservation equation says: $\frac{\partial H}{\partial t} + \Div \bq = a$
+    \item[$\circ$] dynamics determines flow from geometry, so: \quad $\bq=\bq(H)$
+    \item[$\circ$] we can agree: \quad $\bq(0)=0$
+    \end{itemize}
+\item<2-4> both $H$ and $\bq$ are zero outside the glacier
+\item<3-4> what is \emph{actually} true at a glacier margin:
+   $$H=0 \qquad \text{\emph{and}} \qquad \bq = 0$$
+
+    \vspace{-1mm}
+    \begin{itemize}
+    \item[$\circ$] \alert{both $H(t,\bx)$ and $\bq(t,\bx)$ are continuous in the map plane}
+        \begin{itemize}
+        \item[$\vartriangleright$] \dots in any fluids view of glaciers where thickness is well-defined
+        \end{itemize}
+    \item[$\circ$] true whether the margin is advancing, stationary, or retreating
+    \item[$\circ$] the quantity \quad $\frac{\partial H}{\partial t} + \Div \bq - a$ \quad actually jumps discontinuously!
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{applies everywhere, including where the glacier is}
 \begin{itemize}
 \item the complementarity problem applies \emph{everywhere on Earth}:
 \begin{align*}
 H &\ge 0 \\
-\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a &\ge 0 \\
-H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
+\frac{\partial H}{\partial t} + \Div \bq - a &\ge 0 \\
+H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
 \end{align*}
-\invisible<1>{
     \begin{itemize}
     \item[$\circ$] at the South Pole 1000 years ago
     \item[$\circ$] 1000 years from now in the middle of Death Valley
@@ -285,30 +329,36 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
     \end{itemize}
 
 \bigskip
-\invisible<2>{
-\item<3> ``where is there a glacier?'' is a first-class problem in glaciology!
+\invisible<1>{
+\item<2-3> ``where is the glacier?'' is a first-class problem in glaciology!
     \begin{itemize}
-    \item[$\circ$] \emph{problem}: determine glacier (ice sheet) extent in various climates
+    \item[$\circ$] \emph{example}: determine ice sheet extent in various climates
     \end{itemize}
-\item<4> so we want our models (and theory) to apply everywhere, \emph{so that we may answer this first-class problem in the model}
-}
+\item<3> we want our theory and models to apply everywhere, so that we may answer this first-class problem \alert{within} a model
 }
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{dynamical viewpoint 1}
+\begin{frame}{my main point is that \dots}
 \begin{itemize}
-\item you might be worried about the zen question:
+\item if you say ``my glacier model conserves mass'' then think
+\begin{align*}
+H &\ge 0 \\
+\frac{\partial H}{\partial t} + \Div \bq - a &\ge 0 \\
+H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
+\end{align*}
+\emph{everywhere}, and not just
+    $$\frac{\partial H}{\partial t} + \Div \bq = a$$
+on the glacier
 
-\emph{what is the velocity $\bU$ of a glacier that isn't there?}
-\item $\bq = \bU H$ is \emph{mass flux}, and it \emph{is} defined everywhere
-\item so mass conservation equation says: $\frac{\partial H}{\partial t} + \Div \bq = a$
-\item dynamics determines flow from geometry: $\bq=\bq(H)$
-\item we can agree: $\bq(0)=0$
+\medskip
+\item<2> note that $H$, $\bq$, $a$ can be defined everywhere
 \end{itemize}
 \end{frame}
 
+
+\section{a bit more precision}
 
 \begin{frame}{dynamical viewpoint 2}
 \begin{itemize}
@@ -339,11 +389,12 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{frame}
 
 
-\section{consequences (for modelers and real scientists)}
+\section{consequences for modelers (\emph{and real scientists too})}
 
-\begin{frame}{xx}
+\begin{frame}{it runs}
 \begin{itemize}
-\item xx
+\item FIXME works with NCP solver and Newton method as in SIAFVE: provide $a$ and $b$ on $\Omega$, give initial guess for $s$, and say ``go''
+\item FIXME current project: make it Stokes
 \end{itemize}
 \end{frame}
 
@@ -355,31 +406,30 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{frame}
 
 
-\section{concluding?}
-
 \begin{frame}{are there big ideas in glaciology?}
 \begin{itemize}
 \item I am not sure most glaciologists have an opinion on this
 \item I disagree
 
 \bigskip
-\item<2-3> some ``big idea'' possibilities:
+\item<2-3> some ``big ideas'':
     \begin{itemize}
-    \item[$\circ$] hysteresis of glacier volume and extent in changing climates
-    \item[$\circ$] volume-area scaling
-    \item[$\circ$] the tidewater glacier cycle
+    \item[$\circ$] volume-area scaling \quad \emph{$\longleftarrow$ Will worked on this!}
     \item[$\circ$] ``glaciology is a 1 bar subject''
-    \item<3>[$\circ$] mass/energy/momentum conservation
-    \item<3>[$\circ$] complementarity determines glacier extent and margins in climates
+    \item[$\circ$] hysteresis of glacier volume from elevation dependence of mass balance
+    \item[$\circ$] the tidewater glacier cycle
+    \item[$\circ$] mass/energy/momentum conservation \quad ?
+    \item[$\circ$] complementarity gives extent and margins \quad ?
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{last}
-\begin{itemize}
-\item some of you may have noticed my lack of precision: ``equations'' in this talk means a collection of equalities and \emph{in}equalities
-\item remembering Almut Iken (1933--2018) and Will Harrison (1936--2020)
-\end{itemize}
+
+\begin{frame}{remembering}
+
+\includegraphics[width=0.4\textwidth]{figs/Iken_front_crop.jpg} \hfill \includegraphics[width=0.4\textwidth]{figs/Will-by-Truffer.jpg}
+
+Almut Iken (1933--2018) \hfill Will Harrison (1936--2020)
 \end{frame}
 
 
