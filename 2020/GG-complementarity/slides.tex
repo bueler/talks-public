@@ -474,7 +474,7 @@ s-b &\ge 0 \\
     $$\bv \ge 0, \qquad \blambda \ge 0, \qquad \grad \phi(\bv) - \blambda = 0, \qquad \bv\, \blambda = 0$$
 
     \begin{itemize}
-    \item[$\circ$] these are KKT conditions; the last one is ``complementary slackness''
+    \item[$\circ$] these are KKT conditions; the last is \alert{complementary slackness}
     \end{itemize}
 \item eliminate $\blambda$ and define $\bF(\bv) = \grad \phi(\bv)$ to state as NCP:
 \begin{align*}
@@ -485,39 +485,76 @@ s-b &\ge 0 \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{example: obstacle problem}
+
+\begin{frame}{example and analogy: obstacle problem}
 
 \begin{center}
 \includegraphics[width=0.6\textwidth]{figs/obstacle65.pdf}
 \end{center}
 
 \begin{itemize}
-\item xx
+\item the well-known \emph{obstacle problem} is an $\infty$-dimensional NCP
+    \begin{itemize}
+    \item[$\circ$] just like the glacier problem
+    \item[$\circ$] but it is also constrained optimization
+    \end{itemize}
+\item suppose $u$ solves:
+    $$\min_{v} \phi(v) \qquad \text{subject to} \qquad v \ge \psi$$
+where
+    $$\phi(v) = \int_\Omega \frac{1}{2} |\grad v|^2 - f\, v\,d\bx$$
+
+    \begin{itemize}
+    \item[$\circ$] in the figure, $\Omega$ is a square, $\psi$ is the grey upper hemisphere, $f=0$, and the solution $u$ is shown as a mesh
+    \item[$\circ$] note $v$ lives in a space of functions on $\Omega$, such as $H_g^1(\Omega)$ where $g$ gives boundary values
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{variational inequality?}
+\begin{frame}{no one wants a variational inequality?}
+
+\hfill \includegraphics[width=0.35\textwidth]{figs/obstacle65.pdf}
+
+\vspace{-15mm}
 \begin{itemize}
-\item FIXME NCP equivalent to VI
-\item but nobody really thinks that way
+\item equivalent obstacle problem formulations:
+\begin{align*}
+    \text{CO}& &&u = \min_{v} \phi(v) \quad \text{s.t. } v \ge \psi \\
+    & \\
+    \text{VI}& &&\int_\Omega \grad u \cdot \grad(v-u)\,d\bx \ge \int_\Omega f(v-u)\,d\bx \quad \text{for all } v \ge \psi \\
+    & \\
+   \text{NCP}& &&\begin{aligned} u - \psi &\ge 0 \\
+                                 -\grad^2 u - f &\ge 0 \\
+                                 (u - \psi) ( -\grad^2 u - f) &= 0 \end{aligned}
+\end{align*}
+\item VI $=$ \emph{variational inequality}
+\item I've concluded nobody really thinks VI style
+\item NCPs are easier to understand, both for scientists and mathematicians
+\item of course, CO $=$ \emph{constrained optimization} is pretty intuitive \dots
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{glacier extent is not optimization}
+\begin{frame}{the glacier problem is not optimization}
+
 \begin{itemize}
-\item FIXME ice is an NCP but is not optimization
+\item unfortunately, glaciers do not optimize any energy functional
+
+\medskip
 \item obstacle problem:
 
 \medskip
-(constrained optimization) $\leftrightarrow$ (variational inequality) $\leftrightarrow$ (NCP)
+\hspace{20mm} CO $\leftrightarrow$ VI $\leftrightarrow$ NCP
 
 \smallskip
-\item glacier problem:
+\item glacier problem has no optimization form:
 
 \smallskip
-\phantom{(constrained optimization) $\leftrightarrow$} (variational inequality) $\leftrightarrow$ (NCP)
+\hspace{20mm} \phantom{CO $\leftrightarrow$} VI $\leftrightarrow$ NCP
+
+\medskip
+\item so I'm stuck explaining using NCP
+\item at least NCP is a ``strong form'' (pointwise statements) while CO and VI are ``weak forms'' (integrals)
 \end{itemize}
 \end{frame}
 
@@ -532,11 +569,21 @@ s-b &\ge 0 \\
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}{a Newton step for an NCP}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
 \begin{itemize}
 \item FIXME think through what a Newton step looks like
 \end{itemize}
+\end{column}
+\begin{column}{0.3\textwidth}
+\hfill \includegraphics[width=0.8\textwidth]{figs/GISsequence.png} \hfill
+\end{column}
+\end{columns}
 \end{frame}
+
 
 \begin{frame}{discrete mass conservation will fail}
 \begin{itemize}
