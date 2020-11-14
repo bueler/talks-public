@@ -51,38 +51,22 @@
 
 \newcommand{\grad}{\nabla}
 \newcommand{\Div}{\nabla\cdot}
-\newcommand{\minmod}{\operatorname{minmod}}
+
+\newcommand{\Divbx}{\nabla_{\bx}\cdot}
 
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\RR}{\mathbb{R}}
 
-\newcommand{\ddt}[1]{\ensuremath{\frac{\partial #1}{\partial t}}}
-\newcommand{\ddx}[1]{\ensuremath{\frac{\partial #1}{\partial x}}}
 \newcommand{\Matlab}{\textsc{Matlab}\xspace}
 \newcommand{\Octave}{\textsc{Octave}\xspace}
 \newcommand{\eps}{\epsilon}
 
 \newcommand{\ip}[2]{\left<#1,#2\right>}
 
-\newcommand{\xiphalf}{{x_{i+\frac{1}{2}}}}
-\newcommand{\ximhalf}{{x_{i-\frac{1}{2}}}}
-\newcommand{\Fiphalf}{{F_{i+\frac{1}{2}}}}
-\newcommand{\Fimhalf}{{F_{i-\frac{1}{2}}}}
-\newcommand{\Fiphalfn}{{F^n_{i+\frac{1}{2}}}}
-\newcommand{\Fimhalfn}{{F^n_{i-\frac{1}{2}}}}
-
-\newcommand{\trefcolumn}[1]{\begin{bmatrix} \phantom{x} \\ #1 \\ \phantom{x} \end{bmatrix}}
-\newcommand{\trefmatrixtwo}[2]{\left[\begin{array}{c|c|c} & & \\ #1 & \dots & #2 \\ & & \end{array}\right]}
-\newcommand{\trefmatrixthree}[3]{\left[\begin{array}{c|c|c|c} & & & \\ #1 & #2 & \dots & #3 \\ & & & \end{array}\right]}
-\newcommand{\trefmatrixgroups}[4]{\left[\begin{array}{c|c|c|c|c|c} & & & & & \\ #1 & \dots & #2 & #3 & \dots & #4 \\ & & & & & \end{array}\right]}
-
 \newcommand{\blocktwo}[4]{\left[\begin{array}{c|c} #1 & #2 \\ \hline #3 & #4 \end{array}\right]}
 
 \newcommand{\bqed}{{\color{blue}\qed}}
 \newcommand{\ds}{\displaystyle}
-
-\newcommand\mynum[1]{{\renewcommand{\insertenumlabel}{#1}%
-      \usebeamertemplate{enumerate item} \,}}
 
 
 \title{Glacier complementarity}
@@ -209,20 +193,22 @@
 
 \begin{frame}{but first \dots define your terms}
 \begin{itemize}
-\item definitions.  \emph{please ask if you are unclear on some dumb symbol!}
-
-\bigskip
 \item $\bx = (x,y)$ is map-plane location
 \item $t$ is time
 
 \medskip
 \item $H(t,\bx)$ is glacier thickness
-\item $b(\bx)$ is bed elevation
+\item $b(\bx)$ is bed elevation (not changing)
 \item $s(t,\bx)$ is glacier surface elevation
 \item $a(t,\bx)$ is annual surface (climatic) mass balance
 \item $\bU = \bU(t,\bx)$ is vertically-averaged horizontal ice velocity
 \item $\bu = \bu(t,x,y,z)$ is ice velocity in 3D
 \end{itemize}
+
+\vspace{25mm}
+
+\footnotesize
+\alert{the symbols are dumb, questions about them are not!}
 \end{frame}
 
 
@@ -234,9 +220,6 @@ H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a &\ge 0 \\
 H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{align*}
-\begin{itemize}
-\item[$\circ$] ``equations'' in this talk usually means ``set of equations and inequalities''
-\end{itemize}
 
 \begin{itemize}
 \item[$\circ$] \emph{consider}: W is standing on a glacier
@@ -245,8 +228,9 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 
 \invisible<1>{
 \bigskip
+\item<2> ``equations'' will mean ``set of equations and inequalities''
 \item<2> the third equation is \alert{complementarity}
-\item<2> the whole thing is a \alert{(nonlinear) complementarity problem}
+\item<2> the whole thing is a \alert{(nonlinear) complementarity problem}, an \alert{NCP}
 }
 \end{itemize}
 \end{frame}
@@ -261,16 +245,14 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{center}
 
 \begin{itemize}
-\item the view switches at a glacier margin
-\invisible<1>{
-\only<1-2>{
-\item<1-2> an extra equality holds at a margin:
+\item one switches from W's view to A's view at a glacier margin
+\only<1>{
+\item an extra equality holds at a margin:
    $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a = 0$$
 }
-\only<3>{
-\item<3> \alert{an extra equality holds at a margin?}
+\only<2>{
+\item \alert{an extra equality holds at a margin?}
    $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a \alert{\stackrel{?}{=}} 0$$
-}
 }
 \end{itemize}
 \end{frame}
@@ -291,7 +273,8 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \item \emph{idea}:  a complementarity problem using derivatives, or any strong-form differential equation, only makes sense in open sets around locations
 
 \medskip
-\item a glacier margin has no neighborhood of differentiability of $H$ or $\bU$
+\item but a glacier margin has no neighborhood of differentiability of $H$ or $\bU$,
+\item \dots so let's not assume the NCP equations hold \emph{at} the margin
 \end{itemize}
 \end{frame}
 
@@ -305,11 +288,15 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{center}
 
 \vspace{5mm}
-\item<2> let $\bq$ be the map-plane \emph{mass flux}
-\item<2> it \emph{is} defined everywhere
-\item<2> $\bq = \bU H$ \emph{on the glacier}
+\item<2> let $\bq$ be the map-plane \emph{mass flux}; it \emph{is} defined everywhere
+
+\medskip
+\item<2> \alert{$\bq = \bU H$ \emph{on the glacier}, but $H=0$ and $\bq=\bzero$ outside the glacier}
+
+\medskip
 \item<2> mass conservation equation says \quad $\frac{\partial H}{\partial t} + \Div \bq = a$ \quad \emph{on the glacier}
-\item<2> both $H$ and $\bq$ are zero outside the glacier
+
+\medskip
 \item<2> dynamics determines flow from geometry, so: \quad $\bq=\bq(H)$
     \begin{itemize}
     \item[$\circ$] we can agree?: \quad $\bq(0)=\bzero$
@@ -324,15 +311,20 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \includegraphics[width=0.4\textwidth]{figs/margin.png}
 \end{center}
 
+\bigskip
 \begin{itemize}
 \item \alert{both $H(t,\bx)$ and $\bq(t,\bx)$ are continuous in the map plane}
     \begin{itemize}
-    \item[$\circ$] \dots in a fluids view of glaciers where thickness is well-defined
+    \item[$\circ$] \dots in any fluids view of glaciers where thickness is well-defined
     \end{itemize}
+
+\medskip
 \item so $H=0$ \emph{and} $\bq=\bzero$ at a glacier margin
     \begin{itemize}
     \item[$\circ$] true whether the margin is advancing, stationary, or retreating
     \end{itemize}
+
+\medskip
 \item the quantity \quad $\frac{\partial H}{\partial t} + \Div \bq - a$ \quad jumps discontinuously
 \end{itemize}
 \end{frame}
@@ -358,28 +350,41 @@ H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
 \end{frame}
 
 
-\begin{frame}{where is there glacier?}
+\begin{frame}{where be glaciers?}
+
+\begin{columns}
+\begin{column}{0.65\textwidth}
 \begin{itemize}
-\item ``where is the glacier?'' is a first-class problem in glaciology
+\item ``where is there a glacier?'' is a first-class problem in glaciology
     \begin{itemize}
-    \item[$\circ$] \emph{example}: determine ice sheet extent in past/future climates
+    \item[$\circ$] \emph{example}: determine ice sheet extent in hypothesized previous climate
     \end{itemize}
 \item we want our theory and models to apply everywhere, so that we may answer this first-class problem \emph{within} a model
-\item an NCP like
+\item an NCP is such a model:
 \begin{align*}
 H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div \bq - a &\ge 0 \\
 H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
 \end{align*}
-is the basis of such a model
     \begin{itemize}
-    \item[$\circ$] the model also needs to compute $\bq$ given the geometry \dots it also needs to conserve momentum
+    \item[$\circ$] it remains to compute $\bq$ from geometry \dots via conservation of momentum
     \end{itemize}
 \end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{figs/Pleistocene_north_ice_map.jpg}
+
+\tiny
+
+\hfill J.~Schlee
+
+\hfill \mbox{\url{pubs.usgs.gov/gip/continents/}}
+\end{column}
+\end{columns}
 \end{frame}
 
 
-\begin{frame}{my main point is that \dots}
+\begin{frame}{my main point}
 \begin{itemize}
 \item if you say ``my glacier model conserves mass'' then think
 \begin{align*}
@@ -392,48 +397,126 @@ H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
 on the glacier
 
 \medskip
-\item<2> \dots and $H$, $\bq$, $a$ can be defined everywhere
+\item<2> note $H$, $\bq$, $a$ can be defined everywhere
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{mass conservation or surface kinematical equation?}
 \begin{itemize}
-\item FIXME SKE 
-\item applies even without incompressibility
-\item not really a more-fundamental view because I am assuming $s \leftrightarrow H$ are well-defined, a restriction on glacier geometry
+\item \emph{recall}: $H$ is thickness, $s$ surface elevation, and $b$ bed elevation
+    \begin{itemize}
+    \item[$\circ$] $H=s-b$
+    \item[$\circ$] $H_t=s_t$ because we have assumed $b_t=0$
+    \end{itemize}
+\item the mass conservation and surface kinematical equations are equivalent if the ice is incompressible
+    $$\frac{\partial H}{\partial t} + \Div \bq - a = 0 \qquad \iff \qquad \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a = 0$$
+    \begin{itemize}
+    \item[$\circ$] where $\bn_s = \left<-\frac{\partial s}{\partial x},-\frac{\partial s}{\partial y},1\right>$ is normal to the surface
+    \end{itemize}
+
+\bigskip
+\scriptsize
+\item justification in frozen and nonsliding case, using Leibniz rule and incompressibility:
+\begin{align*}
+\Divbx \bq &= \Divbx \left(\int_b^s \left<u,v\right>\,dz\right) = \left<u,v\right>\big|_s \cdot \grad_{\bx} s - \left<u,v\right>\big|_b \cdot \grad_{\bx} b + \int_b^s \Divbx \left<u,v\right>\,dz \\
+           &= \left<u,v\right>\big|_s \cdot \grad_{\bx} s - \int_b^s w_z\,dz = \left<u,v\right>\big|_s \cdot \grad_{\bx} s - w\big|_s = - \bu \cdot \bn_s
+\end{align*}
+
+    \vspace{-2mm}
+    \begin{itemize}
+    \scriptsize
+    \item[$\circ$] in sliding/melting base cases, the mass conservation equation is modified but we use the (nontrivial) basal kinematical equation to get the \emph{same} SKE
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{xx}
+\begin{frame}{NCP using surface kinematical equation}
+
 \begin{itemize}
-\item xx
+\item the surface kinematical equation does not care about incompressibility or the basal motion
+\item thus worth restating the NCP:
+\begin{align*}
+s-b &\ge 0 \\
+\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a &\ge 0 \\
+(s-b) \left(\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a\right) &= 0
+\end{align*}
+
+\medskip
+\item a bit better, but not more fundamental
+    \begin{itemize}
+    \item[$\circ$] I've assumed $H$ and $s$ are well-defined, thus no overhangs, and this \emph{is} a fundamental restriction on glacier geometry
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 \section{complementarity from optimization}
 
-\begin{frame}{abstract inequality-constrained optimization}
+\newcommand{\blambda}{\bm{\lambda}}
+
+\begin{frame}{inequality-constrained optimization}
 \begin{itemize}
-\item xx
+\item I did not invent ``complementarity''
+\item optimization problem:
+    $$\min_{\bv\in\RR^n} \phi(\bv) \qquad \text{subject to} \qquad \bv \ge 0 \phantom{sd ad adsaf jsdlkja asdf kj asdf asdfa ad sdfa sad}$$
+
+\vspace{-20mm}
+\hfill \includegraphics[width=0.35\textwidth]{figs/optimization.png}
+
+\vspace{-8mm}
+\item Lagrange multipliers:
+
+\smallskip
+\qquad $\Phi(\bv,\blambda) = \phi(\bv) - \blambda \cdot \bv$
+\item then:
+    $$\bv \ge 0, \qquad \blambda \ge 0, \qquad \grad \phi(\bv) - \blambda = 0, \qquad \bv\, \blambda = 0$$
+
+    \begin{itemize}
+    \item[$\circ$] these are KKT conditions; the last one is ``complementary slackness''
+    \end{itemize}
+\item eliminate $\blambda$ and define $\bF(\bv) = \grad \phi(\bv)$ to state as NCP:
+\begin{align*}
+\bv &\ge 0 \\
+\bF(\bv) &\ge 0 \\
+\bv\, \bF(\bv) &= 0
+\end{align*}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{example: obstacle problem}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figs/obstacle65.pdf}
+\end{center}
+
 \begin{itemize}
 \item xx
 \end{itemize}
 \end{frame}
 
-\begin{frame}{equivalences}
+
+\begin{frame}{variational inequality?}
 \begin{itemize}
-\item e.g. obstacle problem:
+\item FIXME NCP equivalent to VI
+\item but nobody really thinks that way
+\end{itemize}
+\end{frame}
 
+
+\begin{frame}{glacier extent is not optimization}
+\begin{itemize}
+\item FIXME ice is an NCP but is not optimization
+\item obstacle problem:
+
+\medskip
 (constrained optimization) $\leftrightarrow$ (variational inequality) $\leftrightarrow$ (NCP)
-\item ice:
 
+\smallskip
+\item glacier problem:
+
+\smallskip
 \phantom{(constrained optimization) $\leftrightarrow$} (variational inequality) $\leftrightarrow$ (NCP)
 \end{itemize}
 \end{frame}
@@ -449,7 +532,13 @@ on the glacier
 \end{itemize}
 \end{frame}
 
-\begin{frame}{discrete mass conservation}
+\begin{frame}{a Newton step for an NCP}
+\begin{itemize}
+\item FIXME think through what a Newton step looks like
+\end{itemize}
+\end{frame}
+
+\begin{frame}{discrete mass conservation will fail}
 \begin{itemize}
 \item FIXME at the free boundary is impossible; see layer paper
 \item bounds on mass accounting errors
@@ -474,18 +563,21 @@ on the glacier
 \begin{frame}{are there big ideas in glaciology?}
 \begin{itemize}
 \item I am not sure most glaciologists have an opinion on this
-\item I disagree
+\item<2-4> I disagree
 
 \bigskip
-\item<2> some ``big ideas'':
+\item<3-4> some ``big ideas'':
     \begin{itemize}
-    \item[$\circ$] volume-area scaling \quad \emph{$\longleftarrow$ Will worked on this!}
+    \item[$\circ$] volume-area scaling
     \item[$\circ$] ``glaciology is a 1 bar subject''
-    \item[$\circ$] hysteresis of glacier volume from elevation dependence of mass balance
+    \item[$\circ$] hysteresis from elevation-dependent mass balance
     \item[$\circ$] the tidewater glacier cycle
-    \item[$\circ$] mass/energy/momentum conservation \quad ?
-    \item[$\circ$] complementarity gives extent and margins \quad ?
+    \item[$\circ$] why glaciers surge
     \end{itemize}
+\item<3-4> none of these are obvious even to smart non-glacier scientists
+
+\bigskip
+\item<4> add ``complementarity gives extent and margins'' to list?
 \end{itemize}
 \end{frame}
 
