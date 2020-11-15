@@ -76,7 +76,7 @@
 
 \institute[UAF]{University of Alaska Fairbanks}
 
-\date{December 2020}
+\date{November 2020}
 
 \AtBeginSection[]
 {%
@@ -239,6 +239,30 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{frame}
 
 
+\begin{frame}{a reminder}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item the main differential equation in this talk is the ``mass conservation'' or ``continuity'' equation
+   $$\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a = 0$$
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{figs/slabmasscontfig.png}
+\end{column}
+\end{columns}
+
+\bigskip
+\begin{itemize}
+\item the simple one horizontal dimension case is shown above
+\item flow into a segment of the glacier [$-\Div \left(\bU H\right)$], plus mass added at the top [$a$], determines rise or fall of the top: \quad $\frac{\partial H}{\partial t} = - \Div \left(\bU H\right) + a$
+
+\item we may include basal motion and mass balance but this complicates the equation without changing my points
+\end{itemize}
+\end{frame}
+
+
 \section{complementarity for glaciers}
 
 \begin{frame}{what is true at a glacier margin?}
@@ -249,12 +273,21 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 
 \begin{itemize}
 \item one switches from W's view to A's view at a glacier margin
+\item both views are contained in the NCP:
+\small
+\begin{align*}
+H &\ge 0 \\
+\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a &\ge 0 \\
+H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
+\end{align*}
+\normalsize
+
 \only<1>{
-\item an extra equality holds at a margin:
+\item perhaps an extra equality holds at a margin:
    $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a = 0$$
 }
 \only<2>{
-\item \alert{an extra equality holds at a margin?}
+\item \alert{perhaps an extra equality holds at a margin?}
    $$H=0 \qquad \text{\emph{and}} \qquad \frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a \alert{\stackrel{?}{=}} 0$$
 }
 \end{itemize}
@@ -273,18 +306,18 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \item ``neighborhood'' $=$ open set in the map-plane
 
 \medskip
-\item \emph{idea}:  a complementarity problem using derivatives, or any strong-form differential equation, only makes sense in open sets around locations
+\item \emph{idea}:  any strong-form differential equation, including an NCP using derivatives, only makes sense in open sets around locations
 
 \medskip
 \item but a glacier margin has no neighborhood of differentiability of $H$ or $\bU$,
-\item \dots so let's not assume the NCP equations hold \emph{at} the margin
+\item \dots so the NCP equations do \alert{not} hold \emph{at} the margin
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{velocity or flux?}
 \begin{itemize}
-\item \dots and you might be worried about the zen question:
+\item \dots and in the NCP you might be worried about the zen question:
 
 \begin{center}
 \emph{what is the velocity $\bU$ of a glacier that isn't there?}
@@ -295,6 +328,9 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 
 \medskip
 \item<2> \alert{$\bq = \bU H$ \emph{on the glacier}, but $H=0$ and $\bq=\bzero$ outside the glacier}
+    \begin{itemize}
+    \item[$\circ$] $\bU=\frac{\bq}{H}$?
+    \end{itemize}
 
 \medskip
 \item<2> mass conservation equation says \quad $\frac{\partial H}{\partial t} + \Div \bq = a$ \quad \emph{on the glacier}
@@ -308,7 +344,7 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 \end{frame}
 
 
-\begin{frame}{what is \emph{actually} true at a glacier margin?}
+\begin{frame}{what is true at a glacier margin?}
 
 \begin{center}
 \includegraphics[width=0.4\textwidth]{figs/margin.png}
@@ -316,26 +352,30 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 
 \bigskip
 \begin{itemize}
-\item \alert{both $H(t,\bx)$ and $\bq(t,\bx)$ are continuous in the map plane}
+\item both $H(t,\bx)$ and $\bq(t,\bx)$ are continuous
     \begin{itemize}
-    \item[$\circ$] \dots in any fluids view of glaciers where thickness is well-defined
+    \item[$\circ$] caveat: \dots in any fluids view of glaciers where thickness is well-defined
+    \item[$\circ$] violated by fracture and/or overhang
     \end{itemize}
 
 \medskip
-\item so $H=0$ \emph{and} $\bq=\bzero$ at a glacier margin
+\item so \alert{$H=0$ \emph{and} $\bq=\bzero$ at a glacier margin}
     \begin{itemize}
     \item[$\circ$] true whether the margin is advancing, stationary, or retreating
     \end{itemize}
 
 \medskip
-\item the quantity \quad $\frac{\partial H}{\partial t} + \Div \bq - a$ \quad jumps discontinuously
+\item the quantity \quad $\frac{\partial H}{\partial t} + \Div \bq - a$ \quad actually jumps discontinuously
+    \begin{itemize}
+    \item[$\circ$] from zero on the glacier to substantially negative off the glacier
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{applies everywhere, including where the glacier is}
 \begin{itemize}
-\item NCP = nonlinear complementarity problem
+\item \emph{reminder}: NCP = nonlinear complementarity problem
 \item the glacier NCP applies \emph{everywhere on Earth}:
 \begin{align*}
 H &\ge 0 \\
@@ -371,7 +411,8 @@ H &\ge 0 \\
 H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
 \end{align*}
     \begin{itemize}
-    \item[$\circ$] it remains to compute $\bq$ from geometry \dots via conservation of momentum
+    \item[$\circ$] it remains to compute $\bq$ from geometry
+    \item[$\circ$] \dots via conservation of momentum
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -390,7 +431,7 @@ H \left(\frac{\partial H}{\partial t} + \Div \bq - a\right) &= 0
 
 \begin{frame}{my main point}
 \begin{itemize}
-\item if you say ``my glacier model conserves mass'' then think
+\item if you say ``my coupled climate-glacier model conserves mass'' then think
 \begin{align*}
 H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div \bq - a &\ge 0 \\
@@ -413,7 +454,7 @@ on the glacier
     \item[$\circ$] $H=s-b$
     \item[$\circ$] $H_t=s_t$ because we have assumed $b_t=0$
     \end{itemize}
-\item the mass conservation and surface kinematical equations are equivalent if the ice is incompressible
+\item the mass conservation equation and the surface kinematical equation (SKE) are equivalent if the ice is incompressible
     $$\frac{\partial H}{\partial t} + \Div \bq - a = 0 \qquad \iff \qquad \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a = 0$$
     \begin{itemize}
     \item[$\circ$] where $\bn_s = \left<-\frac{\partial s}{\partial x},-\frac{\partial s}{\partial y},1\right>$ is normal to the surface
@@ -421,7 +462,7 @@ on the glacier
 
 \bigskip
 \scriptsize
-\item[] \emph{justification in frozen and nonsliding case, using Leibniz rule and incompressibility:}
+\item[] \emph{justification in the nonsliding and nonmelting base case, using Leibniz rule and incompressibility:}
 \begin{align*}
 \Divbx \bq &= \Divbx \left(\int_b^s \left<u,v\right>\,dz\right) = \left<u,v\right>\big|_s \cdot \grad_{\bx} s - \left<u,v\right>\big|_b \cdot \grad_{\bx} b + \int_b^s \Divbx \left<u,v\right>\,dz \\
            &= \left<u,v\right>\big|_s \cdot \grad_{\bx} s - \int_b^s w_z\,dz = \left<u,v\right>\big|_s \cdot \grad_{\bx} s - w\big|_s = - \bu \cdot \bn_s
@@ -429,15 +470,15 @@ on the glacier
 
 \medskip
 \normalsize
-\item in sliding and/or melting base cases we use the (nontrivial) basal kinematical equation to get the \textbf{same} SKE, but the mass conservation equation is modified
+\item in sliding and/or melting base cases the \textbf{SKE remains the same} but the mass conservation equation is modified
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{NCP using surface kinematical equation}
+\begin{frame}{NCP using the surface kinematical equation}
 
 \begin{itemize}
-\item the surface kinematical equation does not care about incompressibility or the basal motion
+\item the SKE does not care about incompressibility or the basal motion
 \item restated NCP:
 \begin{align*}
 s-b &\ge 0 \\
@@ -446,9 +487,10 @@ s-b &\ge 0 \\
 \end{align*}
 
 \medskip
-\item a bit better, but not really more fundamental
+\item SKE form is a bit better and more general
+\item not really more fundamental
     \begin{itemize}
-    \item[$\circ$] NCP form assumes $H$ and $s$ are well-defined, thus no overhangs, and this \emph{is} a fundamental restriction on glacier geometry
+    \item[$\circ$] either NCP form assumes $H$ and $s$ are well-defined, thus no overhangs, and this \emph{is} a fundamental restriction on glacier geometry
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -472,13 +514,17 @@ s-b &\ge 0 \\
 
 \smallskip
 \qquad $\Phi(\bv,\blambda) = \phi(\bv) - \blambda \cdot \bv$
-\item then:
+
+then
     $$\bv \ge 0, \qquad \blambda \ge 0, \qquad \grad \phi(\bv) - \blambda = 0, \qquad \bv\, \blambda = 0$$
 
     \begin{itemize}
-    \item[$\circ$] these are KKT conditions; the last is \alert{complementary slackness}
+    \item[$\circ$] these are KKT conditions
+    \item[$\circ$] last condition ``$\bv\, \blambda = 0$'' is \alert{complementary slackness}
     \end{itemize}
-\item eliminate $\blambda$ and define $\bF(\bv) = \grad \phi(\bv)$ to state as NCP:
+
+\bigskip
+\item eliminate $\blambda$ and define $\bF(\bv) = \grad \phi(\bv)$ to state as \alert{NCP}:
 \begin{align*}
 \bv &\ge 0 \\
 \bF(\bv) &\ge 0 \\
@@ -498,7 +544,7 @@ s-b &\ge 0 \\
 \item the well-known \emph{obstacle problem} is an $\infty$-dimensional NCP
     \begin{itemize}
     \item[$\circ$] just like the glacier problem
-    \item[$\circ$] but it is also constrained optimization
+    \item[$\circ$] it is \emph{also} constrained optimization
     \end{itemize}
 \item membrane position $u=u(\bx)$ solves:
     $$\min_{v} \phi(v) \qquad \text{subject to} \qquad v \ge \psi$$
@@ -509,7 +555,7 @@ where
     \item[$\circ$] in the figure, $\Omega$ is a square, $\psi$ is the grey upper hemisphere, $f=0$, and the solution $u$ is shown as a mesh
     \item[$\circ$] $u$ and $v$ live in a space of functions on $\Omega$
         \begin{itemize}
-        \item[$\vartriangleright$] such as $H_g^1(\Omega)$ where $g$ gives boundary values
+        \item[$\vartriangleright$] $v \in H_g^1(\Omega)$ where $g$ gives boundary values
         \end{itemize}                
     \end{itemize}
 \end{itemize}
@@ -535,17 +581,18 @@ where
 \item VI $=$ \emph{variational inequality}
 \item I've concluded nobody really thinks VI style
 \item NCPs are easier to understand, both for scientists and mathematicians
-\item of course, CO $=$ \emph{constrained optimization} is pretty intuitive \dots
+\item CO $=$ \emph{constrained optimization} is pretty intuitive, but \dots
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{the glacier problem is not optimization}
+\begin{frame}{the glacier problem is not constrained optimization}
 
 \begin{itemize}
 \item unfortunately, glaciers do not optimize any energy functional
     \begin{itemize}
-    \item[$\circ$] no such energy has been offered; for known theories the necessary symmetry is missing
+    \item[$\circ$] no such energy has been offered
+    \item[$\circ$] in known theories the implied symmetry is missing
     \end{itemize}
 
 \medskip
@@ -561,8 +608,11 @@ where
 \hspace{20mm} \phantom{CO $\leftrightarrow$} VI $\leftrightarrow$ NCP
 
 \medskip
-\item so I'm stuck explaining using NCP
-\item at least NCP is a ``strong form'' (pointwise statements) while CO and VI are ``weak forms'' (integrals)
+\item NCP is a ``strong form'' (pointwise statements)
+\item CO and VI are ``weak forms'' (integrals, function spaces)
+
+\medskip
+\item I'm stuck thinking in, and explaining via, an NCP
 \end{itemize}
 \end{frame}
 
@@ -580,13 +630,14 @@ s-b &\ge 0 \\
 \end{align*}
 
 \bigskip
-\item my current project: make it work with Stokes dynamics in Firedrake/PETSc
+\item my current project: solve NCP with isothermal Stokes dynamics in Firedrake/PETSc
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{steady state and implicit time steps}
+\begin{frame}{steady state? implicit time steps?}
 \begin{itemize}
+\item it is easy to state NCPs for these situations
 \item if a glacier is in steady state with a steady climate $a$ then
 \begin{align*}
 s-b &\ge 0 \\
@@ -599,13 +650,11 @@ s-b &\ge 0 \\
 s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
 (s-b) \left(s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right)\right) &= 0
 \end{align*}
-\item \emph{no problem stating NCPs for these situations}
+\item well-posedness proofs in some particular cases
     \begin{itemize}
-    \item[$\circ$] plus well-posedness proofs in some particular cases
-    \end{itemize}
-\item but for explicit steps there are regularity issues
-    \begin{itemize}
-    \item[$\circ$] a separate discussion
+    \item[$\circ$] (treating NCP and VI forms as equivalent)
+    \item[$\circ$] \href{https://arxiv.org/abs/2007.05625}{\texttt{arxiv.org/abs/2007.05625}}
+    \item[$\circ$] explicit steps have regularity issues (separate discussion)
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -622,17 +671,17 @@ in your evolving glacier model:
 \begin{enumerate}
 \item the NCP \emph{is} the source of margin shape
     \begin{itemize}
-    \item[$\circ$] \emph{I assert}: this is true in the continuum model, regardless of momentum balance
+    \item[$\circ$] this is true in the continuum model, regardless of momentum balance
     \item[$\circ$] no need to impose a shape to the margin
     \end{itemize}
 \item the NCP is a sanity check
     \begin{itemize}
     \item[$\circ$] check each part of NCP once converged
-    \item[$\circ$] \emph{my experience}: get violations within one cell of the margin; worth fixing them
+    \item[$\circ$] \emph{my experience}: it is worth measuring and/or fixing the violations which arise within one cell of the margin
     \end{itemize}
 \item you can run an NCP solver on a computer
     \begin{itemize}
-    \item[$\circ$] some software already exists
+    \item[$\circ$] software already exists
         \begin{itemize}
         \item[$\vartriangleright$] SNESVI and TAO in PETSc/TAO
         
@@ -647,9 +696,6 @@ in your evolving glacier model:
         \end{itemize}                
     \end{itemize}
 \end{enumerate}
-
-\medskip
-\scriptsize note: \emph{use NCP or VI form as they are equivalent}
 \end{column}
 \begin{column}{0.35\textwidth}
 \hfill \includegraphics[width=0.9\textwidth]{figs/GISBueler2016.png}
@@ -658,28 +704,32 @@ in your evolving glacier model:
 \end{frame}
 
 
-\begin{frame}{inside an NCP solver (one possibility)}
+\begin{frame}{inside an NCP solver (``active set'' method)}
 
 \begin{columns}
 \begin{column}{0.7\textwidth}
 \begin{itemize}
-\item recall for an implicit time-step:
+\item for an implicit time-step:
 
-\vspace{-7mm}
+\vspace{-8mm}
+\small
 \begin{align*}
 s-b &\ge 0 \\
 s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
-(s-b) \left(s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right)\right) &= 0
+(s-b) \left(s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right)\right) &= 0 \\
+[\text{momentum balance}] &= 0
 \end{align*}
-\item sketch of one time-step:
+\normalsize
+\item sketch of Newton iteration for one time-step:
     \begin{itemize}
-    \item[$\circ$] given as data on $\Omega \times [t,t+\Delta t]$: $a$ and $b$
+    \item[$\circ$] $a$ and $b$ given as data on $\Omega \times [t,t+\Delta t]$
     \item[$\circ$] set initial iterate $s^{(0)}=s_{\text{old}}, \bu^{(0)}=\bu_{\text{old}}$
     \item[$\circ$] for $k=1,2,3,\dots$
         \begin{itemize}
         \item[-] compute all residuals in NCP \emph{and} momentum
-        \item[-] for all $\bu$ variables, and where either $s^{(k)}>b$ or $s^{(k)} - s_{\text{old}} - \Delta t\left(\bu^{(k-1)} \cdot \bn_s^{(k-1)} + a\right) \le 0$, solve Newton step linear equations for search direction
-        \item[-] get $s^{(k)}$ by line search, and repeat until tolerance
+        \item[-] for all $\bu^{(k)}$ variables, and for $s^{(k)}>b$ or $s^{(k)} - s_{\text{old}} - \Delta t\left(\bu^{(k-1)} \cdot \bn_s^{(k-1)} + a\right) \le 0$ variables, solve Newton step linear equations for search direction
+        \item[-] get $s^{(k)}$, $\bu^{(k)}$ by line search
+        \item[-] repeat until tolerance
         \end{itemize}
     \item[$\circ$] $s=s^{(k)}$ is updated surface elevation at $t+\Delta t$
     \end{itemize}
@@ -697,34 +747,50 @@ s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
 \end{frame}
 
 
-\begin{frame}{discrete mass conservation fails}
+\begin{frame}{discrete-time mass conservation fails}
+
+\begin{itemize}
+\item for fixed-boundary glacier problems one has mass conservation exactly:
+   $$M_n = M_{n-1} + C_n$$
+
+    \begin{itemize}
+    \item[$\circ$] $M_n =$ (total ice mass at time $t_n$)
+    \item[$\circ$] $C_n =$ (total SMB, i.e.~climate input, applied to ice during $[t_{n-1},t_n]$)
+    \item[$\circ$] $t_n=t_{n-1}+\Delta t$
+    \end{itemize}
+\item in solving the implicit time-step NCP, if any margin \emph{retreats} then such mass conservation \emph{will fail}
+\item thus accounting for mass errors is needed
+    \begin{itemize}
+    \item[$\circ$] $M_n = M_{n-1} + C_n - R_n$\, where $R_n$ is retreat mass
+    \item[$\circ$] area of retreat is unboundable in theory, but $R_n\to 0$ as $\Delta t\to 0$
+    \end{itemize}
+
+\vspace{10mm}
+\item<2> \small \href{https://arxiv.org/abs/2007.05625}{\texttt{arxiv.org/abs/2007.05625}} de-mystifies this and the next slide
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{\emph{why} does discrete-time mass conservation fail?}
 
 \begin{columns}
 \begin{column}{0.7\textwidth}
 \begin{itemize}
-\item \small \href{https://arxiv.org/abs/2007.05625}{\texttt{arxiv.org/abs/2007.05625}} de-mystifies this slide \normalsize
-\item for fixed-boundary glacier problems one can get mass conservation $M_n = M_{n-1} + C_n$ exactly
-\item when solving the implicit time-step NCP, if any margin \emph{retreats} then mass conservation \emph{will fail}
+\item \emph{claim:} when solving the NCP, if any margin \emph{retreats} then mass conservation \emph{will fail}
+\item even if we solve the continuous-space NCP exactly
+\item why?
     \begin{itemize}
-    \item[$\circ$] even if we solve the NCP exactly
-    \item[$\circ$] why?
     \item[$\circ$] suppose ice extents $\Omega_{n-1}$ (old) and $\Omega_n$ (new)
-    \item[$\circ$] consider the retreat area
-    
-    $\Omega_n^r = \{\bx\,:\, s_{n-1}(\bx)>b(\bx) \text{ \& } s_{n}(\bx)=b(\bx)\}$
-
-    \medskip
+    \item[$\circ$] consider the retreat area:
+        \begin{align*}
+        \Omega_n^r &= \{\bx\,:\, s_{n-1}(\bx)>b(\bx) \text{ \& } s_{n}(\bx)=b(\bx)\} \\
+                   &= \Omega_{n-1} \setminus \Omega_n
+        \end{align*}
     \item[$\circ$] question: \emph{for $\bx \in \Omega_n^r$, when did the ice thickness go to zero and how much surface mass balance, versus flow into $\Omega_n^r$, was needed to do it?}
         \begin{itemize}
-        \item exact discrete mass conservation implies an answer, but no information is available
+        \item[$\vartriangleright$] exact discrete mass conservation requires you know the answer
+        \item[$\vartriangleright$] information to answer this question requires cutting up the time step
         \end{itemize}
-    \end{itemize}
-
-\medskip
-\item thus accounting for mass errors is needed
-    \begin{itemize}
-    \item[$\circ$] $M_n = M_{n-1} + C_n - R_n$\, where $R_n$ is retreat mass
-    \item[$\circ$] $|\Omega_n^r|$ unboundable in theory, but $R_n$ is boundable
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -733,7 +799,6 @@ s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
 \end{column}
 \end{columns}
 \end{frame}
-
 
 \begin{frame}{A's view as logic}
 
@@ -756,7 +821,7 @@ If the glacier thickness here is zero then the annual surface mass balance canno
 \begin{itemize}
 \item we already knew that?  I hope so
 \item remember the glossary?  \quad \scriptsize (IACS 2011. \emph{Glossary of glacier mass balance and related terms}) \normalsize
-\item proposal: define an \emph{admissible annual (climatic) surface mass balance} as any quantity $a$ defined everywhere which makes the NCP true
+\item proposal?: define an \emph{admissible annual (climatic) surface mass balance} (AACSMB) as any $a$, defined everywhere, which satisfies NCP
 \begin{align*}
 s-b &\ge 0 \\
 \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a &\ge 0 \\
@@ -765,8 +830,8 @@ s-b &\ge 0 \\
 
 \vspace{-2mm}
     \begin{itemize}
-    \item[$\circ$] gives meaning to modeled SMB values \emph{outside} the current glacier
-    \item[$\circ$] not just existing SMB measurements \emph{on} the glacier
+    \item[$\circ$] identifies SMB $a$ as term in conservation equation ($\checkmark$) \emph{and} requires compatibility for modeled SMB values \emph{outside} the current glacier
+    \item[$\circ$] your predictive ice dynamics model wants AACSMBs from climate models
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -774,13 +839,14 @@ s-b &\ge 0 \\
 
 \begin{frame}{surface mass balance should be modeled (almost) everywhere}
 \begin{itemize}
+\item the above proposal is a joke, but \dots
 \item numerically-computed stable time steps for evolving glaciers require modeled surface mass balance \emph{everywhere}, not just \emph{on} the glacier
     \begin{itemize}
     \item[$\circ$] or at least ``nearby'' \dots otherwise GIGO
-    \item[$\circ$] really essential to get steady states
     \end{itemize}
+\item this is practical
 \item for example, consider an energy balance model for bare ice or snow SMB
-\item requires a ``thought experiment'' for (e.g.) a dirt area:
+\item requires a ``thought experiment'' in a dirt area:
 
 \begin{quotation}
 how fast would a piston of ice or snow need to rise in order
@@ -812,6 +878,10 @@ to stay at trail level in this hypothesized climate?
 
 \bigskip
 \item<4> add ``complementarity gives glacier extent'' to list?
+    \begin{itemize}
+    \item[$\circ$] viewpoint incipient in Bodvardsson 1955?
+    \item[$\circ$] viewpoint fully present Calvo et al 2002
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
