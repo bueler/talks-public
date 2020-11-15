@@ -578,7 +578,9 @@ s-b &\ge 0 \\
 \frac{\partial s}{\partial t} - \bu_{\text{from solving the mass/momentum/energy coupled problem}} \cdot \bn_s - a &\ge 0 \\
 (s-b) \left(\frac{\partial s}{\partial t} - \bu_{\text{from solving the mass/momentum/energy coupled problem}} \cdot \bn_s - a\right) &= 0
 \end{align*}
-\item my current project: make it work with Stokes dynamics
+
+\bigskip
+\item my current project: make it work with Stokes dynamics in Firedrake/PETSc
 \end{itemize}
 \end{frame}
 
@@ -611,34 +613,81 @@ s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
 
 \section{consequences/advantages for modelers (\emph{and real people})}
 
-\begin{frame}{an NCP is a sanity check on your evolving glacier model}
-\begin{itemize}
-\item FIXME 
-\end{itemize}
+
+\begin{frame}{reasons a numerical modeler should care}
+
+\begin{columns}
+\begin{column}{0.65\textwidth}
+in your evolving glacier model:
+\begin{enumerate}
+\item the NCP \emph{is} the source of margin shape
+    \begin{itemize}
+    \item[$\circ$] \emph{I assert}: this is true in the continuum model, regardless of momentum balance
+    \item[$\circ$] no need to impose a shape to the margin
+    \end{itemize}
+\item the NCP is a sanity check
+    \begin{itemize}
+    \item[$\circ$] check each part of NCP once converged
+    \item[$\circ$] \emph{my experience}: get violations within one cell of the margin; worth fixing them
+    \end{itemize}
+\item you can run an NCP solver on a computer
+    \begin{itemize}
+    \item[$\circ$] some software already exists
+        \begin{itemize}
+        \item[$\vartriangleright$] SNESVI and TAO in PETSc/TAO
+        
+        \href{https://www.mcs.anl.gov/petsc/}{\texttt{www.mcs.anl.gov/petsc}}
+        \item[$\vartriangleright$] dune-solvers in DUNE
+        
+        \href{https://www.dune-project.org/modules/dune-solvers/}{\texttt{www.dune-project.org}}
+        \end{itemize}                
+    \item[$\circ$] Bueler (2016) is a PETSc example
+        \begin{itemize}
+        \item[$\vartriangleright$] steady state SIA case (GIS at right)
+        \end{itemize}                
+    \end{itemize}
+\end{enumerate}
+
+\medskip
+\scriptsize note: \emph{use NCP or VI form as they are equivalent}
+\end{column}
+\begin{column}{0.35\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{figs/GISBueler2016.png}
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}{the NCP is the source of margin shape}
-\begin{itemize}
-\item FIXME 
-\end{itemize}
-\end{frame}
 
-
-\begin{frame}{an NCP is something you can run on a computer}
-\begin{itemize}
-\item FIXME works with NCP solver and Newton method as in SIAFVE: provide $a$ and $b$ on $\Omega$, give initial guess for $s$, and say ``go''
-\item FIXME current project: make it Stokes
-\item for implicit time steps
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{a Newton step in an NCP}
+\begin{frame}{inside an NCP solver (one possibility)}
 
 \begin{columns}
 \begin{column}{0.7\textwidth}
 \begin{itemize}
-\item FIXME think through what a Newton step looks like
+\item recall for an implicit time-step:
+
+\vspace{-7mm}
+\begin{align*}
+s-b &\ge 0 \\
+s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
+(s-b) \left(s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right)\right) &= 0
+\end{align*}
+\item sketch of one time-step:
+    \begin{itemize}
+    \item[$\circ$] given as data on $\Omega \times [t,t+\Delta t]$: $a$ and $b$
+    \item[$\circ$] set initial iterate $s^{(0)}=s_{\text{old}}, \bu^{(0)}=\bu_{\text{old}}$
+    \item[$\circ$] for $k=1,2,3,\dots$
+        \begin{itemize}
+        \item[-] compute all residuals in NCP \emph{and} momentum
+        \item[-] for all $\bu$ variables, and where either $s^{(k)}>b$ or $s^{(k)} - s_{\text{old}} - \Delta t\left(\bu^{(k-1)} \cdot \bn_s^{(k-1)} + a\right) \le 0$, solve Newton step linear equations for search direction
+        \item[-] get $s^{(k)}$ by line search, and repeat until tolerance
+        \end{itemize}
+    \item[$\circ$] $s=s^{(k)}$ is updated surface elevation at $t+\Delta t$
+    \end{itemize}
+\item steady state is $\Delta t \to \infty$ extreme case
+    \begin{itemize}
+    \item[$\circ$] Jouvet \& Bueler (2012) at right: DUNE, $s^{(0)}=0$
+    \end{itemize}
+
 \end{itemize}
 \end{column}
 \begin{column}{0.3\textwidth}
@@ -648,12 +697,41 @@ s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
 \end{frame}
 
 
-\begin{frame}{discrete mass conservation will fail}
+\begin{frame}{discrete mass conservation fails}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
 \begin{itemize}
-\item when solving an NCP, discrete mass conservation will fail
-\item FIXME at the free boundary is impossible; see layer paper
-\item however, bounds on mass accounting errors
+\item \small \href{https://arxiv.org/abs/2007.05625}{\texttt{arxiv.org/abs/2007.05625}} de-mystifies this slide \normalsize
+\item for fixed-boundary glacier problems one can get mass conservation $M_n = M_{n-1} + C_n$ exactly
+\item when solving the implicit time-step NCP, if any margin \emph{retreats} then mass conservation \emph{will fail}
+    \begin{itemize}
+    \item[$\circ$] even if we solve the NCP exactly
+    \item[$\circ$] why?
+    \item[$\circ$] suppose ice extents $\Omega_{n-1}$ (old) and $\Omega_n$ (new)
+    \item[$\circ$] consider the retreat area
+    
+    $\Omega_n^r = \{\bx\,:\, s_{n-1}(\bx)>b(\bx) \text{ \& } s_{n}(\bx)=b(\bx)\}$
+
+    \medskip
+    \item[$\circ$] question: \emph{for $\bx \in \Omega_n^r$, when did the ice thickness go to zero and how much surface mass balance, versus flow into $\Omega_n^r$, was needed to do it?}
+        \begin{itemize}
+        \item exact discrete mass conservation implies an answer, but no information is available
+        \end{itemize}
+    \end{itemize}
+
+\medskip
+\item thus accounting for mass errors is needed
+    \begin{itemize}
+    \item[$\circ$] $M_n = M_{n-1} + C_n - R_n$\, where $R_n$ is retreat mass
+    \item[$\circ$] $|\Omega_n^r|$ unboundable in theory, but $R_n$ is boundable
+    \end{itemize}
 \end{itemize}
+\end{column}
+\begin{column}{0.3\textwidth}
+\includegraphics[width=\textwidth]{figs/domains-fig.pdf}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -666,7 +744,7 @@ s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
 
 \bigskip
 \begin{quote}
-If the glacier thickness is zero where you are then the annual surface mass balance cannot be positive.
+If the glacier thickness here is zero then the annual surface mass balance cannot be positive.
 \end{quote}
 \end{itemize}
 \end{column}
@@ -676,8 +754,9 @@ If the glacier thickness is zero where you are then the annual surface mass bala
 \end{columns}
 
 \begin{itemize}
-\item we already knew that?
-\item the glossary\footnote{IACS Working Group, \emph{Glossary of glacier mass balance and related terms}, 2011} could redefine \emph{annual (climatic) surface mass balance} $a$ as any quantity which makes the NCP true
+\item we already knew that?  I hope so
+\item remember the glossary?  \quad \scriptsize (IACS 2011. \emph{Glossary of glacier mass balance and related terms}) \normalsize
+\item proposal: define an \emph{admissible annual (climatic) surface mass balance} as any quantity $a$ defined everywhere which makes the NCP true
 \begin{align*}
 s-b &\ge 0 \\
 \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a &\ge 0 \\
@@ -686,7 +765,8 @@ s-b &\ge 0 \\
 
 \vspace{-2mm}
     \begin{itemize}
-    \item[$\circ$] this gives meaning to modeled values for $a$ outside the current glacier, not just prior measurements \emph{on} the glacier
+    \item[$\circ$] gives meaning to modeled SMB values \emph{outside} the current glacier
+    \item[$\circ$] not just existing SMB measurements \emph{on} the glacier
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -694,17 +774,18 @@ s-b &\ge 0 \\
 
 \begin{frame}{surface mass balance should be modeled (almost) everywhere}
 \begin{itemize}
-\item to numerically compute the steady state of a glacier in a model, or for an implicit time step, it is essential that the modeled surface mass balance be available not just \emph{on} the glacier but everywhere
+\item numerically-computed stable time steps for evolving glaciers require modeled surface mass balance \emph{everywhere}, not just \emph{on} the glacier
     \begin{itemize}
-    \item[$\circ$] or at least ``nearby''
-    \item[$\circ$] garbage in, garbage out
+    \item[$\circ$] or at least ``nearby'' \dots otherwise GIGO
+    \item[$\circ$] really essential to get steady states
     \end{itemize}
-\item in an energy balance model, for example, it requires a ``thought experiment'' for (e.g.) a dirt trail area:
+\item for example, consider an energy balance model for bare ice or snow SMB
+\item requires a ``thought experiment'' for (e.g.) a dirt area:
 
 \begin{quotation}
-how fast would a piston of bare ice or snow need to rise in order
+how fast would a piston of ice or snow need to rise in order
 
-to stay at this level in this climate?
+to stay at trail level in this hypothesized climate?
 \end{quotation}
 \end{itemize}
 
@@ -742,6 +823,4 @@ to stay at this level in this climate?
 Almut Iken (1933--2018) \hfill Will Harrison (1936--2020)
 \end{frame}
 
-
 \end{document}
-
