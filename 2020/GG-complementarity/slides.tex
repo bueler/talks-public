@@ -201,11 +201,14 @@
 \item $b(\bx)$ is bed elevation (not changing)
 \item $s(t,\bx)$ is glacier surface elevation
 \item $a(t,\bx)$ is annual surface (climatic) mass balance
+    \begin{itemize}
+    \item[$\circ$] a.k.a.~the accumulation-ablation function
+    \end{itemize}
 \item $\bU = \bU(t,\bx)$ is vertically-averaged horizontal ice velocity
 \item $\bu = \bu(t,x,y,z)$ is ice velocity in 3D
 \end{itemize}
 
-\vspace{25mm}
+\vspace{20mm}
 
 \footnotesize
 \alert{the symbols are dumb, questions about them are not!}
@@ -332,7 +335,8 @@ H \left(\frac{\partial H}{\partial t} + \Div \left(\bU H\right) - a\right) &= 0
 
 \begin{frame}{applies everywhere, including where the glacier is}
 \begin{itemize}
-\item the complementarity problem applies \emph{everywhere on Earth}:
+\item NCP = nonlinear complementarity problem
+\item the glacier NCP applies \emph{everywhere on Earth}:
 \begin{align*}
 H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div \bq - a &\ge 0 \\
@@ -417,17 +421,15 @@ on the glacier
 
 \bigskip
 \scriptsize
-\item justification in frozen and nonsliding case, using Leibniz rule and incompressibility:
+\item[] \emph{justification in frozen and nonsliding case, using Leibniz rule and incompressibility:}
 \begin{align*}
 \Divbx \bq &= \Divbx \left(\int_b^s \left<u,v\right>\,dz\right) = \left<u,v\right>\big|_s \cdot \grad_{\bx} s - \left<u,v\right>\big|_b \cdot \grad_{\bx} b + \int_b^s \Divbx \left<u,v\right>\,dz \\
            &= \left<u,v\right>\big|_s \cdot \grad_{\bx} s - \int_b^s w_z\,dz = \left<u,v\right>\big|_s \cdot \grad_{\bx} s - w\big|_s = - \bu \cdot \bn_s
 \end{align*}
 
-    \vspace{-2mm}
-    \begin{itemize}
-    \scriptsize
-    \item[$\circ$] in sliding/melting base cases, the mass conservation equation is modified but we use the (nontrivial) basal kinematical equation to get the \emph{same} SKE
-    \end{itemize}
+\medskip
+\normalsize
+\item in sliding and/or melting base cases we use the (nontrivial) basal kinematical equation to get the \textbf{same} SKE, but the mass conservation equation is modified
 \end{itemize}
 \end{frame}
 
@@ -436,7 +438,7 @@ on the glacier
 
 \begin{itemize}
 \item the surface kinematical equation does not care about incompressibility or the basal motion
-\item thus worth restating the NCP:
+\item restated NCP:
 \begin{align*}
 s-b &\ge 0 \\
 \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a &\ge 0 \\
@@ -444,9 +446,9 @@ s-b &\ge 0 \\
 \end{align*}
 
 \medskip
-\item a bit better, but not more fundamental
+\item a bit better, but not really more fundamental
     \begin{itemize}
-    \item[$\circ$] I've assumed $H$ and $s$ are well-defined, thus no overhangs, and this \emph{is} a fundamental restriction on glacier geometry
+    \item[$\circ$] NCP form assumes $H$ and $s$ are well-defined, thus no overhangs, and this \emph{is} a fundamental restriction on glacier geometry
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -498,14 +500,17 @@ s-b &\ge 0 \\
     \item[$\circ$] just like the glacier problem
     \item[$\circ$] but it is also constrained optimization
     \end{itemize}
-\item suppose $u$ solves:
+\item membrane position $u=u(\bx)$ solves:
     $$\min_{v} \phi(v) \qquad \text{subject to} \qquad v \ge \psi$$
 where
     $$\phi(v) = \int_\Omega \frac{1}{2} |\grad v|^2 - f\, v\,d\bx$$
 
     \begin{itemize}
     \item[$\circ$] in the figure, $\Omega$ is a square, $\psi$ is the grey upper hemisphere, $f=0$, and the solution $u$ is shown as a mesh
-    \item[$\circ$] note $v$ lives in a space of functions on $\Omega$, such as $H_g^1(\Omega)$ where $g$ gives boundary values
+    \item[$\circ$] $u$ and $v$ live in a space of functions on $\Omega$
+        \begin{itemize}
+        \item[$\vartriangleright$] such as $H_g^1(\Omega)$ where $g$ gives boundary values
+        \end{itemize}                
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -539,6 +544,9 @@ where
 
 \begin{itemize}
 \item unfortunately, glaciers do not optimize any energy functional
+    \begin{itemize}
+    \item[$\circ$] no such energy has been offered; for known theories the necessary symmetry is missing
+    \end{itemize}
 
 \medskip
 \item obstacle problem:
@@ -559,9 +567,64 @@ where
 \end{frame}
 
 
-\section{consequences for modelers (\emph{and real scientists too})}
+\begin{frame}{how about all the other glacier equations?}
+\begin{itemize}
+\item momentum/energy conservation equations only apply within the glacier
+\item for this talk their ``purpose'' is to provide velocity in the NCP:
+    $$(\text{geometry, boundary stress, thermal state}) \implies \bU,\bq,\bu$$
+\item i.e.
+\begin{align*}
+s-b &\ge 0 \\
+\frac{\partial s}{\partial t} - \bu_{\text{from solving the mass/momentum/energy coupled problem}} \cdot \bn_s - a &\ge 0 \\
+(s-b) \left(\frac{\partial s}{\partial t} - \bu_{\text{from solving the mass/momentum/energy coupled problem}} \cdot \bn_s - a\right) &= 0
+\end{align*}
+\item my current project: make it work with Stokes dynamics
+\end{itemize}
+\end{frame}
 
-\begin{frame}{it runs}
+
+\begin{frame}{steady state and implicit time steps}
+\begin{itemize}
+\item if a glacier is in steady state with a steady climate $a$ then
+\begin{align*}
+s-b &\ge 0 \\
+- \bu \cdot \bn_s - a &\ge 0 \\
+(s-b) \left(- \bu \cdot \bn_s - a\right) &= 0
+\end{align*}
+\item if we want to solve for $s$ after a backward Euler step of $\Delta t$ then
+\begin{align*}
+s-b &\ge 0 \\
+s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right) &\ge 0 \\
+(s-b) \left(s - s_{\text{old}} - \Delta t\left(\bu \cdot \bn_s + a\right)\right) &= 0
+\end{align*}
+\item \emph{no problem stating NCPs for these situations}
+    \begin{itemize}
+    \item[$\circ$] plus well-posedness proofs in some particular cases
+    \end{itemize}
+\item but for explicit steps there are regularity issues
+    \begin{itemize}
+    \item[$\circ$] a separate discussion
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\section{consequences/advantages for modelers (\emph{and real people})}
+
+\begin{frame}{an NCP is a sanity check on your evolving glacier model}
+\begin{itemize}
+\item FIXME 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{the NCP is the source of margin shape}
+\begin{itemize}
+\item FIXME 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{an NCP is something you can run on a computer}
 \begin{itemize}
 \item FIXME works with NCP solver and Newton method as in SIAFVE: provide $a$ and $b$ on $\Omega$, give initial guess for $s$, and say ``go''
 \item FIXME current project: make it Stokes
@@ -570,7 +633,7 @@ where
 \end{frame}
 
 
-\begin{frame}{a Newton step for an NCP}
+\begin{frame}{a Newton step in an NCP}
 
 \begin{columns}
 \begin{column}{0.7\textwidth}
@@ -587,23 +650,67 @@ where
 
 \begin{frame}{discrete mass conservation will fail}
 \begin{itemize}
+\item when solving an NCP, discrete mass conservation will fail
 \item FIXME at the free boundary is impossible; see layer paper
-\item bounds on mass accounting errors
+\item however, bounds on mass accounting errors
 \end{itemize}
 \end{frame}
 
-\begin{frame}{A's view is more interesting}
+
+\begin{frame}{A's view as logic}
+
+\begin{columns}
+\begin{column}{0.8\textwidth}
 \begin{itemize}
-\item \emph{A says:} even when one is just walking down a trail, precise glaciology is possible
-\item FIXME glossary could define surface mass balance $a$ as the ``official'' quantity that makes the $(H,F(H))$ NCP true
+\item even on a dirt trail, precise glaciology is possible:
+
+\bigskip
+\begin{quote}
+If the glacier thickness is zero where you are then the annual surface mass balance cannot be positive.
+\end{quote}
+\end{itemize}
+\end{column}
+\begin{column}{0.2\textwidth}
+\hfill \includegraphics[width=0.7\textwidth]{figs/Iken_front_crop.jpg} \hfill
+\end{column}
+\end{columns}
+
+\begin{itemize}
+\item we already knew that?
+\item the glossary\footnote{IACS Working Group, \emph{Glossary of glacier mass balance and related terms}, 2011} could redefine \emph{annual (climatic) surface mass balance} $a$ as any quantity which makes the NCP true
+\begin{align*}
+s-b &\ge 0 \\
+\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a &\ge 0 \\
+(s-b) \left(\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a\right) &= 0
+\end{align*}
+
+\vspace{-2mm}
+    \begin{itemize}
+    \item[$\circ$] this gives meaning to modeled values for $a$ outside the current glacier, not just prior measurements \emph{on} the glacier
+    \end{itemize}
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}{surface mass balance should be modeled (almost) everywhere}
 \begin{itemize}
-\item FIXME for implicit time steps, its essential
-\item FIXME thought experiment: need ice-surface case [piston of ice cartoon], need snow-surface case [ditto]
+\item to numerically compute the steady state of a glacier in a model, or for an implicit time step, it is essential that the modeled surface mass balance be available not just \emph{on} the glacier but everywhere
+    \begin{itemize}
+    \item[$\circ$] or at least ``nearby''
+    \item[$\circ$] garbage in, garbage out
+    \end{itemize}
+\item in an energy balance model, for example, it requires a ``thought experiment'' for (e.g.) a dirt trail area:
+
+\begin{quotation}
+how fast would a piston of bare ice or snow need to rise in order
+
+to stay at this level in this climate?
+\end{quotation}
 \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/pistontrail.png}
+\end{center}
 \end{frame}
 
 
@@ -613,10 +720,9 @@ where
 \item<2-4> I disagree
 
 \bigskip
-\item<3-4> some ``big ideas'':
+\item<3-4> some possible ``big ideas'':
     \begin{itemize}
     \item[$\circ$] volume-area scaling
-    \item[$\circ$] ``glaciology is a 1 bar subject''
     \item[$\circ$] hysteresis from elevation-dependent mass balance
     \item[$\circ$] the tidewater glacier cycle
     \item[$\circ$] why glaciers surge
@@ -624,7 +730,7 @@ where
 \item<3-4> none of these are obvious even to smart non-glacier scientists
 
 \bigskip
-\item<4> add ``complementarity gives extent and margins'' to list?
+\item<4> add ``complementarity gives glacier extent'' to list?
 \end{itemize}
 \end{frame}
 
