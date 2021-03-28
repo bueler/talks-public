@@ -1,0 +1,259 @@
+% Copyright 2021  Ed Bueler
+
+\documentclass[10pt,hyperref,dvipsnames]{beamer}
+
+\mode<presentation>{
+  \usetheme{Madrid}
+  \usecolortheme{beaver}
+  \setbeamercovered{transparent}
+  \setbeamerfont{frametitle}{size=\large}
+}
+
+\setbeamercolor*{block title}{bg=red!10}
+\setbeamercolor*{block body}{bg=red!5}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\usepackage{empheq}
+\usepackage{xspace}
+\usepackage{verbatim,fancyvrb}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows.meta,decorations.markings,decorations.pathreplacing,fadings,positioning}
+
+\usepackage{hyperref}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command:
+%\beamerdefaultoverlayspecification{<+->}
+
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bbf}{\mathbf{f}}
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bw}{\mathbf{w}}
+
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bG}{\mathbf{G}}
+\newcommand{\bQ}{\mathbf{Q}}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+\newcommand{\minmod}{\operatorname{minmod}}
+
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\ddt}[1]{\ensuremath{\frac{\partial #1}{\partial t}}}
+\newcommand{\ddx}[1]{\ensuremath{\frac{\partial #1}{\partial x}}}
+\newcommand{\Matlab}{\textsc{Matlab}\xspace}
+\newcommand{\Octave}{\textsc{Octave}\xspace}
+\newcommand{\eps}{\epsilon}
+
+\newcommand{\ip}[2]{\left<#1,#2\right>}
+
+\newcommand{\xiphalf}{{x_{i+\frac{1}{2}}}}
+\newcommand{\ximhalf}{{x_{i-\frac{1}{2}}}}
+\newcommand{\Fiphalf}{{F_{i+\frac{1}{2}}}}
+\newcommand{\Fimhalf}{{F_{i-\frac{1}{2}}}}
+\newcommand{\Fiphalfn}{{F^n_{i+\frac{1}{2}}}}
+\newcommand{\Fimhalfn}{{F^n_{i-\frac{1}{2}}}}
+
+\newcommand{\trefcolumn}[1]{\begin{bmatrix} \phantom{x} \\ #1 \\ \phantom{x} \end{bmatrix}}
+\newcommand{\trefmatrixtwo}[2]{\left[\begin{array}{c|c|c} & & \\ #1 & \dots & #2 \\ & & \end{array}\right]}
+\newcommand{\trefmatrixthree}[3]{\left[\begin{array}{c|c|c|c} & & & \\ #1 & #2 & \dots & #3 \\ & & & \end{array}\right]}
+\newcommand{\trefmatrixgroups}[4]{\left[\begin{array}{c|c|c|c|c|c} & & & & & \\ #1 & \dots & #2 & #3 & \dots & #4 \\ & & & & & \end{array}\right]}
+
+\newcommand{\blocktwo}[4]{\left[\begin{array}{c|c} #1 & #2 \\ \hline #3 & #4 \end{array}\right]}
+
+\newcommand{\bqed}{{\color{blue}\qed}}
+\newcommand{\ds}{\displaystyle}
+
+\newcommand\mynum[1]{{\renewcommand{\insertenumlabel}{#1}%
+      \usebeamertemplate{enumerate item} \,}}
+
+
+\title{What is \emph{multigrid}?}
+
+\subtitle{And what can it do for \emph{your} problems?}
+
+\author{Ed Bueler}
+
+\institute[UAF]{University of Alaska Fairbanks}
+
+\date{April 2021}
+
+%% this nonsense needed to start section counter at 0; see
+%% https://tex.stackexchange.com/questions/170222/change-the-numbering-in-beamers-table-of-content
+%\makeatletter
+%\patchcmd{\beamer@sectionintoc}
+%  {\ifnum\beamer@tempcount>0}
+%  {\ifnum\beamer@tempcount>-1}
+%  {}
+%  {}
+%\beamer@tocsectionnumber=-1
+%\makeatother
+
+
+\begin{document}
+\beamertemplatenavigationsymbolsempty
+
+\begin{frame}
+  \maketitle
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+
+\section{fluids: a slow flow example}
+
+\begin{frame}{the lid-driven cavity: fast and slow}
+
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figs/eddies1.png}
+\end{center}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{fluid equations}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{the Stokes equations}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/gstokes.jpg}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{discretization, matrices, and solvers}
+
+\begin{frame}{mesh for Stokes}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\input{figs/gradedcorners.tikz}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{matrix for Stokes}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/jbrown}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/Kstokes.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{iterative linear methods}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/akrylov.jpg}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{iterative nonlinear methods}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/inewton.jpg}
+
+\vspace{-20mm}
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\section{solver performance}
+
+\begin{frame}{FIXME}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{multigrid}
+
+\hfill \includegraphics[width=0.25\textwidth]{figs/people/abrandt.jpg}
+
+%\vspace{-20mm}
+\begin{itemize}
+\item stalling numerical processes must be wrong (\emph{Achi Brandt})
+\item FIXME
+\end{itemize}
+\end{frame}
+
+\begin{frame}{lid-driven cavity optimality}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figs/stokesopt-work.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{resolution results}
+
+\begin{itemize}
+\item FIXME
+\begin{center}
+\includegraphics[width=0.25\textwidth]{figs/eddies1.png} \qquad \includegraphics[width=0.25\textwidth]{figs/eddies2.png} \qquad \includegraphics[width=0.25\textwidth]{figs/eddies3.png}
+\end{center}
+
+\hfill \includegraphics[width=0.2\textwidth]{figs/frontcover.jpg}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{references}
+\begin{itemize}
+\item Elman
+\item E.~Bueler, \emph{PETSc for Partial Differential Equations: Numerical Solutions in C and Python}, SIAM Press, 2021
+\end{itemize}
+\end{frame}
+
+
+\end{document}
