@@ -88,22 +88,29 @@
 
 \title{Tools for mathematical life}
 
+\subtitle{Applied, opinionated view}
+
 \author{Ed Bueler}
 
 \institute[UAF]{University of Alaska Fairbanks}
 
-\date{May 2021}
+\date{August 2021}
+
+\titlegraphic{\begin{picture}(0,0)
+    \put(0,180){\makebox(0,0)[rt]{\includegraphics[width=4cm]{figs/software.png}}}
+  \end{picture}
+}
 
 %% this nonsense needed to start section counter at 0; see
 %% https://tex.stackexchange.com/questions/170222/change-the-numbering-in-beamers-table-of-content
-%\makeatletter
-%\patchcmd{\beamer@sectionintoc}
-%  {\ifnum\beamer@tempcount>0}
-%  {\ifnum\beamer@tempcount>-1}
-%  {}
-%  {}
+\makeatletter
+\patchcmd{\beamer@sectionintoc}
+  {\ifnum\beamer@tempcount>0}
+  {\ifnum\beamer@tempcount>-1}
+  {}
+  {}
 %\beamer@tocsectionnumber=-1
-%\makeatother
+\makeatother
 
 
 \begin{document}
@@ -118,30 +125,9 @@
   \tableofcontents[hideallsubsections]
 \end{frame}
 
+\newcommand\fsect[2]{\section{\textbf{#1} \quad {\color{NavyBlue} \emph{#2}}}}
 
-\section{calculating stuff}
-
-\begin{frame}{fixme}
-
-\begin{itemize}
-\item mathematica example
-\item matlab/octave example
-\item python/numpy/matplotlib mention
-\end{itemize}
-\end{frame}
-
-
-\section{not losing stuff}
-
-\begin{frame}{fixme}
-
-\begin{itemize}
-\item git
-\end{itemize}
-\end{frame}
-
-
-\section{writing stuff}
+\fsect{\LaTeX~and friends}{writing math}
 
 \begin{frame}{fixme}
 
@@ -151,14 +137,78 @@
 \end{itemize}
 \end{frame}
 
-
-\section{making pretty pictures}
-
 \begin{frame}{fixme}
 
 \begin{itemize}
 \item tikz
-\item python/numpy/matplotlib
+\end{itemize}
+\end{frame}
+
+
+\fsect{git}{not losing stuff}
+
+\begin{frame}{fixme}
+
+\begin{itemize}
+\item git
+\end{itemize}
+\end{frame}
+
+
+\makeatletter
+\beamer@tocsectionnumber=-1
+\makeatother
+
+\fsect{the command line}{ground truth}
+
+\begin{frame}{fixme}
+
+\begin{itemize}
+\item fixme
+\end{itemize}
+\end{frame}
+
+
+\makeatletter
+\beamer@tocsectionnumber=2
+\makeatother
+
+\fsect{Matlab or Octave}{calculations}
+
+\begin{frame}{fixme}
+
+\begin{itemize}
+\item matlab/octave example
+\end{itemize}
+\end{frame}
+
+
+\fsect{Python}{scripts for everything}
+
+\begin{frame}{fixme}
+
+\begin{itemize}
+\item python example
+\end{itemize}
+\end{frame}
+
+
+\fsect{Firedrake}{solving your PDEs}
+
+\begin{frame}{fixme}
+
+\begin{itemize}
+\item firedrake example
+\end{itemize}
+\end{frame}
+
+
+\fsect{PETSc}{bigger calculations}
+
+\begin{frame}{fixme}
+
+\begin{itemize}
+\item firedrake example
 \end{itemize}
 \end{frame}
 
