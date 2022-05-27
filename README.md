@@ -5,6 +5,12 @@ Some of my presentations, for which materials are all open.
 
 Here are some of my other public repos which contain talks which I have given:
 
+  * https://github.com/bueler/multilevel-stokes-geometry
+      * SIAM Geosciences 2021, June 2021 (given virtual)
+
+  * https://github.com/bueler/stokes-ice-tutorial
+      * Glacier's Group seminar April 2021, Fairbanks
+
   * https://github.com/bueler/slide-teach/fvolume
       * Alexei Rybkin's REU group, June 2020, Fairbanks
 
