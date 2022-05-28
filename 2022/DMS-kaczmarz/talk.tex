@@ -117,7 +117,7 @@
     \end{itemize}
 \item connection to machine learning
     \begin{itemize}
-    \item[$\circ$] randomized Kaczmarz iteration as \emph{online linear system}
+    \item[$\circ$] randomized Kaczmarz iteration for \emph{online linear systems}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -793,17 +793,17 @@ $$A\,\bx = \bb$$
 \begin{itemize}
 \item recall quadratic optimization versus solving a linear system:
 \begin{align*}
-\bx &= \argmin{\by \in \RR^n} \frac{1}{2} \by^\top A\, \by - \bb^\top \by &&\stackrel{\ast}{\iff} & A\,\bx&=\bb \\
-\bx &= \argmin{\by \in \RR^n} \frac{1}{2} \|A\, \by - \bb\|^2 &&\stackrel{\dagger}{\iff} & A^\top A\,\bx&=A^\top\bb
+(i)\qquad && \bx &= \argmin{\by \in \RR^n} \frac{1}{2} \by^\top A\, \by - \bb^\top \by &&\iff & A\,\bx&=\bb \\
+(ii)\qquad && \bx &= \argmin{\by \in \RR^n} \frac{1}{2} \|A\, \by - \bb\|^2 &&\iff & A^\top A\,\bx&=A^\top\bb
 \end{align*}
 
     \begin{itemize}
-    \item[$\circ$] $\ast$ equivalent if $A$ is square and SPD
-    \item[$\circ$] $\dagger$ equivalent if $A$ is tall ($m\ge n$) and has full column rank
-    \item[$\circ$] $A^\top A\,\bx=A^\top\bb$ is called the \emph{normal equations}
+    \item[$\circ$] \emph{(i)} equivalent if $A$ is square and SPD
+    \item[$\circ$] \emph{(ii)} equivalent if $A$ has full column rank (thus tall $m\ge n$)
+    \item[$\circ$] $A^\top A\,\bx=A^\top\bb$ are the \emph{normal equations}
     \end{itemize}
 \item any connection to Kaczmarz?  of course!
-\item \emph{hint}: the $\dagger$ quadratic functional can be written row-wise
+\item \emph{hint}: the \emph{(ii)}  functional can be written row-wise
 	$$f(\by) = \frac{1}{2} \|A\, \by - \bb\|^2 = \sum_{i=1}^m \frac{1}{2} |\ba_i \by - b_i|^2$$
 \end{itemize}
 \end{frame}
@@ -812,26 +812,70 @@ $$A\,\bx = \bb$$
 \begin{frame}{RKI $=$ stochastic gradient descent}
 
 \begin{itemize}
-\item x
+\item decompose the least-squares objective by rows:
+    $$f(\by) = \frac{1}{2} \|A\, \by - \bb\|^2 = \sum_{i=1}^m f_i(\by)$$
+where $f_i(\by) = \frac{1}{2} |\ba_i \by - b_i|^2$; note $\grad f_i(\by) = (\ba_i \by - b_i) \ba_i^\top \sim \ba_i^\top$
+\item \emph{stochastic gradient descent} (SGD) would choose $i$ at random and descend with step size (\emph{learning rate}) $\lambda>0$:
+    $$\bx_{k+1} = \bx_k - \lambda (\ba_i \bx_k - b_i) \ba_i^\top$$
+\item randomized Kaczmarz iteration (RKI) chooses $\lambda = \|\ba_i\|^{-2}$:
+    $$\bx_{k+1} = \bx_k - \frac{\ba_i \bx_k - b_i}{\|\ba_i\|^2} \ba_i^\top$$
+    \begin{itemize}
+    \item[$\circ$] choice $\lambda = \|\ba_i\|^{-2}$ minimizes distance from $\bx_{k+1}$ to $\bx$
+    \item[$\circ$] a.k.a.~\emph{exact line search}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{online linear systems}
+\begin{frame}{RKI solves \emph{online} linear systems}
 
 \begin{itemize}
-\item x
+\item in \emph{online optimization}, the objective pieces $f_i(\by)$ form a stream
+\item surprisingly, SGD does well \dots it has a good regret bound
+
+    \begin{itemize}
+    \item[$\circ$] ask me about a talk I gave for our machine learning seminar
+    \end{itemize}
+\item now consider:
+\end{itemize}
+
+\begin{block}{the \emph{online linear system} problem}
+$\circ$\, assume the eventual $A\bx=\bb$ is consistent
+
+$\circ$\, a stream presents random scalar equations (rows):
+    $$\ba_i \bx = b_i$$
+
+$\circ$\, generate iterates $\bx_k$ so that $\EE\left(\|\bx_k - \bx\|^2\right)$ is small
+\end{block}
+
+\begin{itemize}
+\item for RKI, S\&V (2009) say: probabilities $\sim \|\ba_i\|^2$ $\implies$
+    $$\EE\left(\|\bx_{k+1} - \bx\|^2\right) \le \left(1 - (\|A\|_F \|A^{-1}\|_2)^{-2}\right)\EE\left(\|\bx_k - \bx\|^2\right)$$
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Kaczmarz (1937):}
+\begin{frame}{conclusion}
 
-\begin{thebibliography}{1}
-\bibitem{Kaczmarz1937}  {\footnotesize S.~Kaczmarz (1937). \textbf{Angenäherte Auflösung von Systemen linearer Gleichungen}, \emph{Bulletin International de l'Académie Polonaise des Sciences et des Lettres. Classe des Sciences Mathématiques et Naturelles. Série A, Sciences Mathématiques}, vol. 35, pp. \alert{355--357}}
+\begin{itemize}
+\item I am not asserting Kaczmarz iteration is a fast solver
+\item but it is:
 
-\bibitem{EnglishKaczmarz1937}  {\footnotesize English translation: \textbf{Approximate Solution for Systems of Linear Equations}. \href{https://faculty.sites.iastate.edu/esweber/files/inline-files/kaczmarz_english_translation_1937.pdf}{\texttt{faculty.sites.iastate.edu/esweber/files/ inline-files/kaczmarz\_english\_translation\_1937.pdf}}}
-\end{thebibliography}
+    \begin{itemize}
+    \item[$\circ$] simple and geometrically-motivated
+    \item[$\circ$] always convergent
+    \end{itemize}
+\item the 21st century has brought it back, but with randomness:
+
+\begin{center}
+\begin{tabular}{c|c}
+online optimization & online linear systems \\ \hline
+SGD & RKI
+\end{tabular}
+\end{center}
+
+\item next few slides, the last ones, are history and references
+\end{itemize}
 \end{frame}
 
 
@@ -875,7 +919,17 @@ Stefan Kaczmarz
 \end{frame}
 
 
-\begin{frame}{Modern references}
+\begin{frame}{Kaczmarz (1937):}
+
+\begin{thebibliography}{1}
+\bibitem{Kaczmarz1937}  {\footnotesize S.~Kaczmarz (1937). \textbf{Angenäherte Auflösung von Systemen linearer Gleichungen}, \emph{Bulletin International de l'Académie Polonaise des Sciences et des Lettres. Classe des Sciences Mathématiques et Naturelles. Série A, Sciences Mathématiques}, vol. 35, pp. \alert{355--357}}
+
+\bibitem{EnglishKaczmarz1937}  {\footnotesize English translation: \textbf{Approximate Solution for Systems of Linear Equations}. \href{https://faculty.sites.iastate.edu/esweber/files/inline-files/kaczmarz_english_translation_1937.pdf}{\texttt{faculty.sites.iastate.edu/esweber/files/ inline-files/kaczmarz\_english\_translation\_1937.pdf}}}
+\end{thebibliography}
+\end{frame}
+
+
+\begin{frame}{21st century revival references}
 
 \begin{thebibliography}{1}
 
