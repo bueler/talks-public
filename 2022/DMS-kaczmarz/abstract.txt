@@ -1,5 +1,5 @@
-title:
+title: Kaczmarz iteration: A 21st century revival?
 
 speaker: Ed Bueler
 
-abstract: Iterations in linear algebra are a main tool for solving hard problems across all of mathematics.  Kaczmarz iteration is a lesser known algorithm which may address 21st century problems in applied math.  This talk will introduce the algorithm, emphasizing its geometry, convergence, and history, at an accessible level for anyone with a course in linear algebra.  After the introduction I will contrast Kaczmarz with better-known iterations, and then cover applications in signal reconstruction, machine learning, and (tentatively) to glaciers.
+abstract: Iterative solver algorithms in linear algebra are a mainstream tool being applied to hard problems across all of mathematics.  By contrast, Kaczmarz iteration is a little-known algorithm which is geometrically-sweet and not very fast.  First I will contrast Kaczmarz iteration with better-known algorithms and then I will describe the revived 21st century interest in terms of connections to optimization and machine learning.  My introductory talk emphasizes the geometry, convergence, and history of the algorithm at an accessible level for anyone with a course in linear algebra.
