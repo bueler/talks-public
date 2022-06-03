@@ -113,7 +113,7 @@
 \end{center}
 
     \begin{itemize}
-    \item[$\circ$] alternative to preconditioned Krylov?
+    \item[$\circ$] alternative to preconditioned Krylov? probably not
     \end{itemize}
 \item connection to machine learning
     \begin{itemize}
@@ -220,7 +220,7 @@ $$\qquad \text{dense} \hspace{39mm} \text{sparse}$$
     \item[$\circ$] we cycle through the rows of $A$:
         $$i = i(k) = (k \operatorname{mod} m) + 1$$
     \item[$\circ$] $\|\cdot\|$ denotes Euclidean norm
-    \item[$\circ$] observation:  fails if $A$ has a row of zeros ($\|\ba_i\|=0$)
+    \item[$\circ$] observation: iteration fails if $A$ has a row of zeros ($\|\ba_i\|=0$)
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -248,7 +248,7 @@ $$\qquad \text{dense} \hspace{39mm} \text{sparse}$$
     $$\begin{bmatrix} 3 & 1 & 6 \\ 3 & -2 & 7 \\ 4 & 9 & -3 \end{bmatrix} \bx = \begin{bmatrix} 4 \\ 2 \\ 2 \end{bmatrix}$$
 
 \begin{itemize}
-\item $m=3$, solution $\ds \bx = \begin{bmatrix} -1 & 1 & 1 \end{bmatrix}^\top$, $\cond(A)=15.5$
+\item $m=3$, unique solution $\ds \bx = \begin{bmatrix} -1 & 1 & 1 \end{bmatrix}^\top$, $\cond(A)=15.5$
 \item if $\bx_0=\bzero$ then for $k=0$:
 \begin{align*}
 \bx_1 &= \bx_0 + \frac{b_1 - \ba_1 \bx_0}{\|\ba_1\|^2}\, \ba_1^\top = \frac{4}{46} \begin{bmatrix} 3 \\ 1 \\ 6 \end{bmatrix} =
@@ -359,10 +359,10 @@ Geometrically the algorithm means the following: The point $\bx_0$ is projected 
 \end{align*}
 
     \begin{itemize}
-    \item[$\circ$] solution $\bx = \begin{bmatrix} 1 & 4 \end{bmatrix}^\top$
+    \item[$\circ$] unique solution $\bx = \begin{bmatrix} 1 & 4 \end{bmatrix}^\top$
     \item[$\circ$] condition number: $k(A) = 62.9$
     \end{itemize}
-\item if $\bx_0$ is far from the solution then $\bx_1$, $\bx_2$,  $\bx_3$, \dots can bounce back and forth between $H_1$ and $H_2$ without significant progress
+\item for most $\bx_0$, the iterates $\bx_1$, $\bx_2$,  $\bx_3$, \dots bounce back and forth between $H_1$ and $H_2$ without decent progress
 \item error $\|\bx_k - \bx\|$ for 8000 iterations starting from $\bx_0 = \begin{bmatrix} -3 & -3 \end{bmatrix}^\top$ \hfill $\to$
 \end{itemize}
 \end{column}
