@@ -3,7 +3,15 @@ talks-public
 
 Some of my presentations, for which materials are all open.
 
-Here are some of my other public repos which contain talks which I have given:
+Here are some of my other repos which contain *additional* talks which I have given:
+
+  * https://github.com/bueler/glaciers-gmg-implicit (private)
+      * SIAM Annual Meeting 2022, July 2022, Pittsburgh
+
+  * https://github.com/bueler/ml-seminar
+      * three hours of talks for MATH 692 Mathematics of Machine Learning, Spring 2022
+      * two hour talk _Getting started on machine learning with one little artificial neural net_
+      * one hour talk _Online optimization: good ML training algorithms regret less_
 
   * https://github.com/bueler/multilevel-stokes-geometry
       * SIAM Geosciences 2021, June 2021 (given virtual)
