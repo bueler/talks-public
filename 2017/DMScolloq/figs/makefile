@@ -7,7 +7,7 @@ pdfgens := $(addsuffix .pdf, $(pdfroots))
 all: $(pdfgens)
 
 NPplane.pdf NPplanestatic.pdf NPplaneweakstrong.pdf: NPplane.py
-	python NPplane.py
+	python3 NPplane.py
 	pdfcrop NPplane.pdf NPplane.pdf
 	pdfcrop NPplanestatic.pdf NPplanestatic.pdf
 	pdfcrop NPplaneweakstrong.pdf NPplaneweakstrong.pdf
