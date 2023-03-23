@@ -5,6 +5,16 @@ Some of my presentations, for which materials are all open.
 
 Here are some of my other repos which contain *additional* talks which I have given:
 
+  * 2 hours of talks for MATH 692 Scalable Algorithms in Applicable Mathematics, Spring 2023
+      * one hour talk _Making ice sheet models scale properly_ (https://github.com/bueler/perf-model-ism/tree/main/talk)
+      * one hour talk _Which linear systems can be solved optimally?_ (https://github.com/bueler/slide-teach/tree/master/optimallinear)
+
+  * https://github.com/bueler/perf-model-ism
+      * Oxford Mathematical Geoscience Seminar, February 2023
+
+  * https://github.com/bueler/mcd-extended
+      * Oxford Computational Mathematics and Applications Seminar, February 2023
+
   * https://github.com/bueler/glaciers-gmg-implicit (private)
       * SIAM Annual Meeting 2022, July 2022, Pittsburgh
 
