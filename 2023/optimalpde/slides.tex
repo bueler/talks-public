@@ -58,10 +58,11 @@
 \newcommand{\Octave}{\textsc{Octave}\xspace}
 \newcommand{\eps}{\epsilon}
 
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla \cdot}
+
 \newcommand{\twovect}[4]{\ensuremath{{#1}_{#2} =
                             \begin{bmatrix} #3 \\ #4 \end{bmatrix}}}
-
-\newcommand{\ftt}[1]{{\color{blue} \texttt{#1}}}
 
 \newcommand{\optimaldef}{
 \begin{definition}
@@ -73,9 +74,9 @@ as $N\to\infty$
 
 
 
-\title{Optimal solvers for partial differential equations}
+\title{Multigrid}
 
-\subtitle{With parallel scaling too!}
+\subtitle{optimal solvers for linear and nonlinear elliptic PDEs}
 
 \author{Ed Bueler}
 
@@ -95,12 +96,184 @@ as $N\to\infty$
   \tableofcontents[hideallsubsections]
 \end{frame}
 
-\section{x}
+
+\section{2 elliptic PDE problems}
+
+\begin{frame}{a linear PDE problem}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item I will consider only two PDEs today
+    \begin{itemize}
+    \item[1.] Poisson problem
+    \item[2.] minimal surface problem
+    \end{itemize}
+\item both are elliptic boundary-value problems
+\item recall the Laplacian $\grad^2 u =\Div(\grad u)$
+    \begin{itemize}
+    \item[$\circ$] in 2D: \quad $\grad^2 u = u_{xx} + u_{yy}$
+    \item[$\circ$] $\grad^2$ is a negative-definite operator
+    \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\hfill \includegraphics[width=\textwidth]{images/poisson.png}
+\end{column}
+\end{columns}
+
+\bigskip
+\begin{block}{Poisson problem} for a given source function $f(x,y)$, find $u(x,y)$ so that
+    $$-\grad^2 u = f \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = 0$$
+\end{block}
+\end{frame}
+
+
+\begin{frame}{a nonlinear PDE problem}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item the second problem is nonlinear, but still elliptic
+\item \textbf{claim 1.} the area of surface $z=v(x,y)$ over $\Omega$ is
+    $$I[v] = \int_\Omega \sqrt{1 + |\grad v|^2}\,dx\,dy$$
+\item \textbf{claim 2.} for given $g$, continuous along $\partial\Omega$, the minimizer $u$ of $I[v]$ over the set $\{v \,:\, v\big|_{\partial \Omega} = g\}$ solves the boundary value problem below
+    \begin{itemize}
+    \item[$\circ$] $g$ defines the wire frame for the soap film
+    \item[$\circ$] examples at right
+    \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.3\textwidth}
+\hfill \includegraphics[width=0.75\textwidth]{images/catenary.png}
+
+\hfill \includegraphics[width=0.75\textwidth]{images/tent.png}
+\end{column}
+\end{columns}
+
+\bigskip
+\begin{block}{minimal surface problem} for given boundary values function $g(x,y)$, find $u(x,y)$ so that
+    $$-\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0 \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = g$$
+\end{block}
+\end{frame}
+
+
+\begin{frame}{finite difference discretization}
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item PDEs are infinite-dimensional problems!
+\item discretization on a grid yields finite-dimensional systems of equations
+\item for example, finite differences (FD):
+    $$f''(x) = \frac{f(x+h) - 2 f(x) + f(x-h)}{h^2} + O(h^2)$$
+\item our 2D test problem will have $\Omega = (0,1) \times (0,1)$
+\item choose integers $m_x,m_y \ge 2$
+\item define spacings $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
+\item grid points are $(x_i,y_j) = (ih_x,jh_y)$ for $i=0,\dots,m_x-1$ and $j=0,\dots,m_y-1$
+\item the FD Laplacian has a 5-point stencil:
+{\small
+$$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \frac{U_{i,j-1} - 2 U_{ij} + U_{i,j+1}}{h_y^2}$$
+}
+\end{itemize}
+\end{column}
+\begin{column}{0.3\textwidth}
+\hfill \includegraphics[width=\textwidth]{images/gridindexing.png}
+
+\vspace{15mm}
+\hfill \includegraphics[width=0.7\textwidth]{images/gridstencil.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+% next slide spy plots from Matlab (NOT OCTAVE):
+%   m=5; spy(delsq(numgrid('S',m)),'k'), axis off,  print -dpdf lapspy5.pdf
+%   m=8; spy(delsq(numgrid('S',m)),8,'k'), axis off,  print -dpdf lapspy8.pdf
+% then pdfcrop
+
+\begin{frame}{PDE $\implies$ linear system $A\bu=\bb$}
+\begin{columns}
+\begin{column}{0.73\textwidth}
+\begin{itemize}
+\item $N=m_x m_y$
+\item global ordering $k=0,1,\dots,N-1$
+\item FIXME SPY PLOTs
+\end{itemize}
+\end{column}
+\begin{column}{0.27\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{images/gridordering.png}
+
+\hfill \includegraphics[width=0.55\textwidth]{images/lapspy5.pdf}
+
+\hfill \includegraphics[width=0.75\textwidth]{images/lapspy8.pdf}
+
+\end{column}
+\end{columns}
+\end{frame}
 
 
 \begin{frame}{x}
 \begin{itemize}
 \item x
+\end{itemize}
+\end{frame}
+
+\begin{frame}{x}
+\begin{itemize}
+\item x
+\end{itemize}
+\end{frame}
+
+
+\section{regarding simple iterations}
+
+\begin{frame}{x}
+\begin{itemize}
+\item x
+\end{itemize}
+\end{frame}
+
+
+\section{the coarse-grid correction}
+
+\begin{frame}{x}
+\begin{itemize}
+\item x
+\end{itemize}
+\end{frame}
+
+
+
+\section{the 2-grid and V cycles}
+
+\begin{frame}{x}
+\begin{columns}
+\begin{column}{0.8\textwidth}
+\begin{itemize}
+\item x
+\end{itemize}
+\end{column}
+\begin{column}{0.17\textwidth}
+\hfill \includegraphics[width=\textwidth]{images/abrandt.jpg}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\section{multigrid as an optimal solver}
+
+\begin{frame}{x}
+\begin{itemize}
+\item x
+\end{itemize}
+\end{frame}
+
+\begin{frame}{nonlinear F-cycle solvers}
+\begin{itemize}
+\item x
+
+\hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
 \end{itemize}
 \end{frame}
 
@@ -140,19 +313,33 @@ def matvec(A,x):
     \item[$\circ$] the guru of multigrid should be better known
     \end{itemize}
 \item[] \textbf{W.~Briggs, V.~E.~Henson, \& S.~McCormick (2000)}.  \emph{A Multigrid Tutorial}, 2nd ed., SIAM Press, Philadelphia
+    \begin{itemize}
+    \item[$\circ$] straightforward introduction
+    \end{itemize}
 \item[] \textbf{E.~Bueler (2021)}. \emph{PETSc for Partial Differential Equations}, SIAM Press, Philadelphia
     \begin{itemize}
-    \item[$\circ$] Krylov methods, multigrid, optimal PDE solvers
+    \item[$\circ$] Krylov methods, preconditioners, many multigrid solver examples
+    \end{itemize}
+\item[] \textbf{H.~Elman, D.~Silvester, \& A.~Wathen (2014)}. \emph{Finite Elements and Fast Iterative Solvers: With Applications to Incompressible Fluid Dynamics}, 2nd ed., Oxford U.~Press
+    \begin{itemize}
+    \item[$\circ$] multigrid in the fluids context
     \end{itemize}
 \item[] \textbf{U.~Trottenberg, C.~Oosterlee, \& A. Schuller (2001)}.  \emph{Multigrid}, Elsevier, Oxford
+    \begin{itemize}
+    \item[$\circ$] a comprehensive view
+    \end{itemize}
 }
 \end{itemize}
 \end{column}
 \begin{column}{0.17\textwidth}
 \hfill \includegraphics[width=\textwidth]{images/abrandt.jpg}
 
-\vspace{7mm}
-\hfill \includegraphics[width=0.8\textwidth]{images/bueler.jpg}
+\hfill {\scriptsize \emph{Achi Brandt}}
+
+\vspace{10mm}
+\hfill \includegraphics[width=0.9\textwidth]{images/bueler.jpg}
+
+\vspace{20mm}
 \end{column}
 \end{columns}
 \end{frame}
