@@ -40,11 +40,12 @@
 \newcommand{\bl}{\bm{\ell}}
 \newcommand{\br}{\mathbf{r}}
 \newcommand{\bs}{\mathbf{s}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
 \newcommand{\bx}{\mathbf{x}}
 \newcommand{\by}{\mathbf{y}}
-\newcommand{\bv}{\mathbf{v}}
-\newcommand{\bu}{\mathbf{u}}
-\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bz}{\mathbf{z}}
 
 \newcommand{\bzero}{\bm{0}}
 
@@ -195,41 +196,95 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 \begin{columns}
 \begin{column}{0.73\textwidth}
 \begin{itemize}
-\item $N=m_x m_y$
-\item global ordering $k=0,1,\dots,N-1$
-\item FIXME SPY PLOTs
+\item consider the 2D Poisson equation $-\grad^2 u = f$
+\item if we choose $m_x,m_y$ subintervals in the two directions, then there are $N=m_x m_y$ total unknowns on the grid
+\item the PDE becomes a linear system for $\bu \in \RR^N$:
+	$$A\, \bu = \bb$$
+
+	\begin{itemize}
+	\item[$\circ$] unknowns $\{U_{ij}\}$ are globally ordered $k=0,1,\dots,N-1$ (upper right)
+	\item[$\circ$] $A \in \RR^{N\times N}$ is symmetric positive definite
+	\item[$\circ$] we keep the boundary values in the linear system
+	\item[$\circ$] $\bb \in \RR^N$ has entries $b_k = f(x_i,y_j)$
+	\end{itemize}
+\item for $m=5$: 9 non-trivial equations (middle right)
+\item for $m=8$: 36 non-trivial equations (lower right)
 \end{itemize}
 \end{column}
 \begin{column}{0.27\textwidth}
 \hfill \includegraphics[width=0.9\textwidth]{images/gridordering.png}
 
-\hfill \includegraphics[width=0.55\textwidth]{images/lapspy5.pdf}
+\bigskip\medskip
+\hfill \includegraphics[width=0.5\textwidth]{images/lapspy5.pdf}
 
-\hfill \includegraphics[width=0.75\textwidth]{images/lapspy8.pdf}
+\bigskip
+\hfill \includegraphics[width=0.7\textwidth]{images/lapspy8.pdf}
 
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{x}
+\begin{frame}{goal: solve $A\bu=\bb$ in $O(N)$ work}
 \begin{itemize}
-\item x
-\end{itemize}
-\end{frame}
-
-\begin{frame}{x}
-\begin{itemize}
-\item x
+\item the linear system $A\bu=\bb$ can be set-up using  $6N$ memory locations
+	\begin{itemize}
+	\item[$\circ$] $A$ has 5 nonzero entries per row
+	\end{itemize}
+\item $A$ is banded, with bandwidth about $\sqrt{N}=m$
+	\begin{itemize}
+	\item[$\circ$] banded Gaussian elimination should solve in $O(N^2)$
+	\end{itemize}
+\item how to solve $A\bu=\bb$ in $O(N)$ work and time?
 \end{itemize}
 \end{frame}
 
 
 \section{regarding simple iterations}
 
-\begin{frame}{x}
+\begin{frame}{cheap $O(N)$ operations: residual, and simple iterations}
 \begin{itemize}
-\item x
+\item we can compute $A\bv$, for any vector $\bv$, in cheap $O(N)$ flops
+\item likewise the residual is $O(N)$
+\end{itemize}
+
+\begin{definition} given $\bv \in\RR^N$, the \emph{residual} for the linear system $A\bu=\bb$ is
+	$$\br(\bv) = \bb - A\bv$$
+\end{definition}
+
+\begin{itemize}
+\item notice: \qquad $A\bu = \bb \quad \iff \quad \br(\bu) = 0$
+\item another $O(N)$ action is a simple iteration \dots \emph{if} $M$ is the right kind of matrix
+\end{itemize}
+
+\begin{definition} for the linear system $A\bu=\bb$, an invertible matrix $M\in \RR^{N\times N}$, and scalar $\alpha>0$,
+    $$\bv_{k+1} = \bv_k + \alpha M^{-1} \left(\bb - A \bv_k\right)$$
+is called \emph{simple iteration}
+\end{definition}
+\end{frame}
+
+
+\begin{frame}{$O(N)$ simple iterations: Jacobi and Gauss-Seidel}
+\begin{itemize}
+\item suppose we split the matrix into diagonal, lower-triangular, and upper-triangular parts:
+	$$A=D + L + U$$
+\item the linear system can be rearranged using the splitting:
+	$$A\bu=\bb \quad \iff \quad D \bu = \bb - (L+U) \bu \quad \iff \quad \bu = \bu + D^{-1} (\bb - A \bu)$$
+\item this gives \emph{Jacobi iteration}, a simple iteration:
+	$$\bv_{k+1} = \bv_k + D^{-1} (\bb - A \bv_k)$$
+
+	\begin{itemize}
+	\item[$\circ$] because solving $D\bz = \bc$ is $O(N)$, each Jacobi iteration is also $O(N)$
+	\end{itemize}
+\item for $A$ from the Poisson equation, we can also solve $(D+L)\bz=\bc$ in $O(N)$, so also each \emph{Gauss-Seidel iteration} is $O(N)$:
+	$$\bv_{k+1} = \bv_k + (D+L)^{-1} (\bb - A \bv_k)$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{what is the effect of Jacobi and Gauss-Seidel}
+\begin{itemize}
+\item FIXME not good solvers ... Figure 6.1
+\item FIXME but smoothers Figure 6.2, 6.3
 \end{itemize}
 \end{frame}
 
