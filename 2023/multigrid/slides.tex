@@ -315,10 +315,40 @@ each \emph{Gauss-Seidel iteration}, a simple iteration, is $O(N)$:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{effect of Jacobi and Gauss-Seidel iterations}
+\begin{frame}{solving effect of Jacobi and Gauss-Seidel iterations}
 \begin{itemize}
 \item FIXME not good solvers ... Figure 6.1
+
+\hfill \includegraphics[width=0.45\textwidth]{images/stagnation.png}
+
+\item an inventor of multigrid, Achi Brandt, famously says:
+\begin{quotation}
+Stalling numerical processes must be wrong.
+
+Whenever the computer grinds very hard for
+
+small or slow effect, there must be a better
+
+way to achieve the same goal.
+\end{quotation}
+
+\vspace{-19mm}
+\hfill \includegraphics[width=0.18\textwidth]{images/abrandt.jpg}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{\emph{smoothing} effect of Jacobi and Gauss-Seidel iterations}
+\begin{itemize}
 \item FIXME but smoothers Figure 6.2, 6.3
+
+\only<1>{
+\hfill \includegraphics[height=0.75\textheight]{images/smoothing-space.png}
+}
+\only<2>{
+\hfill \includegraphics[height=0.75\textheight]{images/smoothing-freq.png}
+}
 \end{itemize}
 \end{frame}
 
