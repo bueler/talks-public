@@ -110,7 +110,7 @@ as $N\to\infty$
     \item[1.] Poisson problem
     \item[2.] minimal surface problem
     \end{itemize}
-\item both are elliptic boundary-value problems
+\item both: elliptic boundary-value problems
 \item recall the Laplacian $\grad^2 u =\Div(\grad u)$
     \begin{itemize}
     \item[$\circ$] in 2D: \quad $\grad^2 u = u_{xx} + u_{yy}$
@@ -124,7 +124,7 @@ as $N\to\infty$
 \end{columns}
 
 \bigskip
-\begin{block}{Poisson problem} for a given source function $f(x,y)$, find $u(x,y)$ so that
+\begin{block}{1.~Poisson problem} for a given source function $f(x,y)$, find $u(x,y)$ so that
     $$-\grad^2 u = f \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = 0$$
 \end{block}
 \end{frame}
@@ -138,11 +138,9 @@ as $N\to\infty$
 \item the second problem is nonlinear, but still elliptic
 \item \textbf{claim 1.} the area of surface $z=v(x,y)$ over $\Omega$ is
     $$I[v] = \int_\Omega \sqrt{1 + |\grad v|^2}\,dx\,dy$$
-\item \textbf{claim 2.} for given $g$, continuous along $\partial\Omega$, the minimizer $u$ of $I[v]$ over the set $\{v \,:\, v\big|_{\partial \Omega} = g\}$ solves the boundary value problem below
-    \begin{itemize}
-    \item[$\circ$] $g$ defines the wire frame for the soap film
-    \item[$\circ$] examples at right
-    \end{itemize}
+\item \textbf{claim 2.} for given $g$, continuous along $\partial\Omega$,
+    $$u = \min_{\{v \,:\, v|_{\partial \Omega} = g\}} I[v]$$
+solves the boundary value problem below
 \end{itemize}
 \end{column}
 \begin{column}{0.3\textwidth}
@@ -152,8 +150,8 @@ as $N\to\infty$
 \end{column}
 \end{columns}
 
-\bigskip
-\begin{block}{minimal surface problem} for given boundary values function $g(x,y)$, find $u(x,y)$ so that
+\medskip
+\begin{block}{2.~minimal surface problem} for given boundary function (wire frame) $g(x,y)$, find $u(x,y)$ so that
     $$-\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0 \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = g$$
 \end{block}
 \end{frame}
@@ -164,14 +162,13 @@ as $N\to\infty$
 \begin{column}{0.7\textwidth}
 \begin{itemize}
 \item PDEs are infinite-dimensional problems!
-\item discretization on a grid yields finite-dimensional systems of equations
+\item discretization yields finite systems of equations
 \item for example, finite differences (FD):
     $$f''(x) = \frac{f(x+h) - 2 f(x) + f(x-h)}{h^2} + O(h^2)$$
 \item our 2D test problem will have $\Omega = (0,1) \times (0,1)$
-\item choose integers $m_x,m_y \ge 2$
-\item define spacings $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
+\item define spacings \strut $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
 \item grid points are $(x_i,y_j) = (ih_x,jh_y)$ for $i=0,\dots,m_x-1$ and $j=0,\dots,m_y-1$
-\item the FD Laplacian has a 5-point stencil:
+\item 5-point stencil for the Laplacian:
 {\small
 $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \frac{U_{i,j-1} - 2 U_{ij} + U_{i,j+1}}{h_y^2}$$
 }
@@ -204,11 +201,11 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 	\begin{itemize}
 	\item[$\circ$] unknowns $\{U_{ij}\}$ are globally ordered $k=0,1,\dots,N-1$ (upper right)
 	\item[$\circ$] $A \in \RR^{N\times N}$ is symmetric positive definite
-	\item[$\circ$] we keep the boundary values in the linear system
+	\item[$\circ$] we \textbf{keep} the boundary values in the linear system
 	\item[$\circ$] $\bb \in \RR^N$ has entries $b_k = f(x_i,y_j)$
 	\end{itemize}
-\item for $m=5$: 9 non-trivial equations (middle right)
-\item for $m=8$: 36 non-trivial equations (lower right)
+\item for $m=5$: 9 \textbf{non-trivial} equations (middle right)
+\item for $m=8$: 36 \textbf{non-trivial} equations (lower right)
 \end{itemize}
 \end{column}
 \begin{column}{0.27\textwidth}
@@ -231,57 +228,94 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 	\begin{itemize}
 	\item[$\circ$] $A$ has 5 nonzero entries per row
 	\end{itemize}
-\item $A$ is banded, with bandwidth about $\sqrt{N}=m$
+\item $A$ is banded, with bandwidth $\approx \sqrt{N}=m$
 	\begin{itemize}
 	\item[$\circ$] banded Gaussian elimination should solve in $O(N^2)$
 	\end{itemize}
 \item how to solve $A\bu=\bb$ in $O(N)$ work and time?
+
+\bigskip
+\item<2> simpler question first:
+
+\medskip
+\qquad what operations using \emph{this} $A$ are obviously $O(N)$?
 \end{itemize}
 \end{frame}
 
 
 \section{regarding simple iterations}
 
-\begin{frame}{cheap $O(N)$ operations: residual, and simple iterations}
+\begin{frame}{cheap $O(N)$ operation: residual}
 \begin{itemize}
-\item we can compute $A\bv$, for any vector $\bv$, in cheap $O(N)$ flops
-\item likewise the residual is $O(N)$
-\end{itemize}
+\item we can compute $A\bv$, for any vector $\bv$, in $O(N)$ flops
+\item also the residual is $O(N)$
 
 \begin{definition} given $\bv \in\RR^N$, the \emph{residual} for the linear system $A\bu=\bb$ is
 	$$\br(\bv) = \bb - A\bv$$
 \end{definition}
 
-\begin{itemize}
-\item notice: \qquad $A\bu = \bb \quad \iff \quad \br(\bu) = 0$
-\item another $O(N)$ action is a simple iteration \dots \emph{if} $M$ is the right kind of matrix
+\item notice: $A\bu = \bb \quad \iff \quad \br(\bu) = 0$
 \end{itemize}
+\end{frame}
 
-\begin{definition} for the linear system $A\bu=\bb$, an invertible matrix $M\in \RR^{N\times N}$, and scalar $\alpha>0$,
+
+\begin{frame}{cheap $O(N)$ operations: \emph{certain} simple iterations}
+
+\begin{definition} for the linear system $A\bu=\bb$, an invertible matrix $M\in \RR^{N\times N}$, and scalar $\alpha$,
     $$\bv_{k+1} = \bv_k + \alpha M^{-1} \left(\bb - A \bv_k\right)$$
 is called \emph{simple iteration}
 \end{definition}
+
+\bigskip
+\begin{itemize}
+\item a simple iteration is $O(N)$ \dots \emph{if} $M$ is the right kind of matrix
+\item \emph{Richardson} iteration is when $M=I$; clearly $O(N)$
+\end{itemize}
+
+\bigskip
+\begin{definition} a matrix or linear map $M$ is an \emph{optimal preconditioner} if solving $M\bz=\bc$ requires $O(N)$ work
+\end{definition}
+
+\bigskip
+\begin{itemize}
+\item warning: a preconditioner $M$ can be optimal without being a good preconditioner!
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}{$O(N)$ simple iterations: Jacobi and Gauss-Seidel}
 \begin{itemize}
-\item suppose we split the matrix into diagonal, lower-triangular, and upper-triangular parts:
+\item suppose we split into diagonal and triangular parts:
 	$$A=D + L + U$$
+\only<1>{
 \item the linear system can be rearranged using the splitting:
-	$$A\bu=\bb \quad \iff \quad D \bu = \bb - (L+U) \bu \quad \iff \quad \bu = \bu + D^{-1} (\bb - A \bu)$$
-\item this gives \emph{Jacobi iteration}, a simple iteration:
+\begin{align*}
+A\bu=\bb \quad &\iff \quad D \bu = \bb - (L+U) \bu \\
+               &\iff \quad \bu = \bu + D^{-1} (\bb - A \bu)
+\end{align*}
+\item solving $D\bz = \bc$ is $O(N)$
+\begin{definition}
+each \emph{Jacobi iteration}, a simple iteration, is $O(N)$:
 	$$\bv_{k+1} = \bv_k + D^{-1} (\bb - A \bv_k)$$
+\end{definition}
+}
+\only<2>{
+\item the linear system can be rearranged using the splitting:
+\begin{align*}
+A\bu=\bb \quad &\iff \quad (D+L) \bu = \bb - U \bu \\
+               &\iff \quad \bu = \bu + (D+L)^{-1} (\bb - A \bu)
+\end{align*}
+\item for $A$ from the Poisson equation, solving $(D+L)\bz=\bc$ is $O(N)$
 
-	\begin{itemize}
-	\item[$\circ$] because solving $D\bz = \bc$ is $O(N)$, each Jacobi iteration is also $O(N)$
-	\end{itemize}
-\item for $A$ from the Poisson equation, we can also solve $(D+L)\bz=\bc$ in $O(N)$, so also each \emph{Gauss-Seidel iteration} is $O(N)$:
+\begin{definition}
+each \emph{Gauss-Seidel iteration}, a simple iteration, is $O(N)$:
 	$$\bv_{k+1} = \bv_k + (D+L)^{-1} (\bb - A \bv_k)$$
+\end{definition}
+}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{what is the effect of Jacobi and Gauss-Seidel}
+\begin{frame}{effect of Jacobi and Gauss-Seidel iterations}
 \begin{itemize}
 \item FIXME not good solvers ... Figure 6.1
 \item FIXME but smoothers Figure 6.2, 6.3
