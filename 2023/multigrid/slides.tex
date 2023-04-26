@@ -355,7 +355,16 @@ way to achieve the same goal.
 
 \section{the coarse-grid correction}
 
-\begin{frame}{x}
+\begin{frame}{grid transfers}
+
+{\large
+$$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
+\begin{matrix}
+\stackrel{\text{\texttt{restrict}}}{\longrightarrow} \\
+\stackrel{\text{\texttt{prolong}}}{\longleftarrow} \\ \phantom{foo} \\ \phantom{foo}
+\end{matrix}
+\qquad \includegraphics[width=0.15\textwidth]{images/coarse.png}$$
+}
 \begin{itemize}
 \item x
 \end{itemize}
@@ -366,6 +375,31 @@ way to achieve the same goal.
 \section{the 2-grid and V cycles}
 
 
+\begin{frame}[fragile]
+\frametitle{2-grid method}
+\begin{itemize}
+\item FIXME
+\begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
+def twogrid(w,presmooth=2,postsmooth=2):
+    v = w.copy()
+    for k in range(presmooth):
+         v = smooth(A,b,v)     # smooth = Jacobi, GS
+    rc = restrict(b - A*v)
+    ec = solve(Ac,r)           # solve error eqn
+    v = v + prolong(ec)
+    for k in range(postsmooth):
+         v = smooth(A,b,v)     # smooth = Jacobi, GS
+    return v
+\end{minted}
+\item where
+\begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
+A  = discretize(m,m)           # fine grid
+Ac = discretize(m/2,m/2)       # coarse grid
+\end{minted}
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{hierarchy of grids}
 \begin{itemize}
 \item x
@@ -373,6 +407,30 @@ way to achieve the same goal.
 \hfill \includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{recursive V-cycle}
+\begin{itemize}
+\item FIXME
+\begin{minted}[fontsize=\small,xleftmargin=10mm,texcomments]{python}
+def vcycle(b,w,lev,...):
+    A = discretize(lev)
+    if lev == 0:
+        return solve(A,b)
+    v = w.copy()
+    for k in range(presmooth):
+         v = smooth(A,b,v)
+    rc = restrict(b - A*v)
+    ec = vcycle(r,0,lev-1,...)  # solve error eqn
+    v = v + prolong(ec)
+    for k in range(postsmooth):
+         v = smooth(A,b,v)
+    return v
+\end{minted}
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{V and W cycles}
 \begin{itemize}
@@ -384,16 +442,14 @@ way to achieve the same goal.
 
 
 \begin{frame}{x}
-\begin{columns}
-\begin{column}{0.8\textwidth}
 \begin{itemize}
-\item x
+\item multigrid combines three conceptual threads:
+\begin{enumerate}
+\item inexpensive classical iterations such as Jacobi and GS tend to smooth the residual in a few iterations
+\item a coarse-grid correction does a good job of approximating the fine-grid solution when acting on a smooth residual
+\item iff the solution of the problem on the coarse grid is inexpensive then the coarse-grid correction is inexpensive because restriction and prolongation are inexpensive
+\end{enumerate}
 \end{itemize}
-\end{column}
-\begin{column}{0.17\textwidth}
-\hfill \includegraphics[width=\textwidth]{images/abrandt.jpg}
-\end{column}
-\end{columns}
 \end{frame}
 
 
@@ -412,30 +468,6 @@ way to achieve the same goal.
 
 \hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{\texttt{matvec}}
-\begin{itemize}
-\item y
-\end{itemize}
-\begin{center}
-\begin{minipage}{0.7\textwidth}
-\begin{minted}[fontsize=\small]{python}
-def matvec(A,x):
-    from numpy import zeros, shape
-    [m,n] = shape(A)
-    z = zeros((m,1))
-    for i in range(m):
-        s = 0.0
-        for j in range(n):
-            s += A[i][j] * x[j]
-        z[i] = s
-    return z
-\end{minted}
-\end{minipage}
-\end{center}
 \end{frame}
 
 
