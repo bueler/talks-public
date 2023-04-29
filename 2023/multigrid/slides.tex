@@ -165,9 +165,9 @@ solves the boundary value problem below
 \item discretization yields finite systems of equations
 \item for example, finite differences (FD):
     $$f''(x) = \frac{f(x+h) - 2 f(x) + f(x-h)}{h^2} + O(h^2)$$
-\item our 2D test problem will have $\Omega = (0,1) \times (0,1)$
-\item define spacings \strut $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
-\item grid points are $(x_i,y_j) = (ih_x,jh_y)$ for $i=0,\dots,m_x-1$ and $j=0,\dots,m_y-1$
+\item assume: $\Omega = (0,1) \times (0,1)$
+\item grid spacings: \strut $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
+\item grid points: $(x_i,y_j) = (ih_x,jh_y)$ for $i=0,\dots,m_x-1$ and $j=0,\dots,m_y-1$
 \item 5-point stencil for the Laplacian:
 {\small
 $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \frac{U_{i,j-1} - 2 U_{ij} + U_{i,j+1}}{h_y^2}$$
@@ -193,19 +193,23 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 \begin{columns}
 \begin{column}{0.73\textwidth}
 \begin{itemize}
-\item consider the 2D Poisson equation $-\grad^2 u = f$
-\item if we choose $m_x,m_y$ subintervals in the two directions, then there are $N=m_x m_y$ total unknowns on the grid
-\item the PDE becomes a linear system for $\bu \in \RR^N$:
+\item consider the 2D Poisson PDE $-\grad^2 u = f$
+\item FD discretize: $N=m_x m_y$ total unknowns on the grid
+
+	\begin{itemize}
+	\item[$\circ$] $m_x=3,m_y=2$ shown at right
+	\end{itemize}
+\item PDE becomes a linear system for $\bu \in \RR^N$:
 	$$A\, \bu = \bb$$
 
 	\begin{itemize}
 	\item[$\circ$] unknowns $\{U_{ij}\}$ are globally ordered $k=0,1,\dots,N-1$ (upper right)
 	\item[$\circ$] $A \in \RR^{N\times N}$ is symmetric positive definite
-	\item[$\circ$] we \textbf{keep} the boundary values in the linear system
+	\item[$\circ$] note we \textbf{keep} boundary values in the linear system
 	\item[$\circ$] $\bb \in \RR^N$ has entries $b_k = f(x_i,y_j)$
 	\end{itemize}
-\item for $m=5$: 9 \textbf{non-trivial} equations (middle right)
-\item for $m=8$: 36 \textbf{non-trivial} equations (lower right)
+\item for $m_x=m_y=5$: \,\,\,9 non-trivial eqns (middle right)
+\item for $m_x=m_y=8$: 36 non-trivial eqns (lower right)
 \end{itemize}
 \end{column}
 \begin{column}{0.27\textwidth}
@@ -226,19 +230,21 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 \begin{itemize}
 \item the linear system $A\bu=\bb$ can be set-up using  $6N$ memory locations
 	\begin{itemize}
-	\item[$\circ$] $A$ has 5 nonzero entries per row
-	\end{itemize}
-\item $A$ is banded, with bandwidth $\approx \sqrt{N}=m$
-	\begin{itemize}
-	\item[$\circ$] banded Gaussian elimination should solve in $O(N^2)$
+	\item[$\circ$] $A$ has 5 nonzero entries per row, plus one entry of $\bb$
 	\end{itemize}
 \item how to solve $A\bu=\bb$ in $O(N)$ work and time?
 
 \bigskip
-\item<2> simpler question first:
+\item<2-> $A$ is banded, with bandwidth $\approx \min\{m_x,m_y\} \approx \sqrt{N}$
+	\begin{itemize}
+	\item[$\circ$] so banded Gaussian elimination will solve in $O(N^2)$
+	\end{itemize}
+
+\bigskip
+\item<3> let's back up and ask:
 
 \medskip
-\qquad what operations using \emph{this} $A$ are obviously $O(N)$?
+\qquad what operations using our $A$ are obviously $O(N)$?
 \end{itemize}
 \end{frame}
 
@@ -248,18 +254,21 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 \begin{frame}{cheap $O(N)$ operation: residual}
 \begin{itemize}
 \item we can compute $A\bv$, for any vector $\bv$, in $O(N)$ flops
-\item also the residual is $O(N)$
+	\begin{itemize}
+	\item[$\circ$] because $A$ has $O(1)$ nonzero entries per row
+	\item[$\circ$] also the residual is $O(N)$
+	\end{itemize}
+\end{itemize}
 
 \begin{definition} given $\bv \in\RR^N$, the \emph{residual} for the linear system $A\bu=\bb$ is
 	$$\br(\bv) = \bb - A\bv$$
+observe that:
+    $$A\bu = \bb \quad \iff \quad \br(\bu) = 0$$
 \end{definition}
-
-\item notice: $A\bu = \bb \quad \iff \quad \br(\bu) = 0$
-\end{itemize}
 \end{frame}
 
 
-\begin{frame}{cheap $O(N)$ operations: \emph{certain} simple iterations}
+\begin{frame}{more cheap $O(N)$ operations: certain simple iterations}
 
 \begin{definition} for the linear system $A\bu=\bb$, an invertible matrix $M\in \RR^{N\times N}$, and scalar $\alpha$,
     $$\bv_{k+1} = \bv_k + \alpha M^{-1} \left(\bb - A \bv_k\right)$$
@@ -269,16 +278,29 @@ is called \emph{simple iteration}
 \bigskip
 \begin{itemize}
 \item a simple iteration is $O(N)$ \dots \emph{if} $M$ is the right kind of matrix
-\item \emph{Richardson} iteration is when $M=I$; clearly $O(N)$
+\item \emph{Richardson} iteration is when $M=I$, for which $O(N)$ is clear
 \end{itemize}
+\end{frame}
 
-\bigskip
-\begin{definition} a matrix or linear map $M$ is an \emph{optimal preconditioner} if solving $M\bz=\bc$ requires $O(N)$ work
+
+\begin{frame}{preconditioned linear system, and preconditioners}
+
+\begin{definition} if a matrix or linear map $M$ on $\RR^N$ is invertible, we say
+    $$M^{-1} A \bu = M^{-1} \bb$$
+is the \emph{(left-) preconditioned} system
 \end{definition}
 
-\bigskip
 \begin{itemize}
-\item warning: a preconditioner $M$ can be optimal without being a good preconditioner!
+\item preconditioned system has same solutions because $M$ is invertible
+\end{itemize}
+
+\begin{definition} a matrix or linear map $M$ is a \emph{fast preconditioner} if solving $M\bz=\bc$ requires $O(N)$ work
+\end{definition}
+
+\begin{itemize}
+\item equivalently: multiplication by $M^{-1}$ is $O(N)$
+\item example: if $A$ has nonzero diagonal entries, the diagonal $M=D$ is a fast preconditioner
+\item warning: a preconditioner $M$ can be fast without being a useful tool!
 \end{itemize}
 \end{frame}
 
@@ -314,6 +336,20 @@ each \emph{Gauss-Seidel iteration}, a simple iteration, is $O(N)$:
 }
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{example of Gauss-Seidel iteration}
+\begin{itemize}
+\item the matrix-splitting view obscures the simplicity of Gauss-Seidel \dots
+\item \emph{example}: for the linear system $A\bu=\bb$ with
+    $$A = \begin{bmatrix} 2 & -1 & & & & \\ -1 & 2 & -1 & & & \\ & -1 & 2 & -1 & & \\ & & \ddots & \ddots & \ddots & \\ & \Big. & & -1 & 2 & -1 \\ & & & & -1 & 2 \end{bmatrix}, \qquad \bb = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ \vdots \\ b_N \end{bmatrix},$$
+Gauss-Seidel is the iteration which generates $\bv^{[k]}$ by
+    $$v_j^{[k+1]} = \frac{b_j}{2} + \frac{1}{2} \left(v_{j-1}^{[k+1]} + v_{j+1}^{[k]}\right)$$
+\item this is a \emph{relaxation} method \dots update $v_j$ using average of neighbors
+\item this example is relevant because $A \sim -\grad^2$
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{solving effect of Jacobi and Gauss-Seidel iterations}
 \begin{itemize}
