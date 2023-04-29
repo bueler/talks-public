@@ -232,7 +232,10 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 	\begin{itemize}
 	\item[$\circ$] $A$ has 5 nonzero entries per row, plus one entry of $\bb$
 	\end{itemize}
-\item how to solve $A\bu=\bb$ in $O(N)$ work and time?
+\item how to solve $A\bu=\bb$ in $O(N)$ work and time as $N\to\infty$?
+	\begin{itemize}
+	\item[$\circ$] if so, the solver is \emph{optimal}
+	\end{itemize}
 
 \bigskip
 \item<2-> $A$ is banded, with bandwidth $\approx \min\{m_x,m_y\} \approx \sqrt{N}$
@@ -251,15 +254,16 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 
 \section{regarding simple iterations}
 
-\begin{frame}{cheap $O(N)$ operation: residual}
+\begin{frame}{cheap $O(N)$ operation: $A\bv$ and the residual}
 \begin{itemize}
-\item we can compute $A\bv$, for any vector $\bv$, in $O(N)$ flops
+\item for $A$ from these PDE examples, we can compute $A\bv$ in $O(N)$ flops
 	\begin{itemize}
-	\item[$\circ$] because $A$ has $O(1)$ nonzero entries per row
+	\item[$\circ$] this is because $A$ has $O(1)$ nonzero entries per row
 	\item[$\circ$] also the residual is $O(N)$
 	\end{itemize}
 \end{itemize}
 
+\bigskip
 \begin{definition} given $\bv \in\RR^N$, the \emph{residual} for the linear system $A\bu=\bb$ is
 	$$\br(\bv) = \bb - A\bv$$
 observe that:
@@ -351,13 +355,27 @@ Gauss-Seidel is the iteration which generates $\bv^{[k]}$ by
 \end{frame}
 
 
-\begin{frame}{solving effect of Jacobi and Gauss-Seidel iterations}
+\begin{frame}{Jacobi and Gauss-Seidel iterations \emph{as solvers}}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item FIXME not good solvers ... Figure 6.1
+\item for Poisson problem linear system $A\bu=\bb$, one can prove that Gauss-Seidel converges!
+    \begin{itemize}
+    \item[$\circ$] same for Jacobi
+    \end{itemize}
+\item but, after initial progress, \emph{agonizingly slowly} on fine grids \dots
+\item an iteration $\bv_{k+1} = \phi(\bv_k)$ \emph{stagnates} or \emph{stalls} if the residual norms $\{\|\br(\bv_k)\|\}$ go to zero more slowly than we want
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=\textwidth]{images/stagnation.png}
+\end{column}
+\end{columns}
 
-\hfill \includegraphics[width=0.45\textwidth]{images/stagnation.png}
-
-\item an inventor of multigrid, Achi Brandt, famously says:
+\bigskip
+\begin{itemize}
+\item an inventor of multigrid, Achi Brandt, said:
 \begin{quotation}
 Stalling numerical processes must be wrong.
 
@@ -374,8 +392,7 @@ way to achieve the same goal.
 \end{frame}
 
 
-
-\begin{frame}{\emph{smoothing} effect of Jacobi and Gauss-Seidel iterations}
+\begin{frame}{Jacobi and Gauss-Seidel iterations \emph{as smoothers}}
 \begin{itemize}
 \item FIXME but smoothers Figure 6.2, 6.3
 
