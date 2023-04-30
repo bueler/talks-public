@@ -252,7 +252,7 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 \end{frame}
 
 
-\section{regarding simple iterations}
+\section{simple iterations?}
 
 \begin{frame}{cheap $O(N)$ operation: $A\bv$ and the residual}
 \begin{itemize}
@@ -274,20 +274,29 @@ observe that:
 
 \begin{frame}{more cheap $O(N)$ operations: certain simple iterations}
 
-\begin{definition} for the linear system $A\bu=\bb$, an invertible matrix $M\in \RR^{N\times N}$, and scalar $\alpha$,
-    $$\bv_{k+1} = \bv_k + \alpha M^{-1} \left(\bb - A \bv_k\right)$$
+\begin{definition} for the linear system $A\bu=\bb$ and an invertible matrix $M\in \RR^{N\times N}$,
+    $$\bv_{k+1} = \bv_k + \alpha\, M^{-1} \left(\bb - A \bv_k\right)$$
 is called \emph{simple iteration}
 \end{definition}
 
 \bigskip
 \begin{itemize}
-\item a simple iteration is $O(N)$ \dots \emph{if} $M$ is the right kind of matrix
-\item \emph{Richardson} iteration is when $M=I$, for which $O(N)$ is clear
+\item $\alpha\in\RR$ is simply a tuning parameter, with default $\alpha=1$
+\item \emph{Richardson iteration} \quad $\bv_{k+1} = \bv_k + \alpha\, \br(\bv_k)$ \quad is the $M=I$ case
+	\begin{itemize}
+	\item[$\circ$] $O(N)$ is clear
+
+\medskip
+	\item[$\circ$] observation: Richardson iteration for the Poisson equation \emph{is} gradient descent for the functional \quad $\displaystyle I[v] = \alpha \int_\Omega \frac{1}{2} |\grad v|^2 - f v\,dx\,dy$
+	\end{itemize}
+
+\medskip
+\item a simple iteration is $O(N)$ \dots \emph{if} $M$ is the right kind of matrix!
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{preconditioned linear system, and preconditioners}
+\begin{frame}{preconditioned linear systems}
 
 \begin{definition} if a matrix or linear map $M$ on $\RR^N$ is invertible, we say
     $$M^{-1} A \bu = M^{-1} \bb$$
@@ -295,16 +304,24 @@ is the \emph{(left-) preconditioned} system
 \end{definition}
 
 \begin{itemize}
-\item preconditioned system has same solutions because $M$ is invertible
+\item new system has same solutions as before because $M$ is invertible
+\item the new residual is $\tilde{\br}(\bv) = M^{-1} \bb - M^{-1} A \bv$
+\item observation: Richardson iteration on the new system is equivalent to simple iteration
+    $$\bv_{k+1} = \bv_k + \alpha\, \tilde{\br}(\bv) \quad \iff \quad \bv_{k+1} = \bv_k + \alpha\, M^{-1} \left(\bb - A \bv_k\right)$$
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{fast preconditioners?}
 
 \begin{definition} a matrix or linear map $M$ is a \emph{fast preconditioner} if solving $M\bz=\bc$ requires $O(N)$ work
 \end{definition}
 
 \begin{itemize}
-\item equivalently: multiplication by $M^{-1}$ is $O(N)$
 \item example: if $A$ has nonzero diagonal entries, the diagonal $M=D$ is a fast preconditioner
+\item ``multiplication by $M^{-1}$ is $O(N)$'' for a fast preconditioner, but (often) not if you actually form the matrix $M^{-1}$!
 \item warning: a preconditioner $M$ can be fast without being a useful tool!
+\item preconditioning is an apparently simple idea, but in 21st century one sees them used as tools all over the space of solvers
 \end{itemize}
 \end{frame}
 
@@ -345,12 +362,16 @@ each \emph{Gauss-Seidel iteration}, a simple iteration, is $O(N)$:
 \begin{frame}{example of Gauss-Seidel iteration}
 \begin{itemize}
 \item the matrix-splitting view obscures the simplicity of Gauss-Seidel \dots
-\item \emph{example}: for the linear system $A\bu=\bb$ with
-    $$A = \begin{bmatrix} 2 & -1 & & & & \\ -1 & 2 & -1 & & & \\ & -1 & 2 & -1 & & \\ & & \ddots & \ddots & \ddots & \\ & \Big. & & -1 & 2 & -1 \\ & & & & -1 & 2 \end{bmatrix}, \qquad \bb = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ \vdots \\ b_N \end{bmatrix},$$
-Gauss-Seidel is the iteration which generates $\bv^{[k]}$ by
+\item \emph{example}: consider the linear system $A\bu=\bb$ with
+    $$A = \begin{bmatrix} 2 & -1 & & & & \\ -1 & 2 & -1 & & & \\ & -1 & 2 & -1 & & \\ & & \ddots & \ddots & \ddots & \\ & \Big. & & -1 & 2 & -1 \\ & & & & -1 & 2 \end{bmatrix}, \qquad \bb = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ \vdots \\ b_N \end{bmatrix}$$
+
+    \begin{itemize}
+    \item[$\circ$] here Gauss-Seidel iteration computes $\bv^{[k+1]}$ by
     $$v_j^{[k+1]} = \frac{b_j}{2} + \frac{1}{2} \left(v_{j-1}^{[k+1]} + v_{j+1}^{[k]}\right)$$
-\item this is a \emph{relaxation} method \dots update $v_j$ using average of neighbors
-\item this example is relevant because $A \sim -\grad^2$
+    \item[$\circ$] this is a \emph{relaxation} method \dots update $v_j$ using average of neighbors
+    \item[$\circ$] one can prove this method converges
+    \item[$\circ$] this example is relevant because $A \sim -\grad^2$ in 1D
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -360,12 +381,9 @@ Gauss-Seidel is the iteration which generates $\bv^{[k]}$ by
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item for Poisson problem linear system $A\bu=\bb$, one can prove that Gauss-Seidel converges!
-    \begin{itemize}
-    \item[$\circ$] same for Jacobi
-    \end{itemize}
-\item but, after initial progress, \emph{agonizingly slowly} on fine grids \dots
-\item an iteration $\bv_{k+1} = \phi(\bv_k)$ \emph{stagnates} or \emph{stalls} if the residual norms $\{\|\br(\bv_k)\|\}$ go to zero more slowly than we want
+\item for the Poisson problem linear system $A\bu=\bb$, one can prove that Gauss-Seidel and Jacobi converge
+\item but, after initial progress, \emph{agonizingly slowly} on fine grids \dots they stagnate
+\item an iteration $\bv_{k+1} = \phi(\bv_k)$ \emph{stagnates} or \emph{stalls} if the ratio of successive residual norms $\{\|\br(\bv_{k+1})\|/\|\br(\bv_k)\|\}$ goes to one
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -394,15 +412,29 @@ way to achieve the same goal.
 
 \begin{frame}{Jacobi and Gauss-Seidel iterations \emph{as smoothers}}
 \begin{itemize}
-\item FIXME but smoothers Figure 6.2, 6.3
+\item however, the first
+
+few residuals are
+
+\emph{much smoother}
+
+than the initial
+
+residual
+\end{itemize}
+
+\vspace{-25mm}
 
 \only<1>{
 \hfill \includegraphics[height=0.75\textheight]{images/smoothing-space.png}
+
+\hfill {\scriptsize Jacobi \hspace{17mm} $\alpha=\frac{2}{3}$ Jacobi \hspace{12mm} Gauss-Seidel \hspace{3mm}}
 }
 \only<2>{
 \hfill \includegraphics[height=0.75\textheight]{images/smoothing-freq.png}
+
+\hfill {\scriptsize Jacobi \hspace{17mm} $\alpha=\frac{2}{3}$ Jacobi \hspace{12mm} Gauss-Seidel \hspace{3mm}}
 }
-\end{itemize}
 \end{frame}
 
 
@@ -419,7 +451,8 @@ $$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
 \qquad \includegraphics[width=0.15\textwidth]{images/coarse.png}$$
 }
 \begin{itemize}
-\item x
+\item we are close to multigrid, but we need to talk about multiple grids!
+\item 
 \end{itemize}
 \end{frame}
 
