@@ -36,6 +36,7 @@
 
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bc}{\mathbf{c}}
+\newcommand{\be}{\mathbf{e}}
 \newcommand{\bbf}{\mathbf{f}}
 \newcommand{\bl}{\bm{\ell}}
 \newcommand{\br}{\mathbf{r}}
@@ -252,8 +253,6 @@ $$\grad^2 u(x_i,y_j) \approx \frac{U_{i-1,j} - 2 U_{ij} + U_{i+1,j}}{h_x^2} + \f
 \end{frame}
 
 
-\section{simple iterations?}
-
 \begin{frame}{cheap $O(N)$ operation: $A\bv$ and the residual}
 \begin{itemize}
 \item for $A$ from these PDE examples, we can compute $A\bv$ in $O(N)$ flops
@@ -272,22 +271,24 @@ observe that:
 \end{frame}
 
 
-\begin{frame}{more cheap $O(N)$ operations: certain simple iterations}
+\section{simple iterations?}
 
-\begin{definition} for the linear system $A\bu=\bb$ and an invertible matrix $M\in \RR^{N\times N}$,
-    $$\bv_{k+1} = \bv_k + \alpha\, M^{-1} \left(\bb - A \bv_k\right)$$
-is called \emph{simple iteration}
+\begin{frame}{simple iterations (cheap $O(N)$ operations?)}
+
+\begin{definition} for the linear system $A\bu=\bb$ and an invertible matrix $M\in \RR^{N\times N}$, \emph{simple iteration} is
+    $$\bv_{k+1} = \bv_k + \alpha\, M^{-1} \underbrace{\left(\bb - A \bv_k\right)}_{=\,\br(\bv_k)}$$
 \end{definition}
 
-\bigskip
 \begin{itemize}
-\item $\alpha\in\RR$ is simply a tuning parameter, with default $\alpha=1$
+\item $\alpha\in\RR$ is a tuning parameter, with default $\alpha=1$
+\item if $M=A$ and $\alpha=1$ then $\bv_{k+1}=\bu$, so simple iteration solves it!
+	\begin{itemize}
+	\item[$\circ$] \dots not practical
+	\end{itemize}
 \item \emph{Richardson iteration} \quad $\bv_{k+1} = \bv_k + \alpha\, \br(\bv_k)$ \quad is the $M=I$ case
 	\begin{itemize}
-	\item[$\circ$] $O(N)$ is clear
-
-\medskip
-	\item[$\circ$] observation: Richardson iteration for the Poisson equation \emph{is} gradient descent for the functional \quad $\displaystyle I[v] = \alpha \int_\Omega \frac{1}{2} |\grad v|^2 - f v\,dx\,dy$
+	\item[$\circ$] observation: Richardson iteration for the Poisson equation \emph{is} gradient descent for the functional \quad $\displaystyle I[v] = \alpha \int_\Omega \frac{1}{2} |\grad v|^2 - f v$
+	\item[$\circ$] $O(N)$ is clear for Richardson iteration
 	\end{itemize}
 
 \medskip
@@ -319,9 +320,9 @@ is the \emph{(left-) preconditioned} system
 
 \begin{itemize}
 \item example: if $A$ has nonzero diagonal entries, the diagonal $M=D$ is a fast preconditioner
-\item ``multiplication by $M^{-1}$ is $O(N)$'' for a fast preconditioner, but (often) not if you actually form the matrix $M^{-1}$!
+\item do not actually form the matrix $M^{-1}$
 \item warning: a preconditioner $M$ can be fast without being a useful tool!
-\item preconditioning is an apparently simple idea, but in 21st century one sees them used as tools all over the space of solvers
+\item preconditioning is an apparently simple idea, but in the 21st century it is used all over the space of solvers
 \end{itemize}
 \end{frame}
 
@@ -338,7 +339,7 @@ A\bu=\bb \quad &\iff \quad D \bu = \bb - (L+U) \bu \\
 \end{align*}
 \item solving $D\bz = \bc$ is $O(N)$
 \begin{definition}
-each \emph{Jacobi iteration}, a simple iteration, is $O(N)$:
+a \emph{Jacobi iteration} is $O(N)$:
 	$$\bv_{k+1} = \bv_k + D^{-1} (\bb - A \bv_k)$$
 \end{definition}
 }
@@ -348,10 +349,10 @@ each \emph{Jacobi iteration}, a simple iteration, is $O(N)$:
 A\bu=\bb \quad &\iff \quad (D+L) \bu = \bb - U \bu \\
                &\iff \quad \bu = \bu + (D+L)^{-1} (\bb - A \bu)
 \end{align*}
-\item for $A$ from the Poisson equation, solving $(D+L)\bz=\bc$ is $O(N)$
+\item solving $(D+L)\bz=\bc$ is $O(N)$
 
 \begin{definition}
-each \emph{Gauss-Seidel iteration}, a simple iteration, is $O(N)$:
+a \emph{Gauss-Seidel iteration} is $O(N)$:
 	$$\bv_{k+1} = \bv_k + (D+L)^{-1} (\bb - A \bv_k)$$
 \end{definition}
 }
@@ -421,9 +422,17 @@ few residuals are
 than the initial
 
 residual
+
+\item the first multigrid
+
+paper (Federenko, 
+
+1961) observed
+
+this?
 \end{itemize}
 
-\vspace{-25mm}
+\vspace{-40mm}
 
 \only<1>{
 \hfill \includegraphics[height=0.75\textheight]{images/smoothing-space.png}
@@ -438,9 +447,13 @@ residual
 \end{frame}
 
 
-\section{the coarse-grid correction}
+\section{2-grid method, and the coarse-grid correction}
 
 \begin{frame}{grid transfers}
+
+\begin{itemize}
+\item multiple grid resolutions will allow us to exploit smoothers to generate fast solutions \dots
+\item but we need \emph{grid transfer} operators between grids of different resolutions
 
 {\large
 $$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
@@ -450,57 +463,143 @@ $$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
 \end{matrix}
 \qquad \includegraphics[width=0.15\textwidth]{images/coarse.png}$$
 }
-\begin{itemize}
-\item we are close to multigrid, but we need to talk about multiple grids!
-\item 
+
+\vspace{-8mm}
+\item for a function $\bv$ defined on a finer grid, define its \emph{restriction} $R\bv$ to a coarser grid to be its value on the coarse grid points (\emph{injection}), or compute it by averaging onto the coarser grid (\emph{full weighting})
+\item for a function $\bw$ defined on the coarser grid, define its \emph{prolongation} $P\bw$ to a finer grid by (linear) \emph{interpolation}
+\item $R$, $P$ are linear operators
+	\begin{itemize}
+	\item[$\circ$] rectangular (non-square) matrices
+	\end{itemize}
 \end{itemize}
 \end{frame}
-
-
-
-\section{the 2-grid and V cycles}
 
 
 \begin{frame}[fragile]
 \frametitle{2-grid method}
 \begin{itemize}
-\item FIXME
+\item put these ideas together!
+\item the \emph{2-grid method} approximately solves the PDE on the finer grid:
+
+\bigskip
 \begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
 def twogrid(w,presmooth=2,postsmooth=2):
     v = w.copy()
     for k in range(presmooth):
          v = smooth(A,b,v)     # smooth = Jacobi, GS
     rc = restrict(b - A*v)
-    ec = solve(Ac,r)           # solve error eqn
+    ec = solve(Ac,r)           # solve error equation
     v = v + prolong(ec)
     for k in range(postsmooth):
-         v = smooth(A,b,v)     # smooth = Jacobi, GS
+         v = smooth(A,b,v)
     return v
 \end{minted}
+
+\medskip
 \item where
 \begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
-A  = discretize(m,m)           # fine grid
-Ac = discretize(m/2,m/2)       # coarse grid
+A, b  = discretize(m,m)           # fine grid
+Ac, _ = discretize(m/2,m/2)       # coarse grid
 \end{minted}
 \end{itemize}
 \end{frame}
 
 
+\begin{frame}{the error equation}
+\begin{itemize}
+\item what do I mean by the \emph{error equation}?
+\item for linear system $A\,\bu=\bb$, consider $\bv$ which is \emph{not} a solution
+
+\begin{definition}
+for any vector $\bv$, the \emph{error equation} corresponding to the linear system $A\,\bu = \bb$ is the equation
+	$$A\,\be = \br(\bv)$$
+\end{definition}
+
+\item here's the logic:
+\begin{align*}
+    \be &= \bu - \bv                   &&\text{\emph{definition of the error}}\\
+    A\, \be &= A \bu - A \bv           &&\text{\emph{multiply by $A$}}\\
+    A\, \be &= \bb - A \bv = \br(\bv)  &&\text{\emph{error equation}}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{the coarse grid correction}
+\begin{itemize}
+\item the essential 3 lines inside \,\texttt{twogrid()} form the \emph{coarse-grid correction}:
+
+\medskip
+\begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
+rc = restrict(b - A*v)     # restrict the residual
+ec = solve(Ac,r)           # coarse-grid solve
+v = v + prolong(ec)        # add back as correction
+\end{minted}
+
+\smallskip
+\item this is a kind of simple iteration:
+    $$\bv \leftarrow \bv + P (A^c)^{-1} R (\bb - A\bv)$$
+\item define the \emph{coarse-grid correction matrix}:
+	$$B^c = P (A^c)^{-1} R$$
+
+	\begin{itemize}
+	\item[$\circ$] is $B^c \approx A^{-1}$?  \alert{yes, for smooth inputs}
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{2-grid method (\emph{again})}
+\begin{itemize}
+\item look at \,\texttt{twogrid()} again:
+
+\medskip
+\begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
+def twogrid(w,presmooth=2,postsmooth=2):
+    v = w.copy()
+    for k in range(presmooth):
+         v = smooth(A,b,v)
+    rc = restrict(b - A*v)
+    ec = solve(Ac,r)
+    v = v + prolong(ec)
+    for k in range(postsmooth):
+         v = smooth(A,b,v)
+    return v
+\end{minted}
+
+\bigskip
+\item a fairly-quick calculation shows that \,\texttt{twogrid()} applies a matrix product, one which is \alert{close to zero}, to the current error:
+	$$\be \leftarrow (I - M^{-1} A)^{\text{\texttt{post}}} (I - B^c A) (I - M^{-1} A)^{\text{\texttt{pre}}} \be$$
+
+\medskip
+\item how should we solve the coarse-grid problem $A^c \be^c = \br^c$?
+\end{itemize}
+\end{frame}
+
+
+\section{V-cycle multigrid}
+
 \begin{frame}{hierarchy of grids}
 \begin{itemize}
-\item x
+\item if we can have two levels of grids, we can have many!
+\item when faced with a coarse-grid solve, just do another 2-grid \dots down to some \emph{easy} coarse grid
 
+\bigskip\medskip
 \hfill \includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
+
+\medskip
+\item we assume restrictions $R$ and prolongations $P$ in the \emph{grid hierarchy}
+
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}[fragile]
 \frametitle{recursive V-cycle}
-\begin{itemize}
-\item FIXME
 \begin{minted}[fontsize=\small,xleftmargin=10mm,texcomments]{python}
-def vcycle(b,w,lev,...):
+def vcycle(b,w,lev,presmooth=2,postsmooth=2):
     A = discretize(lev)
     if lev == 0:
         return solve(A,b)
@@ -508,13 +607,15 @@ def vcycle(b,w,lev,...):
     for k in range(presmooth):
          v = smooth(A,b,v)
     rc = restrict(b - A*v)
-    ec = vcycle(r,0,lev-1,...)  # solve error eqn
+    ec = vcycle(r,0,lev-1)  # solve error eqn
     v = v + prolong(ec)
     for k in range(postsmooth):
          v = smooth(A,b,v)
     return v
 \end{minted}
-\end{itemize}
+
+\vspace{-5mm}
+\hfill \includegraphics[width=0.15\textwidth]{images/vcycle.png}
 \end{frame}
 
 
@@ -582,10 +683,12 @@ def vcycle(b,w,lev,...):
 
 \begin{frame}{references}
 
+\setbeamerfont*{itemize/enumerate body}{size=\footnotesize}
+\setbeamerfont*{itemize/enumerate subbody}{parent=itemize/enumerate body}
+
 \begin{columns}
 \begin{column}{0.8\textwidth}
 \begin{itemize}
-{\small
 \item[] \textbf{A.~Brandt (1977)}. \emph{Multi-level adaptive solutions to boundary-value problems}, Mathematics of Computation 31 (138), 333--390
     \begin{itemize}
     \item[$\circ$] the guru of multigrid should be better known
@@ -602,11 +705,14 @@ def vcycle(b,w,lev,...):
     \begin{itemize}
     \item[$\circ$] multigrid in the fluids context
     \end{itemize}
-\item[] \textbf{U.~Trottenberg, C.~Oosterlee, \& A. Schuller (2001)}.  \emph{Multigrid}, Elsevier, Oxford
+\item[] \textbf{R.~Fedorenko (1961)}.  \emph{A relaxation method for solving elliptic difference equations}, USSR Comput.~Math.~Math.~Phys.~1, 922--927
+    \begin{itemize}
+    \item[$\circ$] the first multigrid paper
+    \end{itemize}
+\item[] \textbf{U.~Trottenberg, C.~Oosterlee, \& A. Schuller (2001)}.  \emph{Multigrid}, Elsevier
     \begin{itemize}
     \item[$\circ$] a comprehensive view
     \end{itemize}
-}
 \end{itemize}
 \end{column}
 \begin{column}{0.17\textwidth}
@@ -614,7 +720,7 @@ def vcycle(b,w,lev,...):
 
 \hfill {\scriptsize \emph{Achi Brandt}}
 
-\vspace{10mm}
+\vspace{7mm}
 \hfill \includegraphics[width=0.9\textwidth]{images/bueler.jpg}
 
 \vspace{20mm}
