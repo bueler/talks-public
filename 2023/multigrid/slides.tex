@@ -63,6 +63,7 @@
 \newcommand{\grad}{\nabla}
 \newcommand{\Div}{\nabla \cdot}
 
+\newcommand{\ds}{\displaystyle}
 \newcommand{\twovect}[4]{\ensuremath{{#1}_{#2} =
                             \begin{bmatrix} #3 \\ #4 \end{bmatrix}}}
 
@@ -652,11 +653,66 @@ def vcycle(b,v,lev,pre=2,post=2):
 \end{frame}
 
 
+\begin{frame}{on multigrid costs: single V-cycle}
+\begin{itemize}
+\item let us analyze the work (flops) of applying a single V-cycle
+    \begin{itemize}
+    \item[$\circ$] note: multiple V-cycles are generally needed to solve the problem
+    \end{itemize}
+
+\medskip
+\begin{definitions}
+
+\vspace{-4mm}
+\begin{align*}
+|\Omega^{(k)}| &= (\text{number of grid points (unknowns) on grid $\Omega^{(k)}$}) \\
+W_k^{k-1} &= \left(\begin{matrix} \text{smoother work done on grid $\Omega^{(k)}$, plus cost of} \\ \text{restriction \& prolongation to next-coarser grid $\Omega^{(k-1)}$} \end{matrix}\right) \\
+W_0 &= (\text{solver work done on the coarsest level})
+\end{align*}
+\end{definitions}
+
+\medskip
+\item $K=3$ case:
+\end{itemize}
+
+\vspace{-3mm}
+\hfill \includegraphics[width=0.65\textwidth]{images/multigrid-grids.png}
+\end{frame}
+
+
+\begin{frame}{on multigrid costs: single V-cycle}
+\begin{itemize}
+\item total cost of a single V-cycle:
+    $$\overline{W} = W_K^{K-1} + W_{K-1}^{K-2} + \dots + W_1^0 + W_0$$
+\item for 2D grids, each coarse grid is 4 times smaller:
+    $$|\Omega^{(k-1)}| = \tfrac{1}{4} |\Omega^{(k)}|$$
+
+\vspace{-28mm}
+\hfill \includegraphics[width=0.13\textwidth]{images/vcycle.png}
+
+\vspace{9mm}
+\item since smoothers and restriction/prolongation are $O(1)$ per grid point:
+    $$W_k^{k-1} = C |\Omega^{(k)}|$$
+
+    \begin{itemize}
+    \item[$\circ$] for some $C$ independent of $k$
+    \end{itemize}
+\item<2> since $N=|\Omega^{(K)}|$ is the number of points in the finest grid,
+\begin{align*}
+\overline{W} &= C |\Omega^{(K)}| + C |\Omega^{(K-1)}| + \dots + C |\Omega^{(1)}| + W_0 \\
+    &= C N \left(1 + \tfrac{1}{4} + \dots + \tfrac{1}{4^{K-1}}\right) + W_0 \\
+    &\approx C N \tfrac{1}{1-(1/4)} = \tfrac{4}{3} C N \hspace{20mm} \text{\alert{optimal}}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{multigrid variations}
 \begin{itemize}
-\item there are many variations on multigrid
+\item there are many variations on multigrid:
 	\begin{itemize}
 	\item[$\circ$] choose different smoothers ({\large $\bullet$} is pre-smoother, {\large $\circ$} is post-smoother)
+	\item[$\circ$] choose different values for \texttt{pre} and \texttt{post} smoother iterations
 	\item[$\circ$] choose different coarse-grid solvers ($\square$)
 	\item[$\circ$] repeat the coarse-grid correction a couple of times (\emph{W cycles})
 	\end{itemize}
@@ -677,14 +733,14 @@ def vcycle(b,v,lev,pre=2,post=2):
 \end{enumerate}
 
 \bigskip
-\item<2> but we have to admit \dots the Poisson problem is too easy
+\item<2> but \dots the Poisson problem is too easy
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{minimal surfaces, a nonlinear problem}
 \begin{itemize}
-\item recall the problem!
+\item recall \dots
 
 \vspace{-10mm}
 \hfill \includegraphics[width=0.25\textwidth]{images/tent.png} \includegraphics[width=0.25\textwidth]{images/catenary.png}
@@ -704,12 +760,26 @@ def vcycle(b,v,lev,pre=2,post=2):
 \end{frame}
 
 
-\begin{frame}{details: 9 point stencil}
+\begin{frame}{details: 9-point stencil with staggered diffusivity}
 \begin{itemize}
-\item x
-\end{itemize}
+\item how do you discretize $\ds -\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right)$?
+\item generalize for clarity: \,$\ds -\Div \left(D(w) \grad u\right)$
 
+where
+    $$D(w) = (1+w)^{-1/2} \hspace{40mm}$$
+
+\vspace{-24mm}
 \hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
+
+\vspace{-5mm}
+\item then do centered finite-differences using
+
+\emph{staggered} values of $D(w)$ for $w=|\grad u|^2$:
+\begin{align*}
+-\Div \left(D(w) \grad u\right) &\approx FIXME \\
+w_e = \left[|\grad u|^2\right]_{i+1/2,j} &\approx 
+\end{align*}
+\end{itemize}
 \end{frame}
 
 
