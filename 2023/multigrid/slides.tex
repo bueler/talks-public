@@ -682,29 +682,70 @@ def vcycle(b,v,lev,pre=2,post=2):
 \end{frame}
 
 
+\begin{frame}{minimal surfaces, a nonlinear problem}
+\begin{itemize}
+\item recall the problem!
+
+\vspace{-10mm}
+\hfill \includegraphics[width=0.25\textwidth]{images/tent.png} \includegraphics[width=0.25\textwidth]{images/catenary.png}
+\end{itemize}
+
+\bigskip
+\begin{block}{minimal surface problem} for given boundary function (wire frame) $g(x,y)$, find $u(x,y)$ so that
+    $$-\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0 \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = g$$
+\end{block}
+\end{frame}
 
 
-
-
-\begin{frame}{x}
+\begin{frame}{discretization gets you \dots harder equations}
 \begin{itemize}
 \item x
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}{details: 9 point stencil}
+\begin{itemize}
+\item x
+\end{itemize}
+
+\hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
+\end{frame}
+
+
+\begin{frame}{Newton's method}
+\begin{itemize}
+\item x
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{x}
 \begin{itemize}
 \item x
 \end{itemize}
+
+\hfill \includegraphics[width=0.3\textwidth]{images/minimal-spy.png}
 \end{frame}
 
 
 \begin{frame}{nonlinear F-cycle solvers}
 \begin{itemize}
 \item x
-
-\hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
 \end{itemize}
+
+\hfill \includegraphics[width=0.3\textwidth]{images/multigrid-fullcycle.png}
+\end{frame}
+
+
+\begin{frame}{minimal surface results}
+\begin{itemize}
+\item x
+\end{itemize}
+
+\hfill \includegraphics[width=0.3\textwidth]{images/minimal-flopsperdof.png}
+
+FIXME: do demo
 \end{frame}
 
 
@@ -718,7 +759,7 @@ def vcycle(b,v,lev,pre=2,post=2):
 \begin{itemize}
 \item[] \textbf{A.~Brandt (1977)}. \emph{Multi-level adaptive solutions to boundary-value problems}, Mathematics of Computation 31 (138), 333--390
     \begin{itemize}
-    \item[$\circ$] the guru of multigrid should be better known
+    \item[$\circ$] the guru of multigrid
     \end{itemize}
 \item[] \textbf{W.~Briggs, V.~E.~Henson, \& S.~McCormick (2000)}.  \emph{A Multigrid Tutorial}, 2nd ed., SIAM Press, Philadelphia
     \begin{itemize}
@@ -726,11 +767,11 @@ def vcycle(b,v,lev,pre=2,post=2):
     \end{itemize}
 \item[] \textbf{E.~Bueler (2021)}. \emph{PETSc for Partial Differential Equations}, SIAM Press, Philadelphia
     \begin{itemize}
-    \item[$\circ$] Krylov methods, preconditioners, many multigrid solver examples
+    \item[$\circ$] preconditioners, many multigrid examples
     \end{itemize}
 \item[] \textbf{H.~Elman, D.~Silvester, \& A.~Wathen (2014)}. \emph{Finite Elements and Fast Iterative Solvers: With Applications to Incompressible Fluid Dynamics}, 2nd ed., Oxford U.~Press
     \begin{itemize}
-    \item[$\circ$] multigrid in the fluids context
+    \item[$\circ$] multigrid in FE and fluids contexts
     \end{itemize}
 \item[] \textbf{R.~Fedorenko (1961)}.  \emph{A relaxation method for solving elliptic difference equations}, USSR Comput.~Math.~Math.~Phys.~1, 922--927
     \begin{itemize}
