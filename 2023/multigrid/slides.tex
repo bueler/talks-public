@@ -197,15 +197,14 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 \begin{columns}
 \begin{column}{0.73\textwidth}
 \begin{itemize}
-\item FD discretize $-\grad^2 u = f$
-
+\item FD discretize $-\grad^2 u = f$:
 	\begin{itemize}
+	\item[$\circ$] note we keep the boundary values in the system
 	\item[$\circ$] $N=m_x m_y$ total unknowns on the grid
 	    \begin{itemize}
 	    \item $m_x=4,m_y=3$ shown at right
         \end{itemize}
-	\item[$\circ$] unknowns $\{u_{ij}\}$ are globally ordered using $k=0,1,\dots,N-1$
-	\item[$\circ$] note we keep the boundary values in the system
+	\item[$\circ$] unknowns $\{u_{ij}\}$ are globally ordered: $u_\ell = u_{ij}$
 	\end{itemize}
 \item get a linear system for $\bu \in \RR^N$:
 	$$A\, \bu = \bb$$
@@ -214,7 +213,7 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 	\item[$\circ$] $A \in \RR^{N\times N}$ is \textbf{sparse}
 	\item[$\circ$] $A$ has positive diagonal
 	\item[$\circ$] $A$ is symmetric positive definite
-	\item[$\circ$] $\bb \in \RR^N$ has entries $b_k = f(x_i,y_j)$
+	\item[$\circ$] $\bb \in \RR^N$ has entries $b_\ell = f(x_i,y_j)$
 	\end{itemize}
 \item for $m_x=m_y=5$: \,\,\,9 non-trivial eqns (middle right)
 \item for $m_x=m_y=8$: 36 non-trivial eqns (lower right)
@@ -240,7 +239,7 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 	\begin{itemize}
 	\item[$\circ$] $A$ has 5 nonzero entries per row, plus one entry of $\bb$
 	\end{itemize}
-\item how to solve $A\,\bu=\bb$ in $O(N)$ work and time as $N\to\infty$?
+\item can we solve $A\,\bu=\bb$ in $O(N)$ work and time as $N\to\infty$?
 	\begin{itemize}
 	\item[$\circ$] if so, the solver is \emph{optimal}
 	\end{itemize}
@@ -260,7 +259,7 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 \end{frame}
 
 
-\begin{frame}{cheap $O(N)$ operations: mat-vec $A\bv$, and the residual}
+\begin{frame}{cheap $O(N)$ operations: mat-vec and residual}
 \begin{itemize}
 \item for $A$ from PDE discretization, we can compute $A\bv$ in $O(N)$ flops
 	\begin{itemize}
@@ -559,7 +558,7 @@ v = v + prolong(ec)        # add back as correction
 \end{align*}
 
 \medskip
-\item the question: is $B^c \approx A^{-1}$?  \only<2>{\hspace{20mm} \alert{yes, for smooth inputs}}
+\item Q: is $B^c \approx A^{-1}$?  \only<2>{\hspace{20mm} \alert{yes, for smooth inputs}}
 \end{itemize}
 \end{frame}
 
@@ -587,7 +586,7 @@ def twogrid(v,pre=2,post=2):
 	$$\be \leftarrow (I - M^{-1} A)^{\text{\texttt{post}}} (I - B^c A) (I - M^{-1} A)^{\text{\texttt{pre}}} \be$$
 
 \medskip
-\item<2> question: how should we solve the coarse-grid problem $A^c \be^c = \br^c$?
+\item<2> Q: how should we solve the coarse-grid problem $A^c \be^c = \br^c$?
 \end{itemize}
 \end{frame}
 
@@ -596,8 +595,8 @@ def twogrid(v,pre=2,post=2):
 
 \begin{frame}{hierarchy of grids}
 \begin{itemize}
-\item if we can have two levels of grids, we can have many!
-\item when faced with a coarse-grid solve, just do another 2-grid \dots and keep going down to some \emph{easy} coarse grid
+\item A: if we can have two levels of grids, we can have many!
+\item when faced with a coarse-grid solve, just do another 2-grid \dots and keep going down to some easy and cheap coarse grid
 
 \bigskip\medskip
 \hfill \includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
@@ -633,8 +632,6 @@ def vcycle(b,v,lev,pre=2,post=2):
 \hspace{5mm} \includegraphics[width=0.6\textwidth]{images/multigrid-grids.png}
 \end{frame}
 
-
-\section{multigrid as an optimal solver}
 
 \begin{frame}{how well does it work?}
 \begin{itemize}
@@ -746,6 +743,8 @@ W_0 &= (\text{solver work done on the coarsest level})
 \end{itemize}
 \end{frame}
 
+
+\section{nonlinear multigrid}
 
 \begin{frame}{minimal surfaces, a nonlinear problem}
 \begin{itemize}
@@ -945,12 +944,12 @@ $ mpiexec -n 6 ./minimal -snes_fd_color -pc_type mg \
 \end{enumerate}
 
 \medskip
-\item for nonlinear elliptic PDEs you can wrap a Newton iteration around multigrid V-cycles to get \textbf{Newton-multigrid}
+\item for nonlinear elliptic PDEs:
+\begin{enumerate}
+\item wrap a Newton iteration around multigrid V-cycles: \textbf{Newton-multigrid}
 \item \textbf{grid sequencing} generates a high-quality finest-grid initial iterate
-\item \dots which gives you a \textbf{nonlinear multigrid F-cycle solver}
-
-\medskip
-\item all of these ideas have legs!
+\item thus: a \textbf{nonlinear multigrid F-cycle solver}
+\end{enumerate}
 \end{itemize}
 \end{frame}
 
