@@ -213,6 +213,7 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 	\item[$\circ$] $A \in \RR^{N\times N}$ is \textbf{sparse}
 	\item[$\circ$] $A$ has positive diagonal
 	\item[$\circ$] $A$ is symmetric positive definite
+	\item[$\circ$] $A$ has $O(1)$ nonzeros per row \hfill {\footnotesize \emph{$\leftarrow$ at most 5, actually}}
 	\item[$\circ$] $\bb \in \RR^N$ has entries $b_\ell = f(x_i,y_j)$
 	\end{itemize}
 \item for $m_x=m_y=5$: \,\,\,9 non-trivial eqns (middle right)
@@ -289,7 +290,7 @@ observe that:
 \item $\alpha\in\RR$ is a tuning parameter, with default $\alpha=1$
 \item if $M=A$ and $\alpha=1$ then $\bv_{k+1}=\bu$, so one iteration solves it!
 	\begin{itemize}
-	\item[$\circ$] \dots not practical
+	\item[$\circ$] \dots not practical, and usually not $O(N)$
 	\end{itemize}
 \item \emph{Richardson iteration} \quad $\bv_{k+1} = \bv_k + \alpha\, \br(\bv_k)$ \quad is the $M=I$ case
 	\begin{itemize}
@@ -518,7 +519,7 @@ Ac,_ = discretize(m/2,m/2)     # coarse grid
 \begin{frame}{the error equation}
 \begin{itemize}
 \item what do I mean by the \emph{error equation}?
-\item for linear system $A\,\bu=\bb$, consider $\bv$ which is \emph{not} a solution
+\item for the linear system $A\,\bu=\bb$, consider some $\bv$ which is \emph{not} a solution
 
 \begin{definition}
 for any vector $\bv$, the \emph{error equation} corresponding to the linear system $A\,\bu = \bb$ is the equation
@@ -558,7 +559,7 @@ v = v + prolong(ec)        # add back as correction
 \end{align*}
 
 \medskip
-\item Q: is $B^c \approx A^{-1}$?  \only<2>{\hspace{20mm} \alert{yes, for smooth inputs}}
+\item Q: is $B^c \approx A^{-1}$?  \only<2>{\hspace{20mm} \alert{A: yes, but only for smooth inputs}}
 \end{itemize}
 \end{frame}
 
@@ -582,7 +583,7 @@ def twogrid(v,pre=2,post=2):
 \end{minted}
 
 \bigskip
-\item a fairly-quick calculation shows that \,\texttt{twogrid()} applies a linear operator which is \alert{close to zero} to the starting error $\be=\bu-\bv$:
+\item a fairly-quick calculation shows that \,\texttt{twogrid()} applies a linear operator, which is \alert{close to the zero operator}, to $\be=\bu-\bv$:
 	$$\be \leftarrow (I - M^{-1} A)^{\text{\texttt{post}}} (I - B^c A) (I - M^{-1} A)^{\text{\texttt{pre}}} \be$$
 
 \medskip
@@ -596,7 +597,7 @@ def twogrid(v,pre=2,post=2):
 \begin{frame}{hierarchy of grids}
 \begin{itemize}
 \item A: if we can have two levels of grids, we can have many!
-\item when faced with a coarse-grid solve, just do another 2-grid \dots and keep going down to some easy and cheap coarse grid
+\item when faced with a coarse-grid solve, just do another 2-grid \dots and keep going down to some really easy and cheap coarse grid
 
 \bigskip\medskip
 \hfill \includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
@@ -672,7 +673,7 @@ def vcycle(b,v,lev,pre=2,post=2):
 \vspace{-4mm}
 \begin{align*}
 |\Omega^{(k)}| &= (\text{number of grid points (unknowns) on grid $\Omega^{(k)}$}) \\
-W_k^{k-1} &= \left(\begin{matrix} \text{smoother work done on grid $\Omega^{(k)}$, plus cost of} \\ \text{restriction \& prolongation to next-coarser grid $\Omega^{(k-1)}$} \end{matrix}\right) \\
+W_k^{k-1} &= \left(\begin{matrix} \text{smoother work done on grid $\Omega^{(k)}$, plus cost of} \\ \text{restriction/prolongation to/from next-coarser grid $\Omega^{(k-1)}$} \end{matrix}\right) \\
 W_0 &= (\text{solver work done on the coarsest level})
 \end{align*}
 \end{definitions}
@@ -691,22 +692,22 @@ W_0 &= (\text{solver work done on the coarsest level})
 \item total cost of a single V-cycle:
     $$\overline{W} = W_K^{K-1} + W_{K-1}^{K-2} + \dots + W_1^0 + W_0$$
 \item for 2D grids, each coarse grid is 4 times smaller:
-    $$|\Omega^{(k-1)}| = \tfrac{1}{4} |\Omega^{(k)}|$$
+    $$|\Omega^{(k-1)}| \approx \tfrac{1}{4} |\Omega^{(k)}|$$
 
 \vspace{-28mm}
 \hfill \includegraphics[width=0.13\textwidth]{images/vcycle.png}
 
 \vspace{9mm}
 \item since smoothers and restriction/prolongation are $O(1)$ per grid point:
-    $$W_k^{k-1} = C |\Omega^{(k)}|$$
+    $$W_k^{k-1} \le C |\Omega^{(k)}|$$
 
     \begin{itemize}
     \item[$\circ$] for some $C$ independent of $k$
     \end{itemize}
 \item<2> since $N=|\Omega^{(K)}|$ is the number of points in the finest grid,
 \begin{align*}
-\overline{W} &= C |\Omega^{(K)}| + C |\Omega^{(K-1)}| + \dots + C |\Omega^{(1)}| + W_0 \\
-    &= C N \left(1 + \tfrac{1}{4} + \dots + \tfrac{1}{4^{K-1}}\right) + W_0 \\
+\overline{W} &\le C |\Omega^{(K)}| + C |\Omega^{(K-1)}| + \dots + C |\Omega^{(1)}| + W_0 \\
+    &\approx C N \left(1 + \tfrac{1}{4} + \dots + \tfrac{1}{4^{K-1}}\right) + W_0 \\
     &\approx C N \tfrac{1}{1-(1/4)} = \tfrac{4}{3} C N \hspace{20mm} \text{\alert{optimal}}
 \end{align*}
 \end{itemize}
@@ -733,13 +734,13 @@ W_0 &= (\text{solver work done on the coarsest level})
 \begin{itemize}
 \item multigrid combines three conceptual threads:
 \begin{enumerate}
-\item a few classical iterations, such as Jacobi and GS, are \textbf{cheap smoothers} of the error
+\item a few classical iterations, such as Jacobi and GS, are \textbf{cheap smoothers} of the residual and the error
 \item a \textbf{coarse-grid correction} does a good job of updating the fine-grid solution when acting on a smooth residual
 \item the coarse-grid correction is cheap because \textbf{restriction and prolongation are cheap}
 \end{enumerate}
 
 \bigskip
-\item<2> but \dots the Poisson problem is too easy
+\item but the Poisson problem is too easy!
 \end{itemize}
 \end{frame}
 
@@ -776,7 +777,7 @@ W_0 &= (\text{solver work done on the coarsest level})
 	\end{itemize}
 
 \medskip
-\begin{block}{principle}
+\begin{block}{nonlinear discretization principle}
 enforcing the PDE at grid point $(x_i,y_j)$ gives one scalar equation $f_{ij}(\bu) = 0$
 \end{block}
 
@@ -793,7 +794,7 @@ enforcing the PDE at grid point $(x_i,y_j)$ gives one scalar equation $f_{ij}(\b
 \item how do you discretize $\ds \Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right)$?
 
 \medskip
-\item generalize for clarity!
+\item technique: generalize first!
 \item discretize \,$\ds \Div \left(D(w) \grad u\right)$ where
 \begin{align*}
 D(w) &= (1+w)^{-1/2} \hspace{40mm} \\
@@ -806,13 +807,13 @@ w &= |\grad u|^2
 \vspace{-8mm}
 \item centered FD, using \emph{staggered} values of $D(w)$,
 
-yields $O(h_x^2+h_y^2)$ truncation error:
+gets $O(h_x^2+h_y^2)$ truncation error and symmetry:
 
 {\small
 \begin{align*}
 \Div \left(D(w) \grad u\right) &\approx \frac{D(w_e) (u_{i+1,j} - u_{i,j}) - D(w_w) (u_{i,j} - u_{i-1,j})}{h_x^2} \\
     &\qquad + \frac{D(w_n) (u_{i,j+1} - u_{i,j}) - D(w_s) (u_{i,j} - u_{i,j-1})}{h_y^2} \\
-w_e = \left[|\grad u|^2\right]_{i+\frac{1}{2},j} &\approx \left(\frac{u_{i+1,j} - u_{i,j}}{h_x}\right)^2 + \left(\frac{u_{i,j+1} + u_{i+1,j+1} - u_{i,j} - u_{i+1,j}}{4 h_y}\right)^2
+w_e = \left[|\grad u|^2\right]_{i+\frac{1}{2},j} &\approx \left(\frac{u_{i+1,j} - u_{i,j}}{h_x}\right)^2 + \left(\frac{u_{i,j+1} + u_{i+1,j+1} - u_{i,j} - u_{i+1,j}}{4 h_y}\right)^2 \hspace{10mm}
 \end{align*}
 }
 \end{itemize}
@@ -833,7 +834,7 @@ w_e = \left[|\grad u|^2\right]_{i+\frac{1}{2},j} &\approx \left(\frac{u_{i+1,j} 
 
 \begin{frame}{Newton's method \only<2-3>{with finite-differenced Jacobian}}
 \begin{itemize}
-\item Q: how do you solve a very-nonlinear system $\bF(\bu)=\bzero$?
+\item Q: how do we solve our nonlinear system $\bF(\bu)=\bzero$?
 
 A: Newton's method!:
 \begin{align*}
@@ -850,7 +851,8 @@ A: more finite differencing:
 
 A$'$: symbolically?
 
-\item<3> Q: how do you \emph{efficiently} calculate the Jacobian? \, A: graph coloring
+\medskip
+\only<3>{\item {\small Q: how do you \emph{efficiently} calculate the FD Jacobian? \, A: graph coloring}}
 \end{itemize}
 \end{frame}
 
@@ -862,7 +864,7 @@ A$'$: symbolically?
 \item Q: how do you solve each linear system in the Newton iteration?
 
 \medskip
-A: solve each linear system \,$J(\bu^{p})\, \bs = - \bF(\bu^p)$ \,\alert{using multigrid}:
+A: solve \,$J(\bu^{p})\, \bs = - \bF(\bu^p)$ \,\alert{using multigrid}:
 
 \medskip
 \begin{minted}[fontsize=\small,xleftmargin=10mm,texcomments]{python}
@@ -879,9 +881,10 @@ def newtonmultigrid(v,lev,maxnewts=50,cycles=1):
 \medskip
 \item<2> details:
 	\begin{itemize}
-	\item[$\circ$] inside \texttt{vcycle()}, the matrix $A=A^{(k)}$ on each level is computed using the Jacobian on that grid level (\emph{rediscretization})
-	\item[$\circ$] the finest-level iterate must be restricted (injected) down to levels:\, $A^{(k)}=J^{(k)}(R^{K-k} \bu^p)$
-	\item[$\circ$] $J^{(k)}$ is approximated using FD and graph coloring
+	\item[$\circ$] inside \texttt{vcycle()}, the matrix $A=A^{(k)}$ on each grid level $\Omega^{(k)}$ is computed using the Jacobian on that grid level (\emph{rediscretization})
+	\item[$\circ$] the finest-level iterate $\bu^p$ must be restricted (injected) down to $\Omega^{(k)}$:
+	    $$A^{(k)}=J^{(k)}(R^{K-k} \bu^p)$$
+	\item[$\circ$] $J^{(k)}$ is approximated using FD and graph coloring on $\Omega^{(k)}$
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -898,11 +901,11 @@ def newtonmultigrid(v,lev,maxnewts=50,cycles=1):
 A: by solving the problem on a coarser grid, and prolonging
 
 \medskip
-\item<2-3> justification: the domain of Newton convergence is larger on the smaller version of the PDE
+\item<2-3> justification: the domain of Newton convergence is larger on the smaller ($=$ coarser) version of the PDE
 
 \medskip
 \item<3> this strategy is called \emph{nested iteration} or \emph{grid sequencing}
-\item<3> if you also solve each problem with Newton-multigrid, then you get a \emph{nonlinear multigrid F-cycle} \dots the most powerful solver you've seen!
+\item<3> if you also solve at each level with Newton-multigrid, then this is a \alert{\emph{nonlinear multigrid F-cycle}} \dots the most powerful solver you've seen!
 \end{itemize}
 
 \medskip
@@ -944,12 +947,18 @@ $ mpiexec -n 6 ./minimal -snes_fd_color -pc_type mg \
 \end{enumerate}
 
 \medskip
-\item for nonlinear elliptic PDEs:
+\item there is also \textbf{algebraic multigrid}, but that is a different talk \dots
+
+\medskip
+\item<2> for nonlinear elliptic PDEs:
 \begin{enumerate}
 \item wrap a Newton iteration around multigrid V-cycles: \textbf{Newton-multigrid}
 \item \textbf{grid sequencing} generates a high-quality finest-grid initial iterate
 \item thus: a \textbf{nonlinear multigrid F-cycle solver}
 \end{enumerate}
+
+\medskip
+\item<2> Newton-multigrid is not the only nonlinear option \dots there is also \textbf{full approximation scheme} multigrid, but that is a different talk \dots
 \end{itemize}
 \end{frame}
 
