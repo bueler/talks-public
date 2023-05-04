@@ -48,6 +48,9 @@
 \newcommand{\by}{\mathbf{y}}
 \newcommand{\bz}{\mathbf{z}}
 
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bU}{\mathbf{U}}
+
 \newcommand{\bzero}{\bm{0}}
 
 \newcommand{\CC}{\mathbb{C}}
@@ -67,6 +70,12 @@
 \newcommand{\twovect}[4]{\ensuremath{{#1}_{#2} =
                             \begin{bmatrix} #3 \\ #4 \end{bmatrix}}}
 
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
 
 
 \title{Multigrid}
@@ -709,7 +718,7 @@ W_0 &= (\text{solver work done on the coarsest level})
 
 \begin{frame}{multigrid variations}
 \begin{itemize}
-\item there are many variations on multigrid:
+\item there are many variations on linear multigrid:
 	\begin{itemize}
 	\item[$\circ$] choose different smoothers ({\large $\bullet$} is pre-smoother, {\large $\circ$} is post-smoother)
 	\item[$\circ$] choose different values for \texttt{pre} and \texttt{post} smoother iterations
@@ -728,7 +737,7 @@ W_0 &= (\text{solver work done on the coarsest level})
 \item multigrid combines three conceptual threads:
 \begin{enumerate}
 \item a few classical iterations, such as Jacobi and GS, are \textbf{cheap smoothers} of the error
-\item a \textbf{coarse-grid correction} does a good job of approximating the fine-grid solution when acting on a smooth residual
+\item a \textbf{coarse-grid correction} does a good job of updating the fine-grid solution when acting on a smooth residual
 \item the coarse-grid correction is cheap because \textbf{restriction and prolongation are cheap}
 \end{enumerate}
 
@@ -742,8 +751,10 @@ W_0 &= (\text{solver work done on the coarsest level})
 \begin{itemize}
 \item recall \dots
 
-\vspace{-10mm}
-\hfill \includegraphics[width=0.25\textwidth]{images/tent.png} \includegraphics[width=0.25\textwidth]{images/catenary.png}
+\vspace{-7mm}
+\hfill \includegraphics[width=0.3\textwidth]{images/tent.png} \includegraphics[width=0.3\textwidth]{images/catenary.png}
+
+\hfill \mbox{{\scriptsize tent} \hspace{36mm} {\scriptsize catenoid} \hspace{10mm}}
 \end{itemize}
 
 \bigskip
@@ -753,70 +764,196 @@ W_0 &= (\text{solver work done on the coarsest level})
 \end{frame}
 
 
-\begin{frame}{discretization gets you \dots harder equations}
+\begin{frame}{discretization gets you \dots more general equations}
 \begin{itemize}
-\item x
+\item at each point $(x_i,y_j)$ on the target (finest) grid $\Omega^{(K)}$ we discretize to get an FD approximation of the PDE:
+    $$f_{ij}(u_{i-1,j},\,u_{i+1,j},\,u_{i,j-1},\,u_{i,j+1},\,u_{i,j}) = 0$$
+
+	\begin{itemize}
+	\item[$\circ$] roughly-speaking, anyway ... see details next slide
+	\item[$\circ$] unknowns must be globally-ordered into a vector $\bu \in \RR^N$:
+	    $$u_\ell = u_{i,j}$$
+    where $\ell=\ell(i,j)$ is a global-to-local indexing function
+	\end{itemize}
+
+\medskip
+\begin{block}{principle}
+enforcing the PDE at grid point $(x_i,y_j)$ gives one scalar equation $f_{ij}(\bu) = 0$
+\end{block}
+
+\bigskip
+\item also globally-order the equations (functions), $f_\ell(\bu) = f_{ij}(\bu)$, to get a nonlinear system of $N$ scalar equations in $N$ scalar unknowns:
+    $$\bF(\bu) = \bzero$$
+\item $\bF$ is a sparse function, as each $f_\ell$ depends on only $O(1)$ entries of $\bu$
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{details: 9-point stencil with staggered diffusivity}
 \begin{itemize}
-\item how do you discretize $\ds -\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right)$?
-\item generalize for clarity: \,$\ds -\Div \left(D(w) \grad u\right)$
+\item how do you discretize $\ds \Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right)$?
 
-where
-    $$D(w) = (1+w)^{-1/2} \hspace{40mm}$$
+\medskip
+\item generalize for clarity!
+\item discretize \,$\ds \Div \left(D(w) \grad u\right)$ where
+\begin{align*}
+D(w) &= (1+w)^{-1/2} \hspace{40mm} \\
+w &= |\grad u|^2
+\end{align*}
 
 \vspace{-24mm}
 \hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
 
-\vspace{-5mm}
-\item then do centered finite-differences using
+\vspace{-8mm}
+\item centered FD, using \emph{staggered} values of $D(w)$,
 
-\emph{staggered} values of $D(w)$ for $w=|\grad u|^2$:
+yields $O(h_x^2+h_y^2)$ truncation error:
+
+{\small
 \begin{align*}
--\Div \left(D(w) \grad u\right) &\approx FIXME \\
-w_e = \left[|\grad u|^2\right]_{i+1/2,j} &\approx 
+\Div \left(D(w) \grad u\right) &\approx \frac{D(w_e) (u_{i+1,j} - u_{i,j}) - D(w_w) (u_{i,j} - u_{i-1,j})}{h_x^2} \\
+    &\qquad + \frac{D(w_n) (u_{i,j+1} - u_{i,j}) - D(w_s) (u_{i,j} - u_{i,j-1})}{h_y^2} \\
+w_e = \left[|\grad u|^2\right]_{i+\frac{1}{2},j} &\approx \left(\frac{u_{i+1,j} - u_{i,j}}{h_x}\right)^2 + \left(\frac{u_{i,j+1} + u_{i+1,j+1} - u_{i,j} - u_{i+1,j}}{4 h_y}\right)^2
 \end{align*}
+}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Newton's method}
+\begin{frame}{9-point stencil Jacobian: sparsity}
 \begin{itemize}
-\item x
+\item on a $6\times 6$ grid, the Jacobian $J(\bv)$ has this sparsity pattern:
 \end{itemize}
+
+\bigskip\bigskip
+\begin{center}
+\includegraphics[width=0.4\textwidth]{images/minimal-spy.png}
+\end{center}
 \end{frame}
 
 
-\begin{frame}{x}
+\begin{frame}{Newton's method \only<2-3>{with finite-differenced Jacobian}}
 \begin{itemize}
-\item x
-\end{itemize}
+\item Q: how do you solve a very-nonlinear system $\bF(\bu)=\bzero$?
 
-\hfill \includegraphics[width=0.3\textwidth]{images/minimal-spy.png}
+A: Newton's method!:
+\begin{align*}
+J(\bu^{p})\, \bs &= - \bF(\bu^p) \\
+\bu^{p+1} &= \bu^p + \bs
+\end{align*}
+where $J(\bv)$ is the Jacobian
+    $$J(\bv)_{r,s} = \left[\,\frac{\partial f_r(\bv)}{\partial v_s}\,\right]$$
+
+\item<2-3> Q: how do you calculate the Jacobian?  (\emph{cause it's a pain in the \dots})
+
+A: more finite differencing:
+    $$J(\bv)_{r,s} \approx \frac{f_r(\bv + \eps \bm{1}_s) - f_r(\bv)}{\eps}$$
+
+A$'$: symbolically?
+
+\item<3> Q: how do you \emph{efficiently} calculate the Jacobian? \, A: graph coloring
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{nonlinear F-cycle solvers}
+\begin{frame}[fragile]
+\frametitle{Newton-multigrid}
+
 \begin{itemize}
-\item x
-\end{itemize}
+\item Q: how do you solve each linear system in the Newton iteration?
 
-\hfill \includegraphics[width=0.3\textwidth]{images/multigrid-fullcycle.png}
+\medskip
+A: solve each linear system \,$J(\bu^{p})\, \bs = - \bF(\bu^p)$ \,\alert{using multigrid}:
+
+\medskip
+\begin{minted}[fontsize=\small,xleftmargin=10mm,texcomments]{python}
+def newtonmultigrid(v,lev,maxnewts=50,cycles=1):
+    for p in range(maxnewts):
+         b = -F(v)
+         s = 0
+         for _ in range(cycles):
+             s = vcycle(b,s,lev)
+         v = v + s
+    return v
+\end{minted}
+
+\medskip
+\item<2> details:
+	\begin{itemize}
+	\item[$\circ$] inside \texttt{vcycle()}, the matrix $A=A^{(k)}$ on each level is computed using the Jacobian on that grid level (\emph{rediscretization})
+	\item[$\circ$] the finest-level iterate must be restricted (injected) down to levels:\, $A^{(k)}=J^{(k)}(R^{K-k} \bu^p)$
+	\item[$\circ$] $J^{(k)}$ is approximated using FD and graph coloring
+	\end{itemize}
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{minimal surface results}
+\begin{frame}{nonlinear multigrid F-cycle solvers}
 \begin{itemize}
-\item x
+\item but wait, \dots there's more!
+
+\medskip
+\item Q: how do you find a good initial iterate $\bu^0$ for the Newton iteration?
+
+\medskip
+A: by solving the problem on a coarser grid, and prolonging
+
+\medskip
+\item<2-3> justification: the domain of Newton convergence is larger on the smaller version of the PDE
+
+\medskip
+\item<3> this strategy is called \emph{nested iteration} or \emph{grid sequencing}
+\item<3> if you also solve each problem with Newton-multigrid, then you get a \emph{nonlinear multigrid F-cycle} \dots the most powerful solver you've seen!
 \end{itemize}
 
-\hfill \includegraphics[width=0.3\textwidth]{images/minimal-flopsperdof.png}
-
-FIXME: do demo
+\medskip
+\begin{center}
+\includegraphics[width=0.5\textwidth]{images/multigrid-fullcycle.png}
+\end{center}
 \end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{minimal surface PDE problem: results}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{images/minimal-flopsperdof.png}
+\end{center}
+
+\begin{itemize}
+\item<2> run-time demo:\blfootnote{{\tiny \texttt{-snes\_monitor\_solution draw -mg\_levels\_\{snes,ksp\}\_converged\_reason}}}
+
+\begin{Verbatim}
+$ cd p4pdes/c/ch7/
+$ make minimal
+$ mpiexec -n 6 ./minimal -snes_fd_color -pc_type mg \
+  -{snes,ksp}_converged_reason -snes_grid_sequence 10
+\end{Verbatim}
+%$
+\bigskip
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{summary}
+\begin{itemize}
+\item a multigrid V-cycle combines three conceptual threads to build an optimal solver for linear elliptic PDEs:
+\begin{enumerate}
+\item classical iterations $=$ cheap smoothers
+\item coarse-grid correction effective, if starting from a smooth residual
+\item restriction and prolongation are cheap
+\end{enumerate}
+
+\medskip
+\item for nonlinear elliptic PDEs you can wrap a Newton iteration around multigrid V-cycles to get \textbf{Newton-multigrid}
+\item \textbf{grid sequencing} generates a high-quality finest-grid initial iterate
+\item \dots which gives you a \textbf{nonlinear multigrid F-cycle solver}
+
+\medskip
+\item all of these ideas have legs!
+\end{itemize}
+\end{frame}
+
 
 
 \begin{frame}{references}
@@ -837,7 +974,7 @@ FIXME: do demo
     \end{itemize}
 \item[] \textbf{E.~Bueler (2021)}. \emph{PETSc for Partial Differential Equations}, SIAM Press, Philadelphia
     \begin{itemize}
-    \item[$\circ$] preconditioners, many multigrid examples
+    \item[$\circ$] preconditioning ideas and diverse multigrid examples
     \end{itemize}
 \item[] \textbf{H.~Elman, D.~Silvester, \& A.~Wathen (2014)}. \emph{Finite Elements and Fast Iterative Solvers: With Applications to Incompressible Fluid Dynamics}, 2nd ed., Oxford U.~Press
     \begin{itemize}
@@ -849,7 +986,7 @@ FIXME: do demo
     \end{itemize}
 \item[] \textbf{U.~Trottenberg, C.~Oosterlee, \& A. Schuller (2001)}.  \emph{Multigrid}, Elsevier
     \begin{itemize}
-    \item[$\circ$] a comprehensive view
+    \item[$\circ$] comprehensive view, and theory
     \end{itemize}
 \end{itemize}
 \end{column}
