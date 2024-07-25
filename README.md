@@ -14,8 +14,10 @@ Here are some of my other repos which contain *additional* talks which I have gi
 
   * https://github.com/bueler/mcd-extended
       * Oxford Computational Mathematics and Applications Seminar, February 2023
+      * DMS Colloquium, November 2023
+      * International Symposium on Mathematical Programming, Montreal, July 2024
 
-  * https://github.com/bueler/glaciers-gmg-implicit (private)
+  * https://github.com/bueler/glaciers-gmg-implicit (private repo)
       * SIAM Annual Meeting 2022, July 2022, Pittsburgh
 
   * https://github.com/bueler/ml-seminar
@@ -28,6 +30,7 @@ Here are some of my other repos which contain *additional* talks which I have gi
 
   * https://github.com/bueler/stokes-ice-tutorial
       * Glacier's Group seminar April 2021, Fairbanks
+      * Oxford, spring 2023
 
   * https://github.com/bueler/slide-teach/fvolume
       * Alexei Rybkin's REU group, June 2020, Fairbanks
