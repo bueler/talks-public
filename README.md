@@ -31,6 +31,7 @@ Here are some of my other repos which contain *additional* talks which I have gi
   * https://github.com/bueler/stokes-ice-tutorial
       * Glacier's Group seminar April 2021, Fairbanks
       * Oxford, spring 2023
+      * Glacier's Group seminar September 2026, Fairbanks
 
   * https://github.com/bueler/slide-teach/fvolume
       * Alexei Rybkin's REU group, June 2020, Fairbanks
