@@ -926,13 +926,16 @@ A: by solving the problem on a coarser grid, and prolonging
 \end{center}
 
 \begin{itemize}
-\item<2> run-time demo:\blfootnote{{\tiny \texttt{-snes\_monitor\_solution draw -mg\_levels\_\{snes,ksp\}\_converged\_reason}}}
+\item<2> run-time demo: %\blfootnote{{\tiny \texttt{-snes\_monitor\_solution draw -mg\_levels\_\{snes,ksp\}\_converged\_reason}}}
 
 \begin{Verbatim}
 $ cd p4pdes/c/ch7/
 $ make minimal
-$ mpiexec -n 6 ./minimal -snes_fd_color -pc_type mg \
-  -{snes,ksp}_converged_reason -snes_grid_sequence 10
+$ mpiexec -n 4 ./minimal -snes_fd_color -pc_type mg -snes_grid_sequence 10 \
+  -snes_converged_reason
+$ mpiexec -n 4 ./minimal -ms_problem tent -snes_fd_color -pc_type mg -snes_grid_sequence 5 \
+  -snes_converged_reason -snes_view_solution vtk:u.vtr
+$ paraview u.vtr
 \end{Verbatim}
 %$
 \bigskip
