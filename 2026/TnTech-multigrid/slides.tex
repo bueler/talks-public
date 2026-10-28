@@ -105,6 +105,74 @@
 
 \section{examples: two elliptic PDE problems}
 
+\newcommand{\st}[1]{\small \text{\color {gray} \emph{#1}}}
+
+\begin{frame}{partial differential equations (PDEs)}
+
+\begin{itemize}
+\item today's talk uses the \alert{gradient} $\grad$ and the \alert{divergence} $\grad\cdot$
+\item also the \alert{Laplacian}, which I will write as $\grad^2$
+\item but entirely in 2 spatial dimensions
+
+\medskip
+\item recall that for points $(x,y)\in\RR^2$, functions $u:\RR^2 \to \RR$, and vector fields $\bF=(F_1,F_2) : \RR^2 \to \RR^2$,
+\begin{align*}
+\grad u &= \left(\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y}\right) && \st{slope of $u$, with direction} \\
+\Div\bF &= \frac{\partial F_1}{\partial x} + \frac{\partial F_2}{\partial y} && \st{does $\bF$~splay out?} \\
+\grad^2 u = \Div(\grad u) &= \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} && \st{average concavity of $u$}
+\end{align*}
+
+\medskip
+\item these are all partial derivatives
+\item if they appear in an equation then it is a \alert{partial differential equation}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{a nonlinear PDE problem}
+
+\begin{itemize}
+\item suppose $\Omega \subset \RR^2$ is a domain, a nice open subset
+\end{itemize}
+
+\begin{definition}
+the \alert{area of a surface} $z=v(x,y)$ over $\Omega$ is the integral
+    $$A[v] = \int_\Omega \sqrt{1 + |\grad v|^2}\,dx\,dy$$
+\end{definition}
+
+\begin{columns}
+\begin{column}{0.8\textwidth}
+\begin{itemize}
+\item given a height function $g$ along $\partial\Omega$, a \alert{wire frame}
+\item consider the function which \alert{minimizes} $A[v]$:
+    $$u \leftarrow \min_{\{v \,:\, v|_{\partial \Omega} = g\}} A[v]$$
+\item the minimizer $u(x,y)$ \alert{solves the PDE} on the next slide
+\end{itemize}
+\end{column}
+\begin{column}{0.2\textwidth}
+\hspace{-5mm}
+\includegraphics[width=1.15\textwidth]{images/omgcatenary.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{minimal surfaces}
+
+\centering
+\includegraphics[width=0.3\textwidth]{images/tent.png} \qquad \includegraphics[width=0.3\textwidth]{images/catenary.png}
+
+\mbox{{\scriptsize tent} \hspace{36mm} {\scriptsize catenoid}}
+
+\bigskip
+\begin{block}{minimal surface equation}
+For given boundary function (wire frame) $g(x,y)$, find $u(x,y)$ so that
+    $$-\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0 \quad \text{on } \Omega, \qquad u\big|_{\partial \Omega} = g.$$
+\emph{Claim.}  In the absence of gravity, the surface $z=u(x,y)$ will be the shape of a soap bubble spanning $g$.
+\end{block}
+\end{frame}
+
+
 \begin{frame}{a linear PDE problem}
 
 \begin{columns}
@@ -112,17 +180,12 @@
 \begin{itemize}
 \item I will consider only two PDEs today
     \begin{itemize}
-    \item[1.] Poisson problem
-    \item[2.] minimal surface problem
+    \item[1.] minimal surface equation \quad \emph{(nonlinear)}
+    \item[2.] Poisson equation \quad \emph{(linear)}
     \end{itemize}
-\item elliptic boundary-value problems
-\item recall Laplacian
-    $$\grad^2 u =\Div(\grad u)$$
-
-    \begin{itemize}
-    \item[$\circ$] in 2D: \quad $\grad^2 u = u_{xx} + u_{yy}$
-    \item[$\circ$] $\grad^2$ is a negative-definite operator
-    \end{itemize}
+\item both are \alert{elliptic PDE boundary-value problems}
+\item problem 2 is easier, so we will start there
+\item note: $\Omega$ is a square in concrete examples
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
@@ -131,35 +194,8 @@
 \end{columns}
 
 \bigskip
-\begin{block}{1.~Poisson problem} for a given source function $f(x,y)$, find $u(x,y)$ so that
-    $$-\grad^2 u = f \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = 0$$
-\end{block}
-\end{frame}
-
-
-\begin{frame}{a nonlinear PDE problem}
-
-\begin{columns}
-\begin{column}{0.7\textwidth}
-\begin{itemize}
-\item the second problem is nonlinear, but still elliptic
-\item \textbf{claim 1.} the area of surface $z=v(x,y)$ over $\Omega$ is
-    $$I[v] = \int_\Omega \sqrt{1 + |\grad v|^2}\,dx\,dy$$
-\item \textbf{claim 2.} for given $g$, continuous along $\partial\Omega$,
-    $$u = \min_{\{v \,:\, v|_{\partial \Omega} = g\}} I[v]$$
-solves the boundary value problem below
-\end{itemize}
-\end{column}
-\begin{column}{0.3\textwidth}
-\hfill \includegraphics[width=0.75\textwidth]{images/catenary.png}
-
-\hfill \includegraphics[width=0.75\textwidth]{images/tent.png}
-\end{column}
-\end{columns}
-
-\medskip
-\begin{block}{2.~minimal surface problem} for given boundary function (wire frame) $g(x,y)$, find $u(x,y)$ so that
-    $$-\Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right) = 0 \, \text{ on } \Omega, \qquad u\big|_{\partial \Omega} = g$$
+\begin{block}{\alert{Poisson equation} (with homogeneous boundary conditions)} For a given source function $f(x,y)$, find $u(x,y)$ so that
+    $$-\grad^2 u = f \quad \text{on } \Omega, \qquad u\big|_{\partial \Omega} = 0.$$
 \end{block}
 \end{frame}
 
@@ -168,13 +204,14 @@ solves the boundary value problem below
 \begin{columns}
 \begin{column}{0.7\textwidth}
 \begin{itemize}
-\item PDEs are infinite-dimensional problems, but \textbf{discretization} yields finite systems of equations
-\item for example, finite differences (FD):
+\item PDEs are \alert{infinite-dimensional problems}
+\item \alert{discretization} yields finite systems of equations in finitely-many unknowns
+\item for example, via \alert{finite differences} (FD):
     $$f''(x) = \frac{f(x+h) - 2 f(x) + f(x-h)}{h^2} + O(h^2)$$
-\item assume: $\Omega = (0,1) \times (0,1)$
-\item grid spacings: \strut $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
+\item assume $\Omega = (0,1)^2$, and put a $m_x\times m_y$ grid on it
+\item with spacings: \strut $h_x=\frac{1}{m_x-1}$, $h_y=\frac{1}{m_y-1}$
 \item grid points: $(x_i,y_j) = (ih_x,jh_y)$ for $i=0,\dots,m_x-1$ and $j=0,\dots,m_y-1$
-\item 5-point stencil for the Laplacian:
+\item \alert{5-point stencil for the Laplacian}:
 {\small
 $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \frac{u_{i,j-1} - 2 u_{ij} + u_{i,j+1}}{h_y^2}$$
 }
@@ -195,31 +232,32 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 %   m=8; spy(delsq(numgrid('S',m)),8,'k'), axis off,  print -dpdf lapspy8.pdf
 % then pdfcrop
 
-\begin{frame}{PDE $\implies$ linear system $A\,\bu=\bb$}
+\begin{frame}{PDE \,$\stackrel{\text{discretize}}{\implies}$\, $A\,\bu=\bb$}
 \begin{columns}
 \begin{column}{0.73\textwidth}
 \begin{itemize}
-\item FD discretize $-\grad^2 u = f$:
+\item discretize $-\grad^2 u = f$ by FD:
 	\begin{itemize}
-	\item[$\circ$] note we keep the boundary values in the system
-	\item[$\circ$] $N=m_x m_y$ total unknowns on the grid
+	\item[$\circ$] $N=m_x m_y$ \, unknowns on the grid
 	    \begin{itemize}
 	    \item $m_x=4,m_y=3$ shown at right
         \end{itemize}
 	\item[$\circ$] unknowns $\{u_{ij}\}$ are globally ordered: $u_\ell = u_{ij}$
 	\end{itemize}
-\item get a linear system for $\bu \in \RR^N$:
+\item get a \alert{linear system for $\bu \in \RR^N$}:
 	$$A\, \bu = \bb$$
 
 	\begin{itemize}
-	\item[$\circ$] $A \in \RR^{N\times N}$ is \textbf{sparse}
-	\item[$\circ$] $A$ has positive diagonal
+	\item[$\circ$] $A \in \RR^{N\times N}$ is \alert{sparse}
 	\item[$\circ$] $A$ is symmetric positive definite
-	\item[$\circ$] $A$ has $O(1)$ nonzeros per row \hfill {\footnotesize \emph{$\leftarrow$ at most 5, actually}}
+	\item[$\circ$] $A$ has $O(1)$ nonzeros per row \hfill {\footnotesize \emph{$\leftarrow$ at most 5}}
 	\item[$\circ$] $\bb \in \RR^N$ has entries $b_\ell = f(x_i,y_j)$
 	\end{itemize}
-\item for $m_x=m_y=5$: \,\,\,9 non-trivial eqns (middle right)
-\item for $m_x=m_y=8$: 36 non-trivial eqns (lower right)
+\item examples at right:
+	\begin{itemize}
+	\item[$\circ$] for $m_x=m_y=5$: \quad \,\,\,9 non-trivial eqns
+	\item[$\circ$] for $m_x=m_y=8$: \quad 36 non-trivial eqns
+	\end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.25\textwidth}
