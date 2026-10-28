@@ -729,11 +729,11 @@ W_0 &= (\text{solver work done on the coarsest level})
 
 \begin{frame}{summary so far}
 \begin{itemize}
-\item multigrid combines three conceptual threads:
+\item multigrid combines 3 concepts:
 \begin{enumerate}
-\item a few classical iterations, such as Jacobi and GS, are \textbf{cheap smoothers} of the residual and the error
-\item a \textbf{coarse-grid correction} does a good job of updating the fine-grid solution when acting on a smooth residual
-\item the coarse-grid correction is cheap because \textbf{restriction and prolongation are cheap}
+\item classical iterations, such as Jacobi and GS, are \alert{cheap smoothers} of the residual and the error
+\item a \alert{coarse-grid correction} does a good job of updating the fine-grid solution, if acting on a smooth residual
+\item the coarse-grid correction is cheap because \alert{restriction and prolongation are cheap}
 \end{enumerate}
 
 \bigskip
