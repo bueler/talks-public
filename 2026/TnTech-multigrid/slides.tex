@@ -111,14 +111,16 @@
 
 \begin{itemize}
 \item today's talk uses the \alert{gradient} $\grad$ and the \alert{divergence} $\grad\cdot$
-\item also the \alert{Laplacian}, which I will write as $\grad^2$
-\item but entirely in 2 spatial dimensions
+	\begin{itemize}
+	\item[$\circ$] also the \alert{Laplacian}, which I will write as $\grad^2$
+	\end{itemize}
+\item entirely in 2 spatial dimensions
 
 \medskip
 \item recall that for points $(x,y)\in\RR^2$, functions $u:\RR^2 \to \RR$, and vector fields $\bF=(F_1,F_2) : \RR^2 \to \RR^2$,
 \begin{align*}
-\grad u &= \left(\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y}\right) && \st{slope of $u$, with direction} \\
-\Div\bF &= \frac{\partial F_1}{\partial x} + \frac{\partial F_2}{\partial y} && \st{does $\bF$~splay out?} \\
+\grad u &= \left(\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y}\right) && \st{slope of $u$, as a vector field} \\
+\Div\bF &= \frac{\partial F_1}{\partial x} + \frac{\partial F_2}{\partial y} && \st{positive if $\bF$~splays out (diverges)} \\
 \grad^2 u = \Div(\grad u) &= \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} && \st{average concavity of $u$}
 \end{align*}
 
@@ -205,7 +207,7 @@ For given boundary function (wire frame) $g(x,y)$, find $u(x,y)$ so that
 \begin{column}{0.7\textwidth}
 \begin{itemize}
 \item PDEs are \alert{infinite-dimensional problems}
-\item \alert{discretization} yields finite systems of equations in finitely-many unknowns
+\item \alert{discretization} yields a finite system of equations in finitely-many unknowns
 \item for example, via \alert{finite differences} (FD):
     $$f''(x) = \frac{f(x+h) - 2 f(x) + f(x-h)}{h^2} + O(h^2)$$
 \item assume $\Omega = (0,1)^2$, and put a $m_x\times m_y$ grid on it
@@ -274,24 +276,24 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 
 
 \begin{frame}{goal: solve $A\,\bu=\bb$ in $O(N)$ work}
+
 \begin{itemize}
-\item the linear system $A\,\bu=\bb$ can be set-up using  $6N$ memory locations
+\item for our Poisson equation problem, the linear system
+    $$A\,\bu=\bb$$
+has $N$ unknowns
+\item it can be set-up using $6N$ memory locations
 	\begin{itemize}
 	\item[$\circ$] $A$ has 5 nonzero entries per row, plus one entry of $\bb$
 	\end{itemize}
+
+\bigskip
 \item can we solve $A\,\bu=\bb$ in $O(N)$ work and time as $N\to\infty$?
 	\begin{itemize}
 	\item[$\circ$] if so, the solver is \alert{optimal}
 	\end{itemize}
 
 \bigskip
-\item<2-> $A$ is banded, with bandwidth $\approx \min\{m_x,m_y\} \approx \sqrt{N}$
-	\begin{itemize}
-	\item[$\circ$] so banded Gaussian elimination will solve in $O(N^2)$
-	\end{itemize}
-
-\bigskip
-\item<3> let's back up and ask:
+\item let's back up and ask:
 
 \medskip
 \qquad what operations using our $A$ are obviously $O(N)$?
@@ -300,13 +302,13 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 
 
 \begin{frame}{cheap $O(N)$ operations: mat-vec and residual}
+
 \begin{itemize}
-\item for $A$ from PDE discretization, we can compute $A\bv$ in $O(N)$ flops
+\item we can compute $A\bv$ in $O(N)$ flops
 	\begin{itemize}
 	\item[$\circ$] this is because $A$ has $O(1)$ nonzero entries per row
+	\item[$\circ$] and \alert{we do not need to do any work to multiply by zero}
 	\end{itemize}
-\item \alert{evaluating the residual is an $O(N)$ operation}
-\end{itemize}
 
 \bigskip
 \begin{definition} given $\bv \in\RR^N$, the \alert{residual} for the linear system $A\,\bu=\bb$ is
@@ -314,12 +316,15 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 observe that:
     $$A\,\bu = \bb \quad \iff \quad \br(\bu) = 0$$
 \end{definition}
+
+\item \alert{evaluating the residual is also an $O(N)$ operation}
+\end{itemize}
 \end{frame}
 
 
 \section{simple iterations}
 
-\begin{frame}{are simple iterations cheap $O(N)$ operations?}
+\begin{frame}{sometimes, simple iterations are cheap $O(N)$ operations}
 
 \begin{definition} for the linear system $A\,\bu=\bb$ and an invertible matrix $M\in \RR^{N\times N}$, \alert{simple iteration} is
     $$\bv_{k+1} = \bv_k + \alpha\, M^{-1} \underbrace{\left(\bb - A \bv_k\right)}_{=\,\br(\bv_k)}$$
@@ -449,7 +454,7 @@ there must be a better way to achieve the same goal.
 \end{frame}
 
 
-\begin{frame}{Jacobi and Gauss-Seidel iterations \emph{as smoothers}}
+\begin{frame}{Jacobi and Gauss-Seidel iterations are good \emph{as smoothers}}
 \begin{itemize}
 \item observation: functions
 
@@ -814,19 +819,7 @@ w_e = \left[|\grad u|^2\right]_{i+\frac{1}{2},j} &\approx \left(\frac{u_{i+1,j} 
 \end{frame}
 
 
-\begin{frame}{9-point stencil Jacobian: sparsity}
-\begin{itemize}
-\item on a $6\times 6$ grid, the Jacobian $J(\bv)$ has this sparsity pattern:
-\end{itemize}
-
-\bigskip\bigskip
-\begin{center}
-\includegraphics[width=0.4\textwidth]{images/minimal-spy.png}
-\end{center}
-\end{frame}
-
-
-\begin{frame}{Newton's method \only<2-3>{and Jacobian management}}
+\begin{frame}{Newton's method \only<2>{and Jacobian management}}
 \begin{itemize}
 \item Q: how do we solve our nonlinear system $\bF(\bu)=\bzero$?
 
@@ -838,7 +831,7 @@ J(\bu^{p})\, \bs &= - \bF(\bu^p) \\
 using the \alert{Jacobian matrix} \, $\displaystyle J(\bv)_{r,s} = \left[\,\frac{\partial f_r(\bv)}{\partial v_s}\,\right]$
 
 \
-\item<2-3> Q: how do you calculate the Jacobian?
+\item<2> Q: how do you calculate the Jacobian?
 
 \smallskip
 A: compute derivatives on paper, and write code to evaluate it 
@@ -849,6 +842,18 @@ A: finite differencing again: \, $\displaystyle J(\bv)_{r,s} \approx \frac{f_r(\
 \smallskip
 A: symbolically, and using powerful libraries
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{details: 9-point stencil Jacobian sparsity}
+\begin{itemize}
+\item on a $6\times 6$ grid, the Jacobian $J(\bv)$ has this sparsity pattern:
+\end{itemize}
+
+\bigskip\bigskip
+\begin{center}
+\includegraphics[width=0.4\textwidth]{images/minimal-spy.png}
+\end{center}
 \end{frame}
 
 
@@ -885,10 +890,12 @@ A: by solving the problem on a coarser grid, and prolonging
 
 \medskip
 \item this strategy is \alert{grid-sequencing}
-\item<2> justification: the domain of Newton convergence is larger on the smaller ($=$ coarser) version of the PDE
+    \begin{itemize}
+    \item[$\circ$] justification: the domain of Newton convergence is larger on the smaller ($=$ coarser) version of the PDE
+    \end{itemize}
 
 \medskip
-\item<2> if you also solve at each level with Newton-multigrid, then this is a \alert{nonlinear F-cycle multigrid} \dots the most powerful solver!
+\item if you also solve at each level with Newton-multigrid, then this is a \alert{nonlinear F-cycle multigrid} \dots the most powerful solver!
 \end{itemize}
 
 \medskip
@@ -899,27 +906,52 @@ A: by solving the problem on a coarser grid, and prolonging
 
 
 \begin{frame}[fragile]
-\frametitle{minimal surface PDE problem: results}
+\frametitle{minimal surface PDE problem: \textbf{live} demo}
 
+\begin{itemize}
+\item one open-source library which fully supports multigrid is \alert{PETSc}
+    \begin{itemize}
+    \item[$\circ$] PETSc $=$ portable, extensible toolkit for scientific computing \hfill \href{https://petsc.org/release/}{\texttt{petsc.org}}
+    \item[$\circ$] it is inside the Python finite element library Firedrake \hfill {\scriptsize \href{https://www.firedrakeproject.org/index.html}{\texttt{firedrakeproject.org}}}
+    \end{itemize}
+\item this demo comes from Chapter 7 of my book \emph{PETSc for Partial Differential Equations} \hfill \href{https://github.com/bueler/p4pdes}{\texttt{github.com/bueler/p4pdes}}
+\end{itemize}
+
+\medskip
+\begin{Verbatim}[fontsize=\footnotesize]
+$ cd p4pdes/c/ch7/
+$ make minimal
+
+$ ./minimal -snes_fd_color -pc_type mg \
+  -snes_grid_sequence 5 -snes_converged_reason
+
+$ ./minimal -ms_problem tent -snes_fd_color -pc_type mg \
+  -snes_grid_sequence 8 -snes_converged_reason \
+  -snes_monitor_solution draw
+
+$ mpiexec -n 6 ./minimal -ms_problem tent -snes_fd_color -pc_type mg \
+  -snes_grid_sequence 9 -snes_converged_reason \
+  -snes_view_solution vtk:u.vtr
+$ paraview u.vtr
+\end{Verbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{minimal surface PDE problem: the performance measurement}
+
+\begin{itemize}
+\item amount of arithmetic (flops) per degree of freedom (N)?
+\item result: the \alert{solver is optimal} on this nonlinear minimal surface equation
+    \begin{itemize}
+    \item[$\circ$] but less so if the tent door is high
+    \end{itemize}
+\end{itemize}
+
+\bigskip
 \begin{center}
 \includegraphics[width=0.5\textwidth]{images/minimal-flopsperdof.png}
 \end{center}
-
-\begin{itemize}
-\item<2> run-time demo: %\blfootnote{{\tiny \texttt{-snes\_monitor\_solution draw -mg\_levels\_\{snes,ksp\}\_converged\_reason}}}
-
-\begin{Verbatim}
-$ cd p4pdes/c/ch7/
-$ make minimal
-$ mpiexec -n 4 ./minimal -snes_fd_color -pc_type mg -snes_grid_sequence 10 \
-  -snes_converged_reason
-$ mpiexec -n 4 ./minimal -ms_problem tent -snes_fd_color -pc_type mg -snes_grid_sequence 5 \
-  -snes_converged_reason -snes_view_solution vtk:u.vtr
-$ paraview u.vtr
-\end{Verbatim}
-%$
-\bigskip
-\end{itemize}
 \end{frame}
 
 
@@ -927,8 +959,8 @@ $ paraview u.vtr
 \begin{itemize}
 \item a \alert{linear multigrid V-cycle} combines concepts to build an optimal solver for linear elliptic PDEs:
 \begin{enumerate}
-\item classical iterations $=$ cheap smoothers
-\item coarse-grid corrections, to act on a smooth residual
+\item classical iterations are cheap smoothers
+\item coarse-grid corrections act accurately on a smooth residual
 \item restriction and prolongation are cheap
 \end{enumerate}
 
@@ -937,11 +969,11 @@ $ paraview u.vtr
 \begin{enumerate}
 \item wrap a Newton iteration around multigrid V-cycles: \alert{Newton-multigrid}
 \item add grid-sequencing to generate initial iterates on each finer grid
-\item giving a \alert{nonlinear multigrid F-cycle solver}, and optimality in many cases
+\item gives a \alert{nonlinear multigrid F-cycle solver}, optimal in many cases
 \end{enumerate}
 
 \medskip
-\item other flavors of multigrid:
+\item other flavors of multigrid: \hfill {\color{gray}\small $\leftarrow$ different talks!}
     \begin{itemize}
     \item[$\circ$] full-approximation scheme (avoids the linearization in Newton's method)
     \item[$\circ$] linear algebraic multigrid (avoids hierarchy of grids)
@@ -982,7 +1014,6 @@ $ paraview u.vtr
     \begin{itemize}
     \item[$\circ$] multigrid in FE and fluids contexts
     \end{itemize}
-%\item[] \textbf{R.~Fedorenko (1961)}.  \emph{A relaxation method for solving elliptic difference equations}, USSR Comput.~Math.~Math.~Phys.~1, 922--927
 
 \medskip
 \item[] \textbf{U.~Trottenberg, C.~Oosterlee, \& A. Schuller (2001)}.  \emph{Multigrid}, Elsevier
