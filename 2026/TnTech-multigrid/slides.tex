@@ -78,16 +78,15 @@
 }
 
 
-\title{What is multigrid, and why is it so fast?}
+\title[Multigrid for nonlinear problems]{What is multigrid, and why is it so fast?}
 
-\subtitle{optimal solvers for linear and nonlinear elliptic PDEs}
+\subtitle{optimal solvers for nonlinear problems}
 
 \author{Ed Bueler}
 
-\institute[]{University of Alaska Fairbanks \\
-FIXME weed out excess stuff: "Richardson", any Federenko, a bunch of details, TODO}
+\institute[]{University of Alaska Fairbanks}
 
-\date{{\color{gray} Tennessee Tech University, October 2026}}
+\date[{\color{gray} Tennessee Tech}]{{\color{gray} Tennessee Tech, October 2026}}
 
 % abstract: This is an introductory talk about "optimal solvers for linear and nonlinear elliptic PDEs".  My first goal will be to explain what these words mean using 2 examples: the Poisson equation (linear) and the minimal surface equation (nonlinear; it is the soap film equation).  Both problems are partial differential equations (PDEs) with boundary values.  One should think of them as systems of infinitely-many equations in infinitely-many unknowns.  Under discretization, by finite differences for concreteness, they become systems of N equations in N unknowns, but N is large.  An optimal solver is one which solves these systems using O(N) arithmetic.  While I will not give the full proof, I will explain why the multigrid idea yields such optimal solvers, and demonstrate one of them on a nonlinear minimal surface problem for N=10^6.
 
@@ -223,15 +222,14 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 \item for $m_x=m_y=8$: 36 non-trivial eqns (lower right)
 \end{itemize}
 \end{column}
-\begin{column}{0.27\textwidth}
-\hfill \includegraphics[width=0.9\textwidth]{images/gridordering.png}
+\begin{column}{0.25\textwidth}
+\includegraphics[width=\textwidth]{images/gridordering.png}
 
-\bigskip\medskip
-\hfill \includegraphics[width=0.5\textwidth]{images/lapspy5.pdf} \hspace{5mm}
+\medskip
+\hfill \includegraphics[width=0.7\textwidth]{images/lapspy5.pdf}
 
-\bigskip
+\smallskip
 \hfill \includegraphics[width=0.7\textwidth]{images/lapspy8.pdf}
-
 \end{column}
 \end{columns}
 \end{frame}
@@ -245,7 +243,7 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 	\end{itemize}
 \item can we solve $A\,\bu=\bb$ in $O(N)$ work and time as $N\to\infty$?
 	\begin{itemize}
-	\item[$\circ$] if so, the solver is \emph{optimal}
+	\item[$\circ$] if so, the solver is \alert{optimal}
 	\end{itemize}
 
 \bigskip
@@ -269,11 +267,11 @@ $$\grad^2 u(x_i,y_j) \approx \frac{u_{i-1,j} - 2 u_{ij} + u_{i+1,j}}{h_x^2} + \f
 	\begin{itemize}
 	\item[$\circ$] this is because $A$ has $O(1)$ nonzero entries per row
 	\end{itemize}
-\item also the residual is $O(N)$
+\item \alert{evaluating the residual is an $O(N)$ operation}
 \end{itemize}
 
 \bigskip
-\begin{definition} given $\bv \in\RR^N$, the \emph{residual} for the linear system $A\,\bu=\bb$ is
+\begin{definition} given $\bv \in\RR^N$, the \alert{residual} for the linear system $A\,\bu=\bb$ is
 	$$\br(\bv) = \bb - A\bv$$
 observe that:
     $$A\,\bu = \bb \quad \iff \quad \br(\bu) = 0$$
@@ -281,24 +279,20 @@ observe that:
 \end{frame}
 
 
-\section{simple iterations?}
+\section{simple iterations}
 
 \begin{frame}{are simple iterations cheap $O(N)$ operations?}
 
-\begin{definition} for the linear system $A\,\bu=\bb$ and an invertible matrix $M\in \RR^{N\times N}$, \emph{simple iteration} is
+\begin{definition} for the linear system $A\,\bu=\bb$ and an invertible matrix $M\in \RR^{N\times N}$, \alert{simple iteration} is
     $$\bv_{k+1} = \bv_k + \alpha\, M^{-1} \underbrace{\left(\bb - A \bv_k\right)}_{=\,\br(\bv_k)}$$
 \end{definition}
 
 \begin{itemize}
 \item $\alpha\in\RR$ is a tuning parameter, with default $\alpha=1$
+\item $M$ is called the \alert{preconditioner matrix} \dots next slide explains that
 \item if $M=A$ and $\alpha=1$ then $\bv_{k+1}=\bu$, so one iteration solves it!
 	\begin{itemize}
 	\item[$\circ$] \dots not practical, and usually not $O(N)$
-	\end{itemize}
-\item \emph{Richardson iteration} \quad $\bv_{k+1} = \bv_k + \alpha\, \br(\bv_k)$ \quad is the $M=I$ case
-	\begin{itemize}
-	\item[$\circ$] observation: Richardson iteration for the Poisson equation is \emph{gradient descent} for the quadratic functional \quad $\displaystyle I[v] = \alpha \int_\Omega \frac{1}{2} |\grad v|^2 - f v$
-	\item[$\circ$] each Richardson iteration is clearly $O(N)$ work
 	\end{itemize}
 
 \medskip
@@ -311,35 +305,33 @@ observe that:
 
 \begin{definition} if a matrix or linear map $M \in \RR^{N\times N}$ is invertible, we say
     $$M^{-1} A \bu = M^{-1} \bb$$
-is a \emph{(left-) preconditioned} system for $A\,\bu=\bb$
+is a \alert{(left-) preconditioned} system for $A\,\bu=\bb$
 \end{definition}
 
 \begin{itemize}
 \item the preconditioned system has the same solutions as before
-\item the new residual is \, $\tilde{\br}(\bv) = M^{-1} \bb - M^{-1} A \bv$
-\item observation: Richardson iteration on the new system is equivalent to simple iteration
-    $$\bv_{k+1} = \bv_k + \alpha\, \tilde{\br}(\bv) \quad \iff \quad \bv_{k+1} = \bv_k + \alpha\, M^{-1} \left(\bb - A \bv_k\right)$$
+\item the new residual is \, $\tilde{\br}(\bv) = M^{-1} (\bb - A \bv)$
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{fast preconditioners?}
 
-\begin{definition} a matrix or linear map $M$ is a \emph{fast preconditioner} if solving $M\,\bz=\bc$ requires $O(N)$ work
+\begin{definition} a matrix or linear map $M$ is a \alert{fast preconditioner} if solving $M\,\bz=\bc$ requires $O(N)$ work
 \end{definition}
 
 \begin{itemize}
 \item example: if $A$ has nonzero diagonal entries, the diagonal $M=D$ is a fast preconditioner
 \item do \emph{not} actually form the matrix $M^{-1}$ when solving $M\,\bz=\bc$
-\item warning: a preconditioner $M$ can be fast without being a useful tool!
-\item preconditioning is an apparently simple idea, but in the 21st century it is used all over the space of solvers
+\item warning: a preconditioner $M$ can be fast without being effective!
+\item preconditioning is an apparently simple idea, but in 21st century it is used in all advanced solvers
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{$O(N)$ simple iterations: Jacobi and Gauss-Seidel}
 \begin{itemize}
-\item suppose we split $A$ into diagonal and triangular parts:
+\item split $A$ into diagonal and lower/upper triangular parts:
 	$$A=D + L + U$$
 \only<1>{
 \item the linear system can be rearranged using the splitting:
@@ -349,7 +341,7 @@ A\,\bu=\bb \quad &\iff \quad D \bu = \bb - (L+U) \bu \\
 \end{align*}
 \item solving $D\bz = \bc$ is $O(N)$
 \begin{definition}
-a \emph{Jacobi iteration} applies a fast preconditioner:
+a \alert{Jacobi iteration} applies a fast preconditioner:
 	$$\bv_{k+1} = \bv_k + D^{-1} (\bb - A \bv_k)$$
 \end{definition}
 }
@@ -362,7 +354,7 @@ A\,\bu=\bb \quad &\iff \quad (D+L) \bu = \bb - U \bu \\
 \item solving $(D+L)\bz=\bc$ is $O(N)$ (for our $A$)
 
 \begin{definition}
-a \emph{Gauss-Seidel (GS) iteration} applies a fast preconditioner:
+a \alert{Gauss-Seidel (GS) iteration} applies a fast preconditioner:
 	$$\bv_{k+1} = \bv_k + (D+L)^{-1} (\bb - A \bv_k)$$
 \end{definition}
 }
@@ -372,14 +364,14 @@ a \emph{Gauss-Seidel (GS) iteration} applies a fast preconditioner:
 
 \begin{frame}{example of Gauss-Seidel iteration}
 \begin{itemize}
-\item the matrix-splitting view obscures the simplicity of Gauss-Seidel?
+\item matrix-splitting view obscures the simplicity of Gauss-Seidel
 \item \emph{example}: consider the linear system $A\bu=\bb$ with
     $$A = \begin{bmatrix} 2 & -1 & & & & \\ -1 & 2 & -1 & & & \\ & -1 & 2 & -1 & & \\ & & \ddots & \ddots & \ddots & \\ & \Big. & & -1 & 2 & -1 \\ & & & & -1 & 2 \end{bmatrix}, \qquad \bb = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ \vdots \\ b_N \end{bmatrix}$$
 
     \begin{itemize}
     \item[$\circ$] in this case, Gauss-Seidel iteration computes
     $$v_j^{[k+1]} = \frac{b_j}{2} + \frac{1}{2} \left(v_{j-1}^{[k+1]} + v_{j+1}^{[k]}\right)$$
-    \item[$\circ$] this is a \emph{relaxation} method \dots update $v_j$ using average of neighbors
+    \item[$\circ$] this is a \alert{relaxation} method \dots update $v_j$ using average of neighbors
     \item[$\circ$] one can prove this method converges
     \item[$\circ$] this example is relevant because $A \sim -\grad^2$ in 1D
     \end{itemize}
@@ -387,14 +379,13 @@ a \emph{Gauss-Seidel (GS) iteration} applies a fast preconditioner:
 \end{frame}
 
 
-\begin{frame}{Jacobi and Gauss-Seidel iterations \emph{as solvers}}
+\begin{frame}{Jacobi and Gauss-Seidel iterations are bad \emph{as solvers}}
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item for the Poisson problem linear system $A\bu=\bb$, one can prove that Gauss-Seidel and Jacobi converge
-\item but, after initial progress, residual norm decrease is \emph{agonizingly slowly} on fine grids
-\item these simple iterations stagnate
+\item for Poisson problem linear system $A\bu=\bb$, one can prove Gauss- Seidel and Jacobi converge
+\item but, after initial progress, residual norms decrease \alert{agonizingly slowly} on fine grids
 \item an iteration $\bv_{k+1} = \phi(\bv_k)$ \emph{stagnates} or \emph{stalls} if the ratio of successive residual norms $\{\|\br(\bv_{k+1})\|/\|\br(\bv_k)\|\}$ goes to one
 \end{itemize}
 \end{column}
@@ -405,58 +396,40 @@ a \emph{Gauss-Seidel (GS) iteration} applies a fast preconditioner:
 
 \bigskip
 \begin{itemize}
-\item<2> Achi Brandt, an inventor of multigrid:
+\item Achi Brandt, an inventor of multigrid:
 \begin{quotation}
-Stalling numerical processes must be wrong.
+Stalling numerical processes must be wrong.  Whenever
 
-Whenever the computer grinds very hard for
+the computer grinds very hard for small or slow effect,
 
-small or slow effect, there must be a better
-
-way to achieve the same goal.
+there must be a better way to achieve the same goal.
 \end{quotation}
 
-\only<1>{\vspace{14mm}}
-
-\vspace{-19mm}
-\hfill \includegraphics<2>[width=0.18\textwidth]{images/abrandt.jpg}
+\vspace{-16mm}
+\hfill \includegraphics[width=0.1\textwidth]{images/abrandt.jpg}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Jacobi and Gauss-Seidel iterations \emph{as smoothers}}
 \begin{itemize}
-\item observation:
+\item observation: functions
 
-functions become
+become \emph{much smoother}
 
-\emph{much smoother}
-
-after a few
-
-iterations
-
-\item the first multigrid
-
-paper (Federenko, 
-
-1961) observed
-
-this?
+after a few iterations
 \end{itemize}
 
-\vspace{-40mm}
+\vspace{-15mm}
 
 \only<1>{
-\hfill \includegraphics[height=0.75\textheight]{images/smoothing-space.png}
-
-\hfill {\scriptsize Jacobi \hspace{17mm} $\alpha=\frac{2}{3}$ Jacobi \hspace{12mm} Gauss-Seidel \hspace{3mm}}
+\hfill \includegraphics[height=0.8\textheight]{images/smoothing-space.png}
 }
 \only<2>{
-\hfill \includegraphics[height=0.75\textheight]{images/smoothing-freq.png}
-
-\hfill {\scriptsize Jacobi \hspace{17mm} $\alpha=\frac{2}{3}$ Jacobi \hspace{12mm} Gauss-Seidel \hspace{3mm}}
+\hfill \includegraphics[height=0.8\textheight]{images/smoothing-freq.png}
 }
+
+\hfill {\scriptsize Jacobi \hspace{20mm} $\alpha=\frac{2}{3}$ Jacobi \hspace{14mm} Gauss-Seidel \hspace{6mm}}
 \end{frame}
 
 
@@ -465,7 +438,7 @@ this?
 \begin{frame}{grid transfers}
 
 \begin{itemize}
-\item multiple grid resolutions will allow us to exploit smoothers to generate fast solutions, but we need \emph{grid transfer} operators between the different grids
+\item multiple grid resolutions will allow us to exploit smoothers to generate fast solutions, but we need \alert{grid transfer} operators between the different grids
 
 {\large
 $$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
@@ -477,8 +450,8 @@ $$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
 }
 
 \vspace{-8mm}
-\item for a function $\bv$ defined on a finer grid, define its \emph{restriction} $R\bv$ to a coarser grid to be its value on the coarse grid points (\emph{injection}), or restrict by averaging onto the coarser grid (\emph{full weighting})
-\item for a function $\bw$ defined on the coarser grid, define its \emph{prolongation} $P\bw$ to a finer grid by (linear) \emph{interpolation}
+\item for a function $\bv$ defined on a finer grid, define its \alert{restriction} $R\bv$ to a coarser grid to be its value on the coarse grid points (\alert{injection}), or restrict by averaging onto the coarser grid (\emph{full weighting})
+\item for a function $\bw$ defined on the coarser grid, define its \alert{prolongation} $P\bw$ to a finer grid by (linear) \emph{interpolation}
 \item $R$, $P$ are linear operators
 	\begin{itemize}
 	\item[$\circ$] $R$, $P$ are rectangular (non-square) matrices
@@ -492,7 +465,7 @@ $$\includegraphics[width=0.15\textwidth]{images/fine.png} \qquad
 \frametitle{2-grid method}
 \begin{itemize}
 \item put these ideas together!
-\item the \emph{2-grid method} approximately solves the PDE on the finer grid:
+\item the \alert{2-grid method} approximately solves the PDE on the finer grid:
 
 \bigskip
 \begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
@@ -521,11 +494,11 @@ Ac,_ = discretize(m/2,m/2)     # coarse grid
 
 \begin{frame}{the error equation}
 \begin{itemize}
-\item what do I mean by the \emph{error equation}?
+\item what do I mean by the ``error equation''?
 \item for the linear system $A\,\bu=\bb$, consider some $\bv$ which is \emph{not} a solution
 
 \begin{definition}
-for any vector $\bv$, the \emph{error equation} corresponding to the linear system $A\,\bu = \bb$ is the equation
+for any vector $\bv$, the \alert{error equation} corresponding to the linear system $A\,\bu = \bb$ is the equation
 	$$A\,\be = \br(\bv)$$
 \end{definition}
 
@@ -542,7 +515,7 @@ for any vector $\bv$, the \emph{error equation} corresponding to the linear syst
 \begin{frame}[fragile]
 \frametitle{the coarse grid correction}
 \begin{itemize}
-\item the essential 3 lines in \,\texttt{twogrid()} form a \emph{coarse-grid correction}:
+\item the essential 3 lines in \,\texttt{twogrid()} form a \alert{coarse-grid correction}:
 
 \medskip
 \begin{minted}[fontsize=\small,xleftmargin=10mm]{python}
@@ -606,7 +579,7 @@ def twogrid(v,pre=2,post=2):
 \hfill \includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
 
 \medskip
-\item restrictions $R$ and prolongations $P$ are needed in this \emph{grid hierarchy}
+\item restrictions $R$ and prolongations $P$ are needed in this \alert{grid hierarchy}
 
 \end{itemize}
 \end{frame}
@@ -639,25 +612,24 @@ def vcycle(b,v,lev,pre=2,post=2):
 
 \begin{frame}{how well does it work?}
 \begin{itemize}
-\item so, how well does it work on our Poisson problem
+\item V-cycles work \alert{absurdly well} on the
 
-\,$-\grad^2 u=f$?
+Poisson problem \,$-\grad^2 u=f$
 
-\vspace{-5mm}
-\hfill \includegraphics[width=0.2\textwidth]{images/poisson.png}
+\vspace{-8mm}
+\hfill \includegraphics[width=0.3\textwidth]{images/poisson.png}
 
-\vspace{-13mm}
-\item absurdly well!
-\item here is scaling out to $m=4097$, when $N=1.6\times 10^7$
+\vspace{-20mm}
+\item scaling out to $m=4097$ ($N=1.6\times 10^7$):
 \end{itemize}
 
 \medskip
 \begin{center}
 \only<1>{ % Figure 7.2
-\includegraphics[height=0.6\textheight]{images/poisson-optimal-flops.png} \hspace{10mm}
+\includegraphics[height=0.54\textheight]{images/poisson-optimal-flops.png} \hspace{30mm}
 }
 \only<2>{ % Figure 7.4
-\includegraphics[height=0.6\textheight]{images/poisson-optimal-timeperdof.png} \hspace{10mm}
+\includegraphics[height=0.54\textheight]{images/poisson-optimal-timeperdof.png} \hspace{30mm}
 }
 \end{center}
 \end{frame}
@@ -665,7 +637,7 @@ def vcycle(b,v,lev,pre=2,post=2):
 
 \begin{frame}{on multigrid costs: single V-cycle}
 \begin{itemize}
-\item let us analyze the work (flops) of applying a single V-cycle
+\item let us compute the work (flops) of applying a single V-cycle
     \begin{itemize}
     \item[$\circ$] note: multiple V-cycles are generally needed to solve the problem
     \end{itemize}
@@ -717,22 +689,6 @@ W_0 &= (\text{solver work done on the coarsest level})
 \end{frame}
 
 
-\begin{frame}{multigrid variations}
-\begin{itemize}
-\item there are many variations on linear multigrid:
-	\begin{itemize}
-	\item[$\circ$] choose different smoothers ({\large $\bullet$} is pre-smoother, {\large $\circ$} is post-smoother)
-	\item[$\circ$] choose different values for \texttt{pre} and \texttt{post} smoother iterations
-	\item[$\circ$] choose different coarse-grid solvers ($\square$)
-	\item[$\circ$] repeat the coarse-grid correction a couple of times (\emph{W cycles})
-	\end{itemize}
-
-\bigskip\bigskip
-\hfill \includegraphics[width=0.8\textwidth]{images/multigrid-cycles.png}
-\end{itemize}
-\end{frame}
-
-
 \begin{frame}{summary so far}
 \begin{itemize}
 \item multigrid combines three conceptual threads:
@@ -751,14 +707,11 @@ W_0 &= (\text{solver work done on the coarsest level})
 \section{nonlinear multigrid}
 
 \begin{frame}{minimal surfaces, a nonlinear problem}
-\begin{itemize}
-\item recall \dots
 
-\vspace{-7mm}
-\hfill \includegraphics[width=0.3\textwidth]{images/tent.png} \includegraphics[width=0.3\textwidth]{images/catenary.png}
+\centering
+\includegraphics[width=0.3\textwidth]{images/tent.png} \qquad \includegraphics[width=0.3\textwidth]{images/catenary.png}
 
-\hfill \mbox{{\scriptsize tent} \hspace{36mm} {\scriptsize catenoid} \hspace{10mm}}
-\end{itemize}
+\mbox{{\scriptsize tent} \hspace{36mm} {\scriptsize catenoid}}
 
 \bigskip
 \begin{block}{minimal surface problem} for given boundary function (wire frame) $g(x,y)$, find $u(x,y)$ so that
@@ -835,27 +788,28 @@ w_e = \left[|\grad u|^2\right]_{i+\frac{1}{2},j} &\approx \left(\frac{u_{i+1,j} 
 \end{frame}
 
 
-\begin{frame}{Newton's method \only<2-3>{with finite-differenced Jacobian}}
+\begin{frame}{Newton's method \only<2-3>{and Jacobian management}}
 \begin{itemize}
 \item Q: how do we solve our nonlinear system $\bF(\bu)=\bzero$?
 
-A: Newton's method!:
+A: \alert{Newton's method}:
 \begin{align*}
 J(\bu^{p})\, \bs &= - \bF(\bu^p) \\
 \bu^{p+1} &= \bu^p + \bs
 \end{align*}
-where $J(\bv)$ is the Jacobian
-    $$J(\bv)_{r,s} = \left[\,\frac{\partial f_r(\bv)}{\partial v_s}\,\right]$$
+using the \alert{Jacobian matrix} \, $\displaystyle J(\bv)_{r,s} = \left[\,\frac{\partial f_r(\bv)}{\partial v_s}\,\right]$
 
-\item<2-3> Q: how do you calculate the Jacobian?  (\emph{cause it's a pain in the \dots})
+\
+\item<2-3> Q: how do you calculate the Jacobian?
 
-A: more finite differencing:
-    $$J(\bv)_{r,s} \approx \frac{f_r(\bv + \eps \bm{1}_s) - f_r(\bv)}{\eps}$$
+\smallskip
+A: compute derivatives on paper, and write code to evaluate it 
 
-A$'$: symbolically?
+\smallskip
+A: finite differencing again: \, $\displaystyle J(\bv)_{r,s} \approx \frac{f_r(\bv + \eps \bm{1}_s) - f_r(\bv)}{\eps}$
 
-\medskip
-\only<3>{\item {\small Q: how do you \emph{efficiently} calculate the FD Jacobian? \, A: graph coloring}}
+\smallskip
+A: symbolically, and using powerful libraries
 \end{itemize}
 \end{frame}
 
@@ -867,48 +821,36 @@ A$'$: symbolically?
 \item Q: how do you solve each linear system in the Newton iteration?
 
 \medskip
-A: solve \,$J(\bu^{p})\, \bs = - \bF(\bu^p)$ \,\alert{using multigrid}:
+A: solve \,$J(\bu^{p})\, \bs = - \bF(\bu^p)$ \,using \alert{multigrid}:
 
 \medskip
 \begin{minted}[fontsize=\small,xleftmargin=10mm,texcomments]{python}
-def newtonmultigrid(v,lev,maxnewts=50,cycles=1):
-    for p in range(maxnewts):
+def newtonmultigrid(v,cycles=1,levs):
+    for p in ...:
          b = -F(v)
          s = 0
          for _ in range(cycles):
-             s = vcycle(b,s,lev)
+             s = vcycle(b,s,levs)
          v = v + s
     return v
 \end{minted}
-
-\medskip
-\item<2> details:
-	\begin{itemize}
-	\item[$\circ$] inside \texttt{vcycle()}, the matrix $A=A^{(k)}$ on each grid level $\Omega^{(k)}$ is computed using the Jacobian on that grid level (\emph{rediscretization})
-	\item[$\circ$] the finest-level iterate $\bu^p$ must be restricted (injected) down to $\Omega^{(k)}$:
-	    $$A^{(k)}=J^{(k)}(R^{K-k} \bu^p)$$
-	\item[$\circ$] $J^{(k)}$ is approximated using FD and graph coloring on $\Omega^{(k)}$
-	\end{itemize}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{nonlinear multigrid F-cycle solvers}
 \begin{itemize}
-\item but wait, \dots there's more!
-
-\medskip
 \item Q: how do you find a good initial iterate $\bu^0$ for the Newton iteration?
 
 \medskip
 A: by solving the problem on a coarser grid, and prolonging
 
 \medskip
-\item<2-3> justification: the domain of Newton convergence is larger on the smaller ($=$ coarser) version of the PDE
+\item this strategy is \alert{grid-sequencing}
+\item<2> justification: the domain of Newton convergence is larger on the smaller ($=$ coarser) version of the PDE
 
 \medskip
-\item<3> this strategy is called \emph{nested iteration} or \emph{grid sequencing}
-\item<3> if you also solve at each level with Newton-multigrid, then this is a \alert{\emph{nonlinear multigrid F-cycle}} \dots the most powerful solver you've seen!
+\item<2> if you also solve at each level with Newton-multigrid, then this is a \alert{nonlinear F-cycle multigrid} \dots the most powerful solver!
 \end{itemize}
 
 \medskip
@@ -945,32 +887,33 @@ $ paraview u.vtr
 
 \begin{frame}{summary}
 \begin{itemize}
-\item a multigrid V-cycle combines three conceptual threads to build an optimal solver for linear elliptic PDEs:
+\item a \alert{linear multigrid V-cycle} combines concepts to build an optimal solver for linear elliptic PDEs:
 \begin{enumerate}
 \item classical iterations $=$ cheap smoothers
-\item coarse-grid correction effective, if starting from a smooth residual
+\item coarse-grid corrections, to act on a smooth residual
 \item restriction and prolongation are cheap
 \end{enumerate}
 
 \medskip
-\item there is also \textbf{algebraic multigrid}, but that is a different talk \dots
-
-\medskip
-\item<2> for nonlinear elliptic PDEs:
+\item for nonlinear elliptic PDEs:
 \begin{enumerate}
-\item wrap a Newton iteration around multigrid V-cycles: \textbf{Newton-multigrid}
-\item \textbf{grid sequencing} generates a high-quality finest-grid initial iterate
-\item thus: a \textbf{nonlinear multigrid F-cycle solver}
+\item wrap a Newton iteration around multigrid V-cycles: \alert{Newton-multigrid}
+\item add grid-sequencing to generate initial iterates on each finer grid
+\item giving a \alert{nonlinear multigrid F-cycle solver}, and optimality in many cases
 \end{enumerate}
 
 \medskip
-\item<2> Newton-multigrid is not the only nonlinear option \dots there is also \textbf{full approximation scheme} multigrid, but that is a different talk \dots
+\item other flavors of multigrid:
+    \begin{itemize}
+    \item[$\circ$] full-approximation scheme (avoids the linearization in Newton's method)
+    \item[$\circ$] linear algebraic multigrid (avoids hierarchy of grids)
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 
-\begin{frame}{references}
+\begin{frame}{references for learning about these ideas}
 
 \setbeamerfont*{itemize/enumerate body}{size=\footnotesize}
 \setbeamerfont*{itemize/enumerate subbody}{parent=itemize/enumerate body}
@@ -980,24 +923,30 @@ $ paraview u.vtr
 \begin{itemize}
 \item[] \textbf{A.~Brandt (1977)}. \emph{Multi-level adaptive solutions to boundary-value problems}, Mathematics of Computation 31 (138), 333--390
     \begin{itemize}
-    \item[$\circ$] the guru of multigrid
+    \item[$\circ$] the origin of powerful multigrid, by its guru
     \end{itemize}
+
+\medskip
 \item[] \textbf{W.~Briggs, V.~E.~Henson, \& S.~McCormick (2000)}.  \emph{A Multigrid Tutorial}, 2nd ed., SIAM Press, Philadelphia
     \begin{itemize}
-    \item[$\circ$] straightforward introduction
+    \item[$\circ$] smaller, straightforward introduction
     \end{itemize}
+
+\medskip
 \item[] \textbf{E.~Bueler (2021)}. \emph{PETSc for Partial Differential Equations}, SIAM Press, Philadelphia
     \begin{itemize}
     \item[$\circ$] preconditioning ideas and diverse multigrid examples
+    \item[$\circ$] for open-source C and Python codes, follow QR $\searrow$
     \end{itemize}
+
+\medskip
 \item[] \textbf{H.~Elman, D.~Silvester, \& A.~Wathen (2014)}. \emph{Finite Elements and Fast Iterative Solvers: With Applications to Incompressible Fluid Dynamics}, 2nd ed., Oxford U.~Press
     \begin{itemize}
     \item[$\circ$] multigrid in FE and fluids contexts
     \end{itemize}
-\item[] \textbf{R.~Fedorenko (1961)}.  \emph{A relaxation method for solving elliptic difference equations}, USSR Comput.~Math.~Math.~Phys.~1, 922--927
-    \begin{itemize}
-    \item[$\circ$] the first multigrid paper
-    \end{itemize}
+%\item[] \textbf{R.~Fedorenko (1961)}.  \emph{A relaxation method for solving elliptic difference equations}, USSR Comput.~Math.~Math.~Phys.~1, 922--927
+
+\medskip
 \item[] \textbf{U.~Trottenberg, C.~Oosterlee, \& A. Schuller (2001)}.  \emph{Multigrid}, Elsevier
     \begin{itemize}
     \item[$\circ$] comprehensive view, and theory
@@ -1005,14 +954,15 @@ $ paraview u.vtr
 \end{itemize}
 \end{column}
 \begin{column}{0.17\textwidth}
-\hfill \includegraphics[width=\textwidth]{images/abrandt.jpg}
+\hfill \includegraphics[width=0.7\textwidth]{images/abrandt.jpg}
 
 \hfill {\scriptsize \emph{Achi Brandt}}
 
 \vspace{7mm}
 \hfill \includegraphics[width=0.9\textwidth]{images/bueler.jpg}
 
-\vspace{20mm}
+\medskip
+\hfill \includegraphics[width=0.75\textwidth]{images/qrp4pdes.png}
 \end{column}
 \end{columns}
 \end{frame}
