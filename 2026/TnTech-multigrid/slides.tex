@@ -103,6 +103,19 @@
 \end{frame}
 
 
+%\begin{frame}[standout]
+\begin{frame}
+
+\Large
+\begin{itemize}
+\item I welcome questions at any time!
+
+\bigskip
+\item they are a \emph{good} use of time
+\end{itemize}
+\end{frame}
+
+
 \section{examples: two elliptic PDE problems}
 
 \newcommand{\st}[1]{\small \text{\color {gray} \emph{#1}}}
@@ -321,6 +334,13 @@ observe that:
 \end{itemize}
 \end{frame}
 
+
+\AtBeginSection[]
+{
+  \begin{frame}{outline}
+  \tableofcontents[currentsection]
+  \end{frame}
+}
 
 \section{simple iterations}
 
@@ -618,8 +638,10 @@ def twogrid(v,pre=2,post=2):
 \item A: if we can have two levels of grids, we can have many!
 \item when faced with a coarse-grid solve, just do another 2-grid \dots and keep going down to some really easy and cheap coarse grid
 
-\bigskip\medskip
-\hfill \includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
+\bigskip
+\begin{center}
+\includegraphics[width=0.8\textwidth]{images/multigrid-grids.png}
+\end{center}
 
 \medskip
 \item restrictions $R$ and prolongations $P$ are needed in this \alert{grid hierarchy}
@@ -722,7 +744,7 @@ W_0 &= (\text{solver work done on the coarsest level})
     \begin{itemize}
     \item[$\circ$] for some $C$ independent of $k$
     \end{itemize}
-\item<2> since $N=|\Omega^{(K)}|$ is the number of points in the finest grid,
+\item since $N=|\Omega^{(K)}|$ is the number of points in the finest grid,
 \begin{align*}
 \overline{W} &\le C |\Omega^{(K)}| + C |\Omega^{(K-1)}| + \dots + C |\Omega^{(1)}| + W_0 \\
     &\approx C N \left(1 + \tfrac{1}{4} + \dots + \tfrac{1}{4^{K-1}}\right) + W_0 \\
@@ -766,22 +788,20 @@ W_0 &= (\text{solver work done on the coarsest level})
 \begin{frame}{discretization gets you \dots more general equations}
 \begin{itemize}
 \item at each point $(x_i,y_j)$ on the target (finest) grid $\Omega^{(K)}$ we discretize to get an FD approximation of the PDE:
-    $$f_{ij}(u_{i-1,j},\,u_{i+1,j},\,u_{i,j-1},\,u_{i,j+1},\,u_{i,j}) = 0$$
+    $$f_{i,j}(u_{i-1,j},\,u_{i+1,j},\,u_{i,j-1},\,u_{i,j+1},\,u_{i,j}) = 0$$
 
 	\begin{itemize}
-	\item[$\circ$] roughly-speaking, anyway ... see details next slide
-	\item[$\circ$] unknowns must be globally-ordered into a vector $\bu \in \RR^N$:
-	    $$u_\ell = u_{i,j}$$
-    where $\ell=\ell(i,j)$ is a global-to-local indexing function
+	\item[$\circ$] unknowns are globally-ordered into a vector $\bu \in \RR^N$: \quad $u_\ell = u_{i,j}$
+    \item[$\circ$] also globally-order the equations: \quad $f_\ell(\bu) = f_{i,j}(\bu)$
 	\end{itemize}
 
 \medskip
 \begin{block}{nonlinear discretization principle}
-enforcing the PDE at grid point $(x_i,y_j)$ gives one scalar equation $f_{ij}(\bu) = 0$
+enforcing the PDE at grid point $(x_i,y_j)$ gives one scalar equation $f_{i,j}(\bu) = 0$
 \end{block}
 
 \bigskip
-\item also globally-order the equations (functions), $f_\ell(\bu) = f_{ij}(\bu)$, to get a nonlinear system of $N$ scalar equations in $N$ scalar unknowns:
+\item get a nonlinear system of $N$ scalar equations in $N$ scalar unknowns:
     $$\bF(\bu) = \bzero$$
 \item $\bF$ is a sparse function, as each $f_\ell$ depends on only $O(1)$ entries of $\bu$
 \end{itemize}
@@ -793,8 +813,7 @@ enforcing the PDE at grid point $(x_i,y_j)$ gives one scalar equation $f_{ij}(\b
 \item how do you discretize $\ds \Div \left(\frac{\grad u}{\sqrt{1 + |\grad u|^2}}\right)$?
 
 \medskip
-\item technique: generalize first!
-\item discretize \,$\ds \Div \left(D(w) \grad u\right)$ where
+\item generalize to \,$\ds \Div \left(D(w) \grad u\right)$ where
 \begin{align*}
 D(w) &= (1+w)^{-1/2} \hspace{40mm} \\
 w &= |\grad u|^2
@@ -804,9 +823,7 @@ w &= |\grad u|^2
 \hfill \includegraphics[width=0.3\textwidth]{images/msboxstencil.png}
 
 \vspace{-8mm}
-\item centered FD, using \emph{staggered} values of $D(w)$,
-
-gets $O(h_x^2+h_y^2)$ truncation error and symmetry:
+\item centered FD, using \emph{staggered} values of $D(w)$:
 
 {\small
 \begin{align*}
@@ -967,9 +984,9 @@ $ paraview u.vtr
 \medskip
 \item for nonlinear elliptic PDEs:
 \begin{enumerate}
-\item wrap a Newton iteration around multigrid V-cycles: \alert{Newton-multigrid}
+\item wrap a Newton iteration around linear V-cycles: \alert{Newton-multigrid}
 \item add grid-sequencing to generate initial iterates on each finer grid
-\item gives a \alert{nonlinear multigrid F-cycle solver}, optimal in many cases
+\item result \alert{nonlinear multigrid F-cycle}, an optimal solver in many cases
 \end{enumerate}
 
 \medskip
